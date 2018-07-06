@@ -1,6 +1,6 @@
 # Wiciren
 
-#Install:
+# Install:
 
 - npm install
 - npm start
