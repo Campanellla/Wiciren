@@ -53,6 +53,13 @@ export class GameWorkspace {
 		this.PI2 = Math.PI * 2;
 		this.PI  = Math.PI;
 		
+		
+		
+		this.engine = undefined;
+		this.canvas = undefined;
+		this.map = undefined;
+		
+		
 	}
 	
 	drawMenu(text){

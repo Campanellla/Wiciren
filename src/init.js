@@ -11,7 +11,7 @@ import {onMouseMoveEvent, onMouseClickEvent, onMouseClickReleaseEvent, onDoubleC
 
 import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
 
-import {_character, Map, Selection} from './prototypes.js';
+import {_character, Selection} from './prototypes.js';
 
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
 
@@ -25,6 +25,8 @@ import ConfigMenu from './ReactComponents/ConfigMenu.js';
 import {createMap, load, save, setCanvasSize, showAxis} from './workspace.js';
 
 import {loadMeshes} from './meshesLoader.js';
+
+import {Map} from './Map.js'
 
 
 
@@ -41,7 +43,6 @@ export default function init(){
 	
 	var canvas = document.getElementById('canvas');
 	canvas.style.cursor = "pointer";
-	
 	
 	game.InterfaceView.appendItem(<div id= 'header'></div>);
 	game.InterfaceView.appendItem(<div id= 'indtext'></div>);
@@ -68,11 +69,10 @@ export default function init(){
 		
 		canvas.focus();
 		
-		
 		/// --- create and draw ground --- ///
 		game.map = new Map(100, 10, game.scene);
 		
-		/// --- make lake --- ///
+		/// --- make small lake --- ///
 		game.map.blocks[0].tiles[1][1].surface = "water";
 		game.map.blocks[0].tiles[1][1].height = -0.1;
 		game.map.blocks[0].tiles[2][1].surface = "water";
@@ -94,32 +94,7 @@ export default function init(){
 		
 		var updatetime = 0.1;
 		
-		function updateMap(){
-			
-			var x = game.camera.position.x;
-			var z = game.camera.position.z;
-			
-			var refreshCount = 0;
-			
-			for(var blockIndex = 0; blockIndex < game.map.blocks.length; blockIndex++){
-				
-				var offset = game.map.blocks[blockIndex].offset
-				if (offset.x > x - 250 && offset.x < x + 150 && offset.z > z - 250 && offset.z < z + 150){
-					if (!game.map.blocks[blockIndex].visible){
-						game.map.blocks[blockIndex].drawBlock();
-						if (refreshCount === 0) {
-							refreshCount = 0;
-							break
-						}; 
-						refreshCount++;
-					}
-				} else {
-					if (game.map.blocks[blockIndex].visible){
-						game.map.blocks[blockIndex].disposeMeshes();
-					}
-				}
-			}
-		}
+		
 		
 		var dcl = 0;
 
@@ -143,16 +118,13 @@ export default function init(){
 			updateObjects(updatetime);
 			
 			if (game.pipelinechanged){
-				//updatePipeline(updatetime, time);
 				game.pipelinechanged = false;
 			}
 			
-			//updatePipeline1(updatetime, time);
-			
 		}
 		
-		intervalscount.push(setInterval(updateMap, 1000/60));
-		intervalscount.push(setInterval(updateontimer, updatetime*1000));
+		intervalscount.push(setInterval(game.map.updateMap, 1000/60));
+		intervalscount.push(setInterval(updateontimer, updatetime * 1000));
 		
 		game.toggle = false;
 

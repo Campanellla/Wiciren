@@ -8,25 +8,28 @@ export default class ItemMenu extends Component {
 	
 	constructor(){
 		super();
+		
 		this.onMouseDown = this.onMouseDown.bind(this);
+		
+		this.onClose = this.onClose.bind(this)
 		
 		this.offsetx = 0;
 		this.offsety = 0;
 		
-		this.element;
+		this.posx = 100;
+		this.posy = 50;
 		
-		this.posx = 0;
-		this.posy = 0;
-		
-		this.state = {hidden:false, text:''};
+		this.state = 
+		{	
+			hidden:true,
+			text:'',
+			position:{	
+				left:100,
+				top:50
+			}
+		};
 		
 		game.itemMenu = this;
-		
-	}
-	
-	componentDidMount(){
-		
-		this.element =  document.getElementById("ItemMenu");
 		
 	}
 	
@@ -42,8 +45,7 @@ export default class ItemMenu extends Component {
 		if (this.posx > window.innerWidth - 50) this.posx = window.innerWidth - 50;
 		if (this.posy > window.innerHeight - 25) this.posy = window.innerHeight - 25;
 		
-		this.element.style.left = (this.posx) + "px";
-		this.element.style.top = (this.posy) + "px";
+		this.setState({position:{left:this.posx, top:this.posy}});
 	}
 
 	closeDragElement() {
@@ -58,8 +60,8 @@ export default class ItemMenu extends Component {
 		
 		e = e || window.event;
 		
-		this.offsetx = e.clientX - this.element.offsetLeft;
-		this.offsety = e.clientY - this.element.offsetTop;
+		this.offsetx = e.clientX - this.posx;
+		this.offsety = e.clientY - this.posy;
 		
 		document.onmouseup = this.closeDragElement.bind(this);
 		document.onmousemove = this.elementDrag.bind(this);
@@ -74,11 +76,16 @@ export default class ItemMenu extends Component {
 	
 	
 	render(){
-		return(	<div id = 'ItemMenu' hidden = {this.state.hidden} >
+		return(<div id = 'ItemMenu' 
+					hidden = {this.state.hidden} 
+					style = {{
+						left:this.state.position.left, 
+						top:this.state.position.top}}
+				>
 					<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
 						header
 					</div>
-					<button id = 'ItemMenuCloseButton' onClick = {this.onClose.bind(this)}>X</button>
+					<button id = 'ItemMenuCloseButton' onClick = {this.onClose}>X</button>
 					<div id = 'ItemMenuText'>{
 						this.state.text.split('\n').map((item, key) => {
   							return <span key={key}>{item}<br/></span>
