@@ -108,6 +108,12 @@ export class _tank {
 		this.mesh.rotation.y = this.rotationIndex * game.TAU;
 		
 	}
+	destruct(){
+		
+		this.ref.link = undefined;
+		this.mesh.dispose();
+		
+	}
 	
 	
 	

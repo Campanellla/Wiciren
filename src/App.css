@@ -1,5 +1,13 @@
 
 
+#ItemMenuCloseButton{
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  
+  border:none;
+}
+
 canvas{
   position: fixed;
   outline: none;

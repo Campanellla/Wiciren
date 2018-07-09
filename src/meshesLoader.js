@@ -149,6 +149,7 @@ export function loadMeshes(scene){
 		var meshes = newMeshes;
 		game.meshes.device = meshes[0];
 		game.meshes.device.setEnabled(false);
-	});
+	}); 
+	
 	
 }

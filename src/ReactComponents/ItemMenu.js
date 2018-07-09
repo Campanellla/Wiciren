@@ -18,6 +18,10 @@ export default class ItemMenu extends Component {
 		this.posx = 0;
 		this.posy = 0;
 		
+		this.state = {hidden:false, text:''};
+		
+		game.itemMenu = this;
+		
 	}
 	
 	componentDidMount(){
@@ -64,11 +68,22 @@ export default class ItemMenu extends Component {
 		
 	}
 	
+	onClose(){
+		this.setState({hidden:true});
+	}
+	
 	
 	render(){
-		return(	<div id = 'ItemMenu' hidden >
-					<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>header</div>
-					<div id = 'ItemMenuText'/>
+		return(	<div id = 'ItemMenu' hidden = {this.state.hidden} >
+					<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
+						header
+					</div>
+					<button id = 'ItemMenuCloseButton' onClick = {this.onClose.bind(this)}>X</button>
+					<div id = 'ItemMenuText'>{
+						this.state.text.split('\n').map((item, key) => {
+  							return <span key={key}>{item}<br/></span>
+						})
+					}</div>
 				</div> );
 	}
 	

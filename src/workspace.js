@@ -20,6 +20,9 @@ export class GameWorkspace {
 		
 		this.map = undefined;
 		
+		this.itemMenu = undefined;
+		
+		
 		this.blocklist = [];
 		this.objectlist = [];
 		this.blocklength = 25;
@@ -53,18 +56,17 @@ export class GameWorkspace {
 	}
 	
 	drawMenu(text){
+		if (!this.itemMenu) return
 		
-		var itemMenu = document.getElementById("ItemMenu");
-		var itemMenuText = document.getElementById("ItemMenuText");
-		itemMenuText.innerText = text;
-		itemMenu.hidden = false;
+		this.itemMenu.setState({hidden:false, text:text });
 		this.itemMenuDrawn = true;
 		
 	}
 	
 	hideMenu(){
-		var itemMenu = document.getElementById("ItemMenu");
-		itemMenu.hidden = true;
+		if (!this.itemMenu) return
+		
+		this.itemMenu.setState({hidden:true});
 		this.itemMenuDrawn = false;
 	}
 	
@@ -75,13 +77,6 @@ export class GameWorkspace {
 	}
 	
 }
-
-
-
-
-
-
-
 
 
 
@@ -100,73 +95,61 @@ export function unBlockSelection(){
 
 export function save(items){
 	
-	var retstring = '';
+	var objects = [];
 	
-	for(var i = 0; i < items.length; i++){
+	//// save objects
+	
+	items.forEach((item)=>{
 		
-		var string = '';
-		
-		var a = [];
-		var ai = 0;
-		
-		if (items[i].link === undefined){
+		if (item.link !== undefined){
 			
-		} else {
-			var b = items[i].link.save()
-			a[ai++] = b;
-		
-			var aa = a.join();
-			string += '{'+aa+'}';
+			objects.push(item.link.save());
 			
-			retstring += '' + string + ',';
-		};
-
-	}
+		}
+		
+	});
 	
-	let scr = {camera: {position: game.camera.position, rotation: game.camera.rotation}};
+	let saveObject = {
+						objects:objects, 
+						camera:{position: game.camera.position, rotation: game.camera.rotation}
+					};
 	
-	return '[' + retstring + JSON.stringify(scr) + ']';
+	return JSON.stringify(saveObject);
 }
+
+
+
 
 
 export function load(data){
 
-	game.map.objectlist = [];
-	game.pipelinechanged = true;
+	game.map.clearObjects();
+	//game.pipelinechanged = true;
 
-	if(data !== null || data !== undefined){
-		
-		/*
-		for(var i = 0; i < data.length; i++){
-			for(var ii = 0; ii < data[i].length; ii++){
-				//game.blocklist[i][ii] = new blockObject({surface:data[i][ii].surface});
-			}
-		}
-		*/
-		
-		for(var i = 0; i < data.length; i++){
+	if(data){
+		if (data.objects){
 			
-			if (data[i].object){
+			data.objects.forEach((object)=>{
 				
-				if (data[i].object !== "undefined"){
-				
-					game.itemConstructor.loadObject(data[i].object);
-				
-				}
-			} else if (data[i].camera){
-				
-				if (data[i].camera !== "undefined"){
+				if (object !== "undefined"){
 					
-					game.camera.position.x = data[i].camera.position.x;
-					game.camera.position.y = data[i].camera.position.y;
-					game.camera.position.z = data[i].camera.position.z;
-					
-					game.camera.rotation.x = data[i].camera.rotation.x;
-					game.camera.rotation.y = data[i].camera.rotation.y;
-					game.camera.rotation.z = data[i].camera.rotation.z;
+					game.itemConstructor.loadObject(object);
 					
 				}
-			}
+				
+			});
+		}
+		
+		if (data.camera){
+			
+			game.camera.position.x = data.camera.position.x;
+			game.camera.position.y = data.camera.position.y;
+			game.camera.position.z = data.camera.position.z;
+			
+			game.camera.rotation.x = data.camera.rotation.x;
+			game.camera.rotation.y = data.camera.rotation.y;
+			game.camera.rotation.z = data.camera.rotation.z;
+			
 		}
 	}
 }

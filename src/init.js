@@ -105,7 +105,7 @@ export default function init(){
 				
 				var offset = game.map.blocks[blockIndex].offset
 				if (offset.x > x - 250 && offset.x < x + 150 && offset.z > z - 250 && offset.z < z + 150){
-					if (game.map.blocks[blockIndex].visible === false){
+					if (!game.map.blocks[blockIndex].visible){
 						game.map.blocks[blockIndex].drawBlock();
 						if (refreshCount === 0) {
 							refreshCount = 0;
@@ -114,7 +114,7 @@ export default function init(){
 						refreshCount++;
 					}
 				} else {
-					if (game.map.blocks[blockIndex].visible === true){
+					if (game.map.blocks[blockIndex].visible){
 						game.map.blocks[blockIndex].disposeMeshes();
 					}
 				}

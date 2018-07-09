@@ -17,7 +17,7 @@ export class _pipe {
 		
 		if (args){
 			
-			if (args.key) this.key = args.key; else this.key = -1;
+			if (args.key !== undefined) this.key = args.key; else this.key = -1;
 			if (args.location) this.location = args.location; else this.location = {};
 			
 			this.rotationIndex = args.rotationIndex || 0;
@@ -40,16 +40,16 @@ export class _pipe {
 	}
 
 	save(){
-		var str = '"object":'+JSON.stringify(
+		var str = 
 			{
 				type: 		this.type,
 				subtype: 	this.subtype,
 				location: 	this.location,
 				volume: 	this.volume,
-				flipped: 	this.flipped,
 				pressure:	this.pressure,
 				rotationIndex: 	this.rotationIndex
-			});
+			};
+		
 		return str;
 	}
 	
@@ -128,6 +128,13 @@ export class _pipe {
 		this.mesh.position.x = this.location.x + offsetx;
 		this.mesh.position.z = this.location.z + offsetz;
 		this.mesh.rotation.y = this.rotationIndex * game.TAU;
+		
+	}
+	
+	destruct(){
+		
+		this.ref.link = undefined;
+		this.mesh.dispose();
 		
 	}
 	

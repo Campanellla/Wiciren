@@ -42,7 +42,7 @@ export class InterfaceView extends Component {
 	render() {
 		return (
 			<div id = 'InterfaceView'>
-			{this.state.items.map((item) => {return item }) }
+				{this.state.items.map((item) => {return item }) }
 			</div>
 			);
 	}

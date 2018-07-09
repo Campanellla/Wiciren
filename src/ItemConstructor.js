@@ -22,14 +22,6 @@ export class ItemConstructor {
 		this.constructorMesh = undefined;
 		this.keynum = 0;
 		
-		this.constructorList = {
-			pump:this.makePump,
-			pipe:this.makePipe,
-			tank:this.makeTank,
-			engine:this.makeEngine,
-			device:this.makeDevice
-		}
-		
 		this.constructorItemList = {
 			
 			pump:{item: _pump, subtype: ''},
@@ -136,7 +128,7 @@ export class ItemConstructor {
 				}
 				
 			} else {
-				console.log(this.constructorList[object.type] + ' ' +object.type);
+				//console.log(this.constructorList[object.type] + ' ' +object.type);
 			}
 		}
 	}

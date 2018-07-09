@@ -210,18 +210,15 @@ export class Map {
 				if (block){
 					
 					if (block.tiles[x-block.offset.x][z-block.offset.z].object) {
-						console.log("item contains: ");
-						console.log(block.tiles[x-block.offset.x][z-block.offset.z].object);
+						//console.log("item contains: ");
+						//console.log(block.tiles[x-block.offset.x][z-block.offset.z].object);
 					} else {
 						tiles.push(block.tiles[x-block.offset.x + w][z-block.offset.z + h]);
-						console.log('x: ' + (x-block.offset.x + w) + ' y: ' + (z-block.offset.z + h));
+						//console.log('x: ' + (x-block.offset.x + w) + ' y: ' + (z-block.offset.z + h));
 					}
 					
 				}
-				
-				
 			}
-			
 		}
 		
 		tiles.forEach((tile) => {tile.object = item.ref});
@@ -238,6 +235,18 @@ export class Map {
 			}
 		}
 		return null
+	}
+	
+	clearObjects(){
+		
+		this.objectsList.forEach((object)=>{
+			
+			object.link.destruct();
+			
+		});
+		
+		this.objectsList = [];
+		
 	}
 	
 	
