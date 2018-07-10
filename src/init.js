@@ -11,22 +11,20 @@ import {onMouseMoveEvent, onMouseClickEvent, onMouseClickReleaseEvent, onDoubleC
 
 import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
 
-import {_character, Selection} from './prototypes.js';
+import {Selection} from './Selection.js';
 
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
 
 import {updateObjects, updatePipeline, updatePipeline1} from './updates.js';
 
 
-import ItemMenu from './ReactComponents/ItemMenu.js';
-import SelectionView from './ReactComponents/SelectionView.js';
-import ConfigMenu from './ReactComponents/ConfigMenu.js';
+
 
 import {createMap, load, save, setCanvasSize, showAxis} from './workspace.js';
 
 import {loadMeshes} from './meshesLoader.js';
 
-import {Map} from './Map.js'
+import {GameMap} from './Map.js'
 
 
 
@@ -44,20 +42,7 @@ export default function init(){
 	var canvas = document.getElementById('canvas');
 	canvas.style.cursor = "pointer";
 	
-	game.InterfaceView.appendItem(<div id= 'header'></div>);
-	game.InterfaceView.appendItem(<div id= 'indtext'></div>);
-	game.InterfaceView.appendItem(<div id= 'timetext'></div>);
-	game.InterfaceView.appendItem(<div id= 'eventtext'></div>);
-	game.InterfaceView.appendItem(<div id= 'fpstext'></div>);
-	
-	game.InterfaceView.appendItem(<SelectionView/>);
-	game.InterfaceView.appendItem(<ConfigMenu />);
-	
-	game.InterfaceView.appendItem(<div id = 'configmenuwindow' hidden/>);
-	
-	game.InterfaceView.appendItem(<ItemMenu />);
-	
-	
+
 	
 	if (BABYLON.Engine.isSupported()) {
 		
@@ -70,7 +55,7 @@ export default function init(){
 		canvas.focus();
 		
 		/// --- create and draw ground --- ///
-		game.map = new Map(100, 10, game.scene);
+		game.map = new GameMap(100, 10, game.scene);
 		
 		/// --- make small lake --- ///
 		game.map.blocks[0].tiles[1][1].surface = "water";
@@ -100,7 +85,6 @@ export default function init(){
 
 		function updateontimer() {
 			
-			updatemouse();
 			time += updatetime;
 			document.getElementById('timetext').innerText = time.toFixed(1) + ' s,'
 			document.getElementById('timetext').innerText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
@@ -110,10 +94,10 @@ export default function init(){
 			document.getElementById('timetext').innerText += " bb: " + dcl.toFixed(3);
 			dcl = (game.scninst.frameTimeCounter.current + dcl * 25)/26 ;
 			
-			document.getElementById("fpstext").innerText = engine.getFps().toFixed() + " fps";
+			game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
 			
 			} catch(e){
-				
+				errorOneTime(e, 1000)
 			}
 			updateObjects(updatetime);
 			
@@ -148,56 +132,27 @@ export default function init(){
 	
 }
 
-
-var currentMouseLocation = {x:0, y:0};
-
-function updatemouse(){
-
-	var view = document.getElementById('View');
-
-	var x = currentMouseLocation.x;
-	var y = currentMouseLocation.y;
-
-	var block = document.getElementById('block');
-
-	var blocklength = 25;
-
-	var blockx = Math.round((x - x % blocklength)/blocklength);
-	var blocky = Math.round((y - y % blocklength)/blocklength);
-
-	var etext = '';
-	etext += 'X: ' + blockx + ' Y: ' + blocky;
-
-	try {
+export function ErrorOneTime(){
+	
+	var time = 500;
+	
+	var timeout = false;
+	
+	return function(text, timer){
 		
-	if (game.blocklist[blockx] !== undefined ){
-		if (game.blocklist[blockx][blocky].object !== undefined ){
-			etext += ' '+game.blocklist[blockx][blocky].object.type;
-			if (game.blocklist[blockx][blocky].object.volume !== undefined){
-				etext += " volume: " + game.blocklist[blockx][blocky].object.volume.toFixed(1);
-			}
-			if (game.blocklist[blockx][blocky].object.pressure !== undefined){
-				etext += " pressure: " + game.blocklist[blockx][blocky].object.pressure.toFixed(2);
-			}
-			if (game.blocklist[blockx][blocky].object.Q !== undefined){
-				etext += " Q: " + game.blocklist[blockx][blocky].object.Q.toFixed(4);
-			}
-			if (game.blocklist[blockx][blocky].object.Qmax !== undefined){
-				etext += " Qmax: " + game.blocklist[blockx][blocky].object.Qmax.toFixed(4);
-			}
-			if (game.blocklist[blockx][blocky].object.key !== undefined){
-				etext += " key: " + game.blocklist[blockx][blocky].object.key;
-			}
+		if (!timeout){
+			
+			console.log('%c'+text, 'color:red');
+			timeout = true;
+			setTimeout(() => {timeout = false}, timer || time);
 		}
+		
 	}
-
-	} catch(err) {
-		console.log("ERROR: "+ err );
-		console.log(blockx +" "+ blocky);
-	}
-
-	document.getElementById('eventtext').innerText = etext;
+	
 }
+
+var errorOneTime = ErrorOneTime();
+
 
 
 var createScene = function (engine, canvas){	

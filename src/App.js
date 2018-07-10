@@ -32,7 +32,7 @@ class App extends Component {
 					height = {window.innerHeight * game.config.canvasMultiplier}
 				> CANVAS element not supported! </canvas>
 
-				<InterfaceView/>
+				{game.interface.View};
 
 			</div>
 

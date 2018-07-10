@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom';
 import {game} from '../App.js';
 
 
-export class InterfaceView extends Component {
+export default class InterfaceView extends Component {
 	
 	constructor(){
 		super();
 		
-		game.InterfaceView = this;
+		game.interface.view = this;
 		
 		this.items = [];
 		this.state = {
@@ -20,6 +20,13 @@ export class InterfaceView extends Component {
 		this.prependItem = this.prependItem.bind(this);
 		
 	}
+	
+	componentDidMount(){
+		
+		game.interface.mount();
+		
+	}
+	
 	
 	appendItem(a) {
 		

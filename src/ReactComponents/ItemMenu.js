@@ -83,7 +83,7 @@ export default class ItemMenu extends Component {
 						top:this.state.position.top}}
 				>
 					<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
-						header
+						Item menu
 					</div>
 					<button id = 'ItemMenuCloseButton' onClick = {this.onClose}>X</button>
 					<div id = 'ItemMenuText'>{

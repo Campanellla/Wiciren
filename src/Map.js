@@ -5,7 +5,7 @@ import * as BABYLON from 'babylonjs';
 
 /// map with constructions
 
-export class Map {
+export class GameMap {
 	
 	constructor(blockHeight, initBlocksHeight, scene){
 		

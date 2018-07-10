@@ -47,12 +47,12 @@ export class ItemConstructor {
 			this.activeConstructorSize = this.constructorItemList[this.activeConstructor].item.prototype.getSize();
 			
 			game.selection.setMesh(this.constructorMesh, this.activeConstructorSize);
+			game.selection.setRotation(this.rotationIndex);
 			
 			this.constructorMesh.material = game.materials.ycolor;
 			this.constructorMesh.visibility = 0.5;
 			this.constructorMesh.isPickable = false;
 			
-			this.constructorMesh.rotation.y = this.rotationIndex * game.TAU;
 			
 		}
 		
@@ -127,9 +127,7 @@ export class ItemConstructor {
 					
 				}
 				
-			} else {
-				//console.log(this.constructorList[object.type] + ' ' +object.type);
-			}
+			} 
 		}
 	}
 	

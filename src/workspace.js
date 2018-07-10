@@ -7,6 +7,9 @@ import * as BABYLON from 'babylonjs';
 
 import {ItemConstructor} from './ItemConstructor.js';
 
+import {InterfaceView} from './ReactComponents/InterfaceView.js';
+
+import Interface from './Interface.js'
 
 export class GameWorkspace {
 	
@@ -35,6 +38,8 @@ export class GameWorkspace {
 		
 		this.itemConstructor = new ItemConstructor();
 		
+		this.interface = new Interface();
+		
 		this.config = {
 			
 			wheelSensubility:0.04,
@@ -52,6 +57,7 @@ export class GameWorkspace {
 		this.TAU = Math.PI / 2;
 		this.PI2 = Math.PI * 2;
 		this.PI  = Math.PI;
+		
 		
 		
 		

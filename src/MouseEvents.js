@@ -1,96 +1,38 @@
-
-
-//import * as BABYLON from 'babylonjs';
-
 import {game} from './App.js';
+
 
 
 
 export function onMouseMoveEvent(evt){
 	
-	var pickResult = this.pick(this.pointerX*game.config.canvasMultiplier, this.pointerY*game.config.canvasMultiplier);
+	var pickResult = picker(this);
 	
-	if (pickResult.hit) {
+	if (pickResult) if (pickResult.hit) {
 		
-		var selection;
-		
-		var offsetx = 0;
-		var offsetz = 0;
-		
-		var position = {x:0, y:0.05, z:0};
-		
-		this.itemSize = {w:1, h:1};
-		
-		if (game.itemConstructor.activeConstructor) {
+		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.type === 'water' || pickResult.pickedMesh.isObject){
 			
-			position.y = 0;
+			let position = {x:0, y:0.01, z:0};
 			
-			game.selection.setRotation(game.itemConstructor.rotationIndex);
-			
-		} else {
-			
-			position.y = 0.1;
-			
-		}
-	
-		var x,y,z;
-	
-	
-		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.type === 'water'){
-			
-			x = Math.floor(pickResult.pickedPoint.x);
-			z = Math.floor(pickResult.pickedPoint.z);
-			y = 0 
-			
-			position.x = x + offsetx;
-			position.y += y;
-			position.z = z + offsetz;
+			position.x = Math.floor(pickResult.pickedPoint.x);
+			position.z = Math.floor(pickResult.pickedPoint.z);
 			
 			game.selection.setPosition(position);
-			if (game.itemConstructor.activeConstructor) game.itemConstructor.checkConstructor(x, z);
 			
-			//console.log(x + ' '+ y + ' '+z);
+			if (game.itemConstructor.activeConstructor) game.itemConstructor.checkConstructor(position.x, position.z);
+			if (game.itemConstructor.continuousConstruction) game.itemConstructor.constructActiveObject();
 			
-		} else if(pickResult.pickedMesh.type === 'selection'){
-			
-		} else if(pickResult.pickedMesh.isObject){
-			
-			x = Math.floor(pickResult.pickedPoint.x);
-			z = Math.floor(pickResult.pickedPoint.z);
-			y = 0 
-			
-			position.x = x + offsetx;
-			position.y += y;
-			position.z = z + offsetz;
-			
-			game.selection.setPosition(position);
-			if (game.itemConstructor.activeConstructor) game.itemConstructor.checkConstructor(x, z);
-			
-		}else {
-			position.x = -100;
-			position.y = -100;
-			position.z = -100;
 		}
 		
-		if (game.itemConstructor.continuousConstruction){
-			game.itemConstructor.constructActiveObject();
-		}
+		return
 		
-		
-		
-	} else {
-		/*
-		selection.position.x = -100;
-		selection.position.y = -100;
-		selection.position.z = -100;
-		*/
 	}
+		
+	game.selection.setInvisible();
+		
 }
 
 
 export function onMouseClickEvent(evt) {
-	
-	console.log(this)
 	
 	var button;
 	
@@ -99,71 +41,50 @@ export function onMouseClickEvent(evt) {
 		case 2: button = "right"; break;
 	};
 	
-	console.time("pickResult");
-	var pickResult = this.pick(this.pointerX * game.config.canvasMultiplier, this.pointerY * game.config.canvasMultiplier);
-	console.timeEnd("pickResult");
+	var pickResult = picker(this);
 	
-	var impact = {position:{}};
-	
-	if (pickResult.hit) {
+	if (pickResult) if (pickResult.hit) {
 		
 		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.isObject){
-		
-			//var box = new BABYLON.Mesh('pipe', this, null, game.abc)
-			//box.type = 'pipe';
 			
+			let position = {x:0, y:0.01, z:0};
 			
+			position.x = Math.floor(pickResult.pickedPoint.x);
+			position.z = Math.floor(pickResult.pickedPoint.z);
 			
-			var x = Math.floor(pickResult.pickedPoint.x);
-			var z = Math.floor(pickResult.pickedPoint.z);
-			var y = 0;
+			let x = position.x; 
+			let z = position.z;
 			
-			console.log(x + ' ' + y + ' ' + z);
+			let itemFromPick = undefined;
 			
-    		impact.position.x = pickResult.pickedPoint.x;
-    		impact.position.y = pickResult.pickedPoint.y;
-    		impact.position.z = pickResult.pickedPoint.z;
-    		
-    		//// ----- create
-
-			var blockx = x; 
-			var blocky = z;
-
-			try{
-
-				document.getElementById('eventtext').innerText = 'X: ' + blockx + ' Y: ' + blocky;
-
-				console.log(game.map.getItemFromCoord(blockx, blocky))
-
-				if (!game.map.getItemFromCoord(blockx, blocky)){
+			if(pickResult.pickedMesh.item) itemFromPick = pickResult.pickedMesh.item.link;
+			if (itemFromPick){
 				
-					game.pipelinechanged = true;
-
-					game.itemConstructor.constructActiveObject();
-					game.itemConstructor.continuousConstruction = true;
-					
-				} else if (game.actionSelected === 'remove' || button === "right"){
-					
-					game.itemConstructor.deleteObject([blockx, blocky]);
-					game.hideMenu();
-					
-				}
-				
-			} catch(e){
-				console.log(e)
+				//console.log("I picked item:", itemFromPick);
 			}
 			
-			//// ----- create
+			let itemFromPosition = game.map.getItemFromCoord(x, z);
 			
+			if (itemFromPosition){
+				
+				//console.log("I found item:", itemFromPosition);
+				
+			} else {
+				
+				game.itemConstructor.constructActiveObject();
+				game.itemConstructor.continuousConstruction = true;
+				
+			} 
 			
-			
-		} else {
-			
+			if (game.actionSelected === 'remove' || button === "right"){
+				
+				game.itemConstructor.deleteObject([x, z]);
+				game.hideMenu();
+				
+			}
 		}
-		
 	}
-	
-};
+}
 
 
 export function onMouseClickReleaseEvent(evt){
@@ -174,33 +95,83 @@ export function onMouseClickReleaseEvent(evt){
 
 export function onDoubleClick(evt){
 	
-	console.log("onDoubleClick")
+	var pickResult = picker(this);
 	
-	var pickResult = this.pick(this.pointerX * game.config.canvasMultiplier, this.pointerY * game.config.canvasMultiplier);
-	
-	if (pickResult.hit) {
+	if (pickResult) if (pickResult.hit) {
 		
-		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.isObject){
+		let pickedMesh = pickResult.pickedMesh;
+		if (pickedMesh.type === 'ground' || pickedMesh.isObject){
 			
-			game.hideMenu();
+			let foundItem = false;
 			
-			if (pickResult.pickedMesh.isObject){
-				if (pickResult.pickedMesh.item){
-					if (pickResult.pickedMesh.item.link){
-						
-						var text = 	'type: ' + pickResult.pickedMesh.item.link.type + 
-									', \nkey: ' + pickResult.pickedMesh.item.link.key + 
-									', \npowr: ' + pickResult.pickedMesh.item.link.power +
-									', \npos x:' + pickResult.pickedMesh.position.x + ' z: ' + pickResult.pickedMesh.position.z;
-						
-						game.drawMenu(text);
-						
-					}
+			if (pickedMesh.isObject && pickedMesh.item) if (pickedMesh.item.link) {
+			
+				foundItem = true;
+			
+				var text = 	'type: ' + pickResult.pickedMesh.item.link.type + 
+							', \nkey: ' + pickResult.pickedMesh.item.link.key + 
+							', \npowr: ' + pickResult.pickedMesh.item.link.power +
+							', \npos x:' + pickResult.pickedMesh.position.x + ' z: ' + pickResult.pickedMesh.position.z;
+				
+				game.drawMenu(text);
+				
+			}
+			
+			if (!foundItem){
+				
+				let x = Math.floor(pickResult.pickedPoint.x);
+				let z = Math.floor(pickResult.pickedPoint.z);
+				
+				let itemFromPosition = game.map.getItemFromCoord(x, z);
+				
+				if (itemFromPosition){
+					
+					foundItem = true;
+					
+					var text = 	'type: ' + itemFromPosition.type + 
+							', \nkey: ' + itemFromPosition.key + 
+							', \npowr: ' + itemFromPosition.power +
+							', \npos x:' + itemFromPosition.mesh.position.x + ' z: ' + itemFromPosition.mesh.position.z;
+				
+					game.drawMenu(text);
+					
 				}
 			}
+			
+			if (!foundItem) game.hideMenu();
 		}
 	}
 }
+
+function Picker(){
+	
+	var time = 1000/60>>>0;
+	
+	var timeout = false;
+	var result = null;
+	
+	var counter1 = 0;
+	var counter2 = 0;
+	
+	return function(_this){
+		counter1++
+		if (!timeout){
+			counter2++
+			timeout = true;
+			result = _this.pick(_this.pointerX * game.config.canvasMultiplier, _this.pointerY * game.config.canvasMultiplier);
+			setTimeout(() => { timeout=false }, time);
+			
+		}
+		//console.log(counter1 + ' ' + counter2);
+		return result;
+}	}
+
+var picker = Picker();
+
+
+
+
+
 
 
 
