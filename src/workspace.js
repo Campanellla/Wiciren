@@ -7,8 +7,6 @@ import * as BABYLON from 'babylonjs';
 
 import {ItemConstructor} from './ItemConstructor.js';
 
-import {InterfaceView} from './ReactComponents/InterfaceView.js';
-
 import Interface from './Interface.js'
 
 export class GameWorkspace {
@@ -59,8 +57,6 @@ export class GameWorkspace {
 		this.PI  = Math.PI;
 		
 		
-		
-		
 		this.engine = undefined;
 		this.canvas = undefined;
 		this.map = undefined;
@@ -68,11 +64,32 @@ export class GameWorkspace {
 		
 	}
 	
-	drawMenu(text){
+	drawMenu(link){
 		if (!this.itemMenu) return
 		
-		this.itemMenu.setState({hidden:false, text:text });
+		let text = 	'type: ' + link.link.type + 
+					', \nkey: ' + link.link.key + 
+					', \npowr: ' + link.link.power +
+					', \nvolume: ' + link.link.volume +
+					', \npos x:' + link.link.mesh.position.x + ' z: ' + link.link.mesh.position.z;
+		
+		this.itemMenu.setState({hidden:false, text:text, item:link });
 		this.itemMenuDrawn = true;
+		
+	}
+	
+	updateMenu(){
+		if (!this.itemMenu) return
+			
+		let link = this.itemMenu.state.item;
+			
+		let text = 	'type: ' + link.link.type + 
+					', \nkey: ' + link.link.key + 
+					', \npowr: ' + link.link.power +
+					', \nvolume: ' + link.link.volume +
+					', \npos x:' + link.link.mesh.position.x + ' z: ' + link.link.mesh.position.z;
+		
+		this.itemMenu.setState({text:text});
 		
 	}
 	

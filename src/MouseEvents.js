@@ -107,13 +107,8 @@ export function onDoubleClick(evt){
 			if (pickedMesh.isObject && pickedMesh.item) if (pickedMesh.item.link) {
 			
 				foundItem = true;
-			
-				var text = 	'type: ' + pickResult.pickedMesh.item.link.type + 
-							', \nkey: ' + pickResult.pickedMesh.item.link.key + 
-							', \npowr: ' + pickResult.pickedMesh.item.link.power +
-							', \npos x:' + pickResult.pickedMesh.position.x + ' z: ' + pickResult.pickedMesh.position.z;
 				
-				game.drawMenu(text);
+				game.drawMenu(pickResult.pickedMesh.item);
 				
 			}
 			
@@ -128,12 +123,7 @@ export function onDoubleClick(evt){
 					
 					foundItem = true;
 					
-					var text = 	'type: ' + itemFromPosition.type + 
-							', \nkey: ' + itemFromPosition.key + 
-							', \npowr: ' + itemFromPosition.power +
-							', \npos x:' + itemFromPosition.mesh.position.x + ' z: ' + itemFromPosition.mesh.position.z;
-				
-					game.drawMenu(text);
+					game.drawMenu(itemFromPosition.ref);
 					
 				}
 			}

@@ -18,7 +18,7 @@ export var game = new GameWorkspace();
 class App extends Component {
 
 	componentDidMount() {
-		init()
+		init();
 	}
 
 	render() {

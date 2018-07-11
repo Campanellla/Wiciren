@@ -23,6 +23,7 @@ export default class ItemMenu extends Component {
 		{	
 			hidden:true,
 			text:'',
+			item:null,
 			position:{	
 				left:100,
 				top:50
@@ -91,7 +92,48 @@ export default class ItemMenu extends Component {
   							return <span key={key}>{item}<br/></span>
 						})
 					}</div>
+					<ItemConfig item = {this.state.item} />
+					
+					
 				</div> );
 	}
 	
 }
+
+class ItemConfig extends Component {
+	
+	constructor(props){
+		
+		super(props);
+		this.textInput = React.createRef();
+	}
+	
+	onclick(){
+		
+		let num = Number(this.textInput.current.value);
+		
+		if(this.props.item) 
+			if(this.props.item.link) 
+				if (this.props.item.link.volume !== undefined && !isNaN(num)) {
+					this.props.item.link.volume = num;
+					game.updateMenu();
+				}
+	}
+	
+	render(){
+		
+		return(
+			<div>
+				<button onClick = {this.onclick.bind(this)}> set vol </button>	
+				<input type = "text" ref={this.textInput}/>
+			</div>
+			)
+		
+	}
+	
+	
+}
+
+
+
+

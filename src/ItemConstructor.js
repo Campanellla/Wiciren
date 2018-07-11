@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import {game} from './App.js';
 
 import * as BABYLON from 'babylonjs';

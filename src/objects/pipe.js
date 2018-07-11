@@ -75,29 +75,31 @@ export class _pipe {
 		
 		subtype = subtype || this.subtype;
 		
+		var mesh;
+		
 		if (subtype === "3-way"){
 			if (instance){
-				var mesh = game.meshes.pipe3.createInstance('index: ' + this.keynum);
+				mesh = game.meshes.pipe3.createInstance('index: ' + this.keynum);
 			} else {
-				var mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe3);
+				mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe3);
 			}
 		} else if (subtype === "4-way"){
 			if (instance){
-				var mesh = game.meshes.pipe4.createInstance('index: ' + this.keynum);
+				mesh = game.meshes.pipe4.createInstance('index: ' + this.keynum);
 			} else {
-				var mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe4);
+				mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe4);
 			}
 		} else if (subtype === "angle") {
 			if (instance){
-				var mesh = game.meshes.pipeA.createInstance('index: ' + this.keynum);
+				mesh = game.meshes.pipeA.createInstance('index: ' + this.keynum);
 			} else {
-				var mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipeA);
+				mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipeA);
 			}
 		} else {
 			if (instance){
-				var mesh = game.meshes.pipe.createInstance('index: ' + this.keynum);
+				mesh = game.meshes.pipe.createInstance('index: ' + this.keynum);
 			} else {
-				var mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe);
+				mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.pipe);
 			}
 		}
 		
