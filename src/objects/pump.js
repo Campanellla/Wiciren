@@ -38,6 +38,8 @@ export class _pump {
 			this.destination = args.destination;
 		}
 		
+		this.checked = false;
+		
 	}
 
 	update(dt){

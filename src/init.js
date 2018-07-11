@@ -93,11 +93,13 @@ export default function init(){
 			try{
 				
 				timeText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
-				timeText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);
+				//timeText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);
 				timeText += " bb: " + dcl.toFixed(3);
-			
+				
 				game.interface.timeText.setState({text:timeText});
-			
+				
+				game.interface.drawCallsLabel.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
+				
 				dcl = (game.scninst.frameTimeCounter.current + dcl * 10)/11 ;
 			
 				game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});

@@ -32,6 +32,9 @@ export class _tank {
 		this.received = [];
 		this.return = [];
 		
+		
+		this.checked = false;
+		
 	}
 
 	update(){

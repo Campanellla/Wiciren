@@ -6,10 +6,10 @@ import {game} from '../App.js';
 
 export default class InterfaceView extends Component {
 	
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		
-		game.interface.view = this;
+		this.props.link.view = this;
 		
 		this.items = [];
 		this.state = {

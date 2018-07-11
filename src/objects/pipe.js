@@ -18,7 +18,7 @@ export class _pipe {
 		if (args){
 			
 			if (args.key !== undefined) this.key = args.key; else this.key = -1;
-			if (args.location) this.location = args.location; else this.location = {};
+			this.location = args.location || {};
 			
 			this.rotationIndex = args.rotationIndex || 0;
 			this.pressure = args.pressure || 0;
@@ -31,6 +31,13 @@ export class _pipe {
 		this.lastQ = 0;
 		this.Q = 0;
 		
+		this.checked = false;
+		
+		this.links = [];
+		
+		this.offsetx = 0;
+		this.offsetz = 0;
+		
 	}
 	
 	update(dt){
@@ -38,6 +45,94 @@ export class _pipe {
 		
 		
 	}
+	
+	updateLinks(){
+		
+		this.checked = false;
+		
+		this.links.length = 0;
+		
+		let a, b, c, d;
+		
+		let x = this.location.x //- this.offsetx;
+		let z = this.location.z //- this.offsetz;
+		
+		if (this.subtype === "pipe"){
+			
+			if (!this.rotationIndex % 2){
+				
+				a = game.map.getItemFromCoord(x-1, z);
+				b = game.map.getItemFromCoord(x+1, z);
+				
+			} else {
+				
+				a = game.map.getItemFromCoord(x, z-1);
+				b = game.map.getItemFromCoord(x, z+1);
+				
+			}
+		} else if (this.subtype === "3-way"){
+			
+			if (this.rotationIndex === 0){
+				
+				a = game.map.getItemFromCoord(x-1, z);
+				b = game.map.getItemFromCoord(x+1, z);
+				c = game.map.getItemFromCoord(x, z-1);
+				
+			} else if (this.rotationIndex === 1){
+				
+				a = game.map.getItemFromCoord(x-1, z);
+				b = game.map.getItemFromCoord(x, z-1);
+				c = game.map.getItemFromCoord(x, z+1);
+				
+			} else if (this.rotationIndex === 2){
+				
+				a = game.map.getItemFromCoord(x-1, z);
+				b = game.map.getItemFromCoord(x+1, z);
+				c = game.map.getItemFromCoord(x, z+1);
+				
+			} else if (this.rotationIndex === 3){
+				
+				a = game.map.getItemFromCoord(x+1, z);
+				b = game.map.getItemFromCoord(x, z-1);
+				c = game.map.getItemFromCoord(x, z+1);
+			}
+		} else if (this.subtype === "4-way"){
+			
+			a = game.map.getItemFromCoord(x+1, z);
+			b = game.map.getItemFromCoord(x, z-1);
+			c = game.map.getItemFromCoord(x, z+1);
+			d = game.map.getItemFromCoord(x-1, z);
+			
+		} else if (this.subtype === "angle"){
+			
+			if (this.rotationIndex === 0){
+				
+				a = game.map.getItemFromCoord(x , z-1);
+				b = game.map.getItemFromCoord(x-1 , z);
+				
+			} else if (this.rotationIndex === 1){
+				
+				a = game.map.getItemFromCoord(x-1 , z);
+				b = game.map.getItemFromCoord(x , z+1);
+				
+			} else if (this.rotationIndex === 2){
+				
+				a = game.map.getItemFromCoord(x+1 , z);
+				b = game.map.getItemFromCoord(x , z+1);
+				
+			} else if (this.rotationIndex === 3){
+				
+				a = game.map.getItemFromCoord(x+1 , z);
+				b = game.map.getItemFromCoord(x , z-1);	
+			}
+		}
+		
+		if (a) this.links.push(a.ref);
+		if (b) this.links.push(b.ref);
+		if (c) this.links.push(c.ref);
+		if (d) this.links.push(d.ref);
+	}
+	
 
 	save(){
 		var str = 
@@ -126,6 +221,9 @@ export class _pipe {
 			case(3): offsetx = this.itemSize.h; break;
 			
 		};
+		
+		this.offsetx = offsetx;
+		this.offsetz = offsetz;
 		
 		this.mesh.position.x = this.location.x + offsetx;
 		this.mesh.position.z = this.location.z + offsetz;

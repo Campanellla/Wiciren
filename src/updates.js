@@ -8,6 +8,7 @@ export function updateObjects(dtime){
 	game.pipelist = [];
 	
 	game.map.objectsList.forEach(function(object){
+		if (!object.link) return
 		object.link.update(dtime);
 	});
 	
@@ -137,7 +138,7 @@ class JunctionNode {
 		 	}
 		}
 		
-		if (item.return[0]!== undefined){
+		if (item.return[0] !== undefined){
 			for (var i = 0; i < item.return.length; i++){
 				returned += item.return[i].Q;
 			}

@@ -4,7 +4,7 @@ import {game} from '../App.js';
 
 
 
-export default class FpsLabel extends Component {
+export class FpsLabel extends Component {
 	
 	constructor(props){
 		
@@ -21,4 +21,19 @@ export default class FpsLabel extends Component {
 	
 }
 
-
+export class DrawCallsLabel extends Component {
+	
+	constructor(props){
+		
+		super(props);
+		
+		this.state = {text:''};
+		this.props.link.drawCallsLabel = this;
+		
+	}
+	
+	render(){
+		return <div id= 'drawCallsLabel'>{this.state.text}</div>;
+	}
+	
+}

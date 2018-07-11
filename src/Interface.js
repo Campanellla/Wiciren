@@ -5,7 +5,7 @@ import InterfaceView from './ReactComponents/InterfaceView.js';
 import ItemMenu from './ReactComponents/ItemMenu.js';
 import SelectionView from './ReactComponents/SelectionView.js';
 import ConfigMenu from './ReactComponents/ConfigMenu.js';
-import FpsLabel from './ReactComponents/FpsLabel.js';
+import {FpsLabel, DrawCallsLabel} from './ReactComponents/FpsLabel.js';
 import {TimeText} from './ReactComponents/Labels.js';
 
 
@@ -14,7 +14,7 @@ export default class Interface {
 	
 	constructor(){
 		
-		this.View = <InterfaceView/>;
+		this.View = <InterfaceView link = {this}/>;
 		
 		this.view = null;
 		
@@ -26,6 +26,7 @@ export default class Interface {
 	mount(){
 		
 		this.view.appendItem(<TimeText link = {this}/>);
+		this.view.appendItem(<DrawCallsLabel link = {this}/>);
 		//this.view.appendItem(<div id= 'eventtext'></div>);
 		
 		this.view.appendItem(<FpsLabel/>);

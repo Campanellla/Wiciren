@@ -72,7 +72,7 @@ export class GameWorkspace {
 					', \nkey: ' + link.link.key + 
 					', \npowr: ' + link.link.power +
 					', \nvolume: ' + link.link.volume +
-					', \npos x:' + link.link.mesh.position.x + ' z: ' + link.link.mesh.position.z;
+					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
 		
 		this.itemMenu.setState({hidden:false, text:text, item:link });
 		this.itemMenuDrawn = true;
@@ -88,7 +88,7 @@ export class GameWorkspace {
 					', \nkey: ' + link.link.key + 
 					', \npowr: ' + link.link.power +
 					', \nvolume: ' + link.link.volume +
-					', \npos x:' + link.link.mesh.position.x + ' z: ' + link.link.mesh.position.z;
+					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
 		
 		this.itemMenu.setState({text:text});
 		
