@@ -101,6 +101,9 @@ export class ItemConstructor {
 						game.map.objectsList.push(item.ref);
 						
 					}
+					/////////////////////////////
+					game.updatePipelines = true;
+					
 				}
 			}
 		}
@@ -124,7 +127,8 @@ export class ItemConstructor {
 					game.map.objectsList.push(item.ref);
 					
 				}
-				
+				//////////
+				game.updatePipelines = true;
 			} 
 		}
 	}
@@ -136,11 +140,9 @@ export class ItemConstructor {
 		
 		if (item){
 			
-			item.mesh.dispose();
-			item.mesh = undefined;
+			item.destruct();
 			
-			item.ref.link = undefined;
-			
+			game.updatePipelines = true;
 		}
 		
 	}

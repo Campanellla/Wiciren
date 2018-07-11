@@ -7,7 +7,9 @@ import * as BABYLON from 'babylonjs';
 
 import {ItemConstructor} from './ItemConstructor.js';
 
-import Interface from './Interface.js'
+import Interface from './Interface.js';
+import Pipelines from './Pipelines.js';
+
 
 export class GameWorkspace {
 	
@@ -23,14 +25,9 @@ export class GameWorkspace {
 		
 		this.itemMenu = undefined;
 		
+		this.updatePipelines = false;
+		this.pipelines = new Pipelines();
 		
-		this.blocklist = [];
-		this.objectlist = [];
-		this.blocklength = 25;
-		this.objectRenderList = [];
-		this.pipelist = [];
-		this.pipeconn = [];
-		this.keynum = 1;
 		
 		this.itemMenuDrawn = false;
 		
@@ -60,6 +57,10 @@ export class GameWorkspace {
 		this.engine = undefined;
 		this.canvas = undefined;
 		this.map = undefined;
+		
+		
+		document.save = save.bind(this);
+		document.load = load.bind(this);
 		
 		
 	}
@@ -146,7 +147,6 @@ export function save(items){
 	
 	return JSON.stringify(saveObject);
 }
-
 
 
 

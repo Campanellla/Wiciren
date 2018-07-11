@@ -53,7 +53,7 @@ export class _pipe {
 		return str;
 	}
 	
-	
+	/// arg bool -> true if need to draw instance only
 	draw(instance){
 		
 		var mesh = this.drawMesh(instance);

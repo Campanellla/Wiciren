@@ -69,6 +69,7 @@ export default function init(){
 		
 		game.map.blocks[0].updateBlock();
 		
+		
 		assignEvents(game);
 
 		//--- tick functions ---//
@@ -86,24 +87,26 @@ export default function init(){
 		function updateontimer() {
 			
 			time += updatetime;
-			document.getElementById('timetext').innerText = time.toFixed(1) + ' s,'
-			document.getElementById('timetext').innerText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
-			try{
-			//document.getElementById('timetext').innerText += ' g: ' + game.timestamp1.toFixed(1) + ' a: ' + game.timestamp2.toFixed(1)
-			document.getElementById('timetext').innerText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);
-			document.getElementById('timetext').innerText += " bb: " + dcl.toFixed(3);
-			dcl = (game.scninst.frameTimeCounter.current + dcl * 25)/26 ;
 			
-			game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
+			let timeText = time.toFixed(1) + ' s,';
+			
+			try{
+				
+				timeText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
+				timeText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);
+				timeText += " bb: " + dcl.toFixed(3);
+			
+				game.interface.timeText.setState({text:timeText});
+			
+				dcl = (game.scninst.frameTimeCounter.current + dcl * 10)/11 ;
+			
+				game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
 			
 			} catch(e){
 				errorOneTime(e, 1000)
 			}
-			updateObjects(updatetime);
 			
-			if (game.pipelinechanged){
-				game.pipelinechanged = false;
-			}
+			updateObjects(updatetime);
 			
 		}
 		

@@ -1,14 +1,28 @@
 import {game} from './App.js';
 
 
+
+
 export function updateObjects(dtime){
 	
 	game.pipelist = [];
 	
-	game.objectlist.forEach(function(object){
-		object.update(dtime);
+	game.map.objectsList.forEach(function(object){
+		object.link.update(dtime);
 	});
+	
+	if (game.updatePipelines){
+		
+		game.updatePipelines = false;
+		game.pipelines.rebuild();
+				
+	}
+			
+	game.pipelines.update();
+	
 };
+
+
 
 
 class Pipeline {
