@@ -98,7 +98,7 @@ export class ItemConstructor {
 						
 						item.draw(true);
 						game.map.insertItem(item, object.location.x, object.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
-						game.map.objectsList.push(item.ref);
+						game.map.objectsList.push(item.pointer);
 						
 					}
 					/////////////////////////////
@@ -124,7 +124,7 @@ export class ItemConstructor {
 					
 					item.draw(true);
 					game.map.insertItem(item, object.location.x, object.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
-					game.map.objectsList.push(item.ref);
+					game.map.objectsList.push(item.pointer);
 					
 				}
 				//////////

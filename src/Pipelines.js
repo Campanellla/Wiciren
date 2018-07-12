@@ -6,7 +6,7 @@ export default class Pipelines {
 	constructor(){
 		
 		this.list = [];
-		this.pipeItems = [];
+		this.pipeList = [];
 		
 		//console.log("Pipelines class constructed");
 		
@@ -14,23 +14,41 @@ export default class Pipelines {
 	
 	rebuild(){
 		
-		this.pipeItems = game.map.objectsList.filter((object)=>{
-			if (object.link.type === "pipe" 
-				|| object.link.type === "tank" 
-				|| object.link.type === "pump"){
+		/// get pipe, pump, etc to list
+		
+		this.pipeList = game.map.objectsList.filter((pointer)=>{
+			if (!pointer.link) return false
+			if (pointer.link.type === "pipe" 
+				|| pointer.link.type === "tank" 
+				|| pointer.link.type === "pump"){
 				return true;
 			};
 		});
 		
-		this.pipeItems.forEach((object) => {
-			object.link.updateLinks()
+		this.pipeList.forEach((pointer) => { pointer.link.updateLinks() });
+		
+		/// remove connection if it only from one side and check if item is node
+		
+		this.pipeList.forEach((pointer) => {
 			
-			console.log(object.link.links);
+			let currentitem = pointer.link;
 			
+			pointer.link.connections = pointer.link.connections.filter((pointer) => {
+				
+				return pointer.link.connections.find((pointer) => {return (pointer.link === currentitem)});
+				
+			});
+			
+			if (pointer.link.type === "pipe" && pointer.link.connections > 2) {
+				
+				pointer.link.isNode = true;
+				
+			}
 		});
 		
-		//buildPipeline(this.pipeItems, this.list);
+		//this.pipeList.forEach(p => console.log(getType(p)))
 		
+		buildPipeline(this.pipeList, this.list);
 		
 		console.log("rebuilt: ", this);
 		
@@ -43,10 +61,6 @@ export default class Pipelines {
 	}
 	
 }
-
-
-
-
 
 
 	/*
@@ -84,7 +98,39 @@ export default class Pipelines {
 	
 	*/
 
-export function buildPipeline(pipelist, pipelines){
+
+function getType(item){
+	
+	if (!item) return undefined;
+	if (item.link) item = item.link;
+	
+	if(item.type === "pipe"){
+		if (item.connections.length > 2 || item.isNode){
+			return "node";
+		} else {
+			return "pipe";
+		}
+	} else {
+		
+		return item.type
+	}
+	
+}
+	
+
+function buildPipeline(pipelist, pipelines){
+	
+	if (!pipelist){
+		console.log("error:", pipelist);
+		return
+	} else if(!pipelist[0]){
+		console.log("error:", pipelist);
+		return
+	}
+	
+	
+	/*
+	
 	
 	var currentitem = pipelist[0].link;
 	
@@ -95,6 +141,8 @@ export function buildPipeline(pipelist, pipelines){
 	
 	var a = collectWing(currentitem);
 	
+	//console.log(a);
+	
 	if (a.node !== undefined){
 		
 		nodelist.push(a.node);
@@ -104,6 +152,7 @@ export function buildPipeline(pipelist, pipelines){
 	if (nodestack[nodestackid] !== undefined){
 		nodestack[nodestackid].wingsides.push(a.wing);
 	}
+	
 	winglist.push(a.wing);	
 	
 	var loopcount = 0;
@@ -114,8 +163,10 @@ export function buildPipeline(pipelist, pipelines){
 		
 		var b = undefined;
 		
-		nodestack[nodestackid].sides.forEach(function(item){
-			if (!item.link.inserted) {
+		//console.log(nodestack[nodestackid])
+		
+		if (nodestack[nodestackid]) nodestack[nodestackid].links.forEach(function(item){
+			if (!item.link.checked) {
 				b = item.link;
 			} 
 		})
@@ -153,7 +204,11 @@ export function buildPipeline(pipelist, pipelines){
 	}
 	
 	pipelines.push(new Pipeline(winglist, nodelist));
-
+	
+	console.log(winglist, nodelist)
+	
+	/*
+	
 	///   set levels for pipes and nodes /////
 	
 	var pipeline = pipelines[0];
@@ -205,7 +260,7 @@ export function buildPipeline(pipelist, pipelines){
 	console.log(numcounter)
 	
 	pipeline.maxlevel = 1;
-	
+	*/
 }
 
 
@@ -482,6 +537,9 @@ class Wing {
 	}
 	
 	pushnode(node){
+		
+		node.links = node.baseitem.links;
+		
 		this.push(node);
 		this.nodes.push(node);
 	}
@@ -880,7 +938,7 @@ function collectWing(item, enternode){
 	
 	while(step){
 		
-		if (item !== undefined && !item.inserted){
+		if (item !== undefined && (!item.checked || item.links.length > 2)){
 			
 			if (item.type === 'pump'){
 				
@@ -895,8 +953,8 @@ function collectWing(item, enternode){
 					pipecollection = new Array();
 				}
 				
-				if (item.destination !== undefined){
-					if (item.destination.object.inserted === true){
+				if (item.links[1]){
+					if (item.links[1].link.object.checked === true){
 						if(wing.items.length > 0){
 							item.destvector = wing.items[wing.items.length-1];
 						}
@@ -906,10 +964,10 @@ function collectWing(item, enternode){
 				}
 				
 				wing.push(item);
-				item.inserted = true;
-				nextitem = item.destination.object.link;
+				item.checked = true;
+				nextitem = item.links[1].object.link;
 				
-			} else if (item.type === 'bottle'){
+			} else if (item.type === 'tank'){
 				
 				if (pipecollection.length > 0){
 					wing.push(new CombinedPipe(pipecollection));
@@ -929,7 +987,7 @@ function collectWing(item, enternode){
 					setdestvector = undefined;
 				}
 				
-				item.inserted = true;
+				item.checked = true;
 				nextitem = undefined;
 				step = false;
 				
@@ -937,18 +995,17 @@ function collectWing(item, enternode){
 				
 			} else if (item.type === 'pipe'){
 				
-				if (item.sides.length === 2 ){
+				if (item.links.length === 2 ){
 					
 					pipecollection.push(item);
-					item.inserted = true;
-					if (!item.sides[0].inserted){
-						nextitem = item.sides[0];
+					item.checked = true;
+					if (!item.links[0].link.checked){
+						nextitem = item.links[0].link;
 					} else {
-						nextitem = item.sides[1];
+						nextitem = item.links[1].link;
 					}
 					
-				} else if (item.sides.length > 2){
-					
+				} else if (item.links.length > 2){
 					
 					if (pipecollection.length > 0){
 						
@@ -960,6 +1017,7 @@ function collectWing(item, enternode){
 						}
 						pipecollection = new Array();
 					}
+					
 					node = new JunctionNode(item)
 					
 					if (setdestvector !== undefined){
@@ -968,20 +1026,20 @@ function collectWing(item, enternode){
 					}
 					
 					wing.pushnode(node);
-					item.inserted = true;
+					item.checked = true;
 					
 					step = false;
 					
-				} else if (item.sides.length = 1){
+				} else if (item.links.length === 1){
 					
-					if (!item.sides[0].inserted){
+					if (!item.links[0].link.checked){
 						
-						nextitem = item.sides[0];
+						nextitem = item.links[0].link;
 						pipecollection.push(item);
-						item.inserted = true;
+						item.checked = true;
 						
 					}else{
-						item.inserted = true;
+						item.checked = true;
 						
 						wing.push(item)
 						
@@ -997,18 +1055,21 @@ function collectWing(item, enternode){
 			
 		} else {
 			step = false;
+			
 		}
 		
 		item = nextitem;
 		
 		count++;
-		if (count > 1000){
+		if (count > 10){
 			step = false ;
+			console.log("forced finish");
 			throw " limit exceeded at collectWing "
 		}
 	}
 	
 	
+	//console.log({wing:wing, node:node})
 	
 	return {wing:wing, node:node};
 	

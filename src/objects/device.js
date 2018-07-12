@@ -5,7 +5,7 @@ export class _device {
 	
 	constructor(args){
 		
-		this.ref = {link:this};
+		this.pointer = {link:this};
 		this.type = "device";
 		
 		this.itemSize = this.getSize();
@@ -44,7 +44,7 @@ export class _device {
 		
 		this.mesh = mesh;
 		
-		mesh.item = this.ref;
+		mesh.item = this.pointer;
 		mesh.type = this.type;
 		mesh.isObject = true;
 		
@@ -91,7 +91,7 @@ export class _device {
 	}
 	destruct(){
 		
-		this.ref.link = undefined;
+		this.pointer.link = undefined;
 		this.mesh.dispose();
 		
 	}

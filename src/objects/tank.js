@@ -5,7 +5,7 @@ export class _tank {
 
 	constructor(args){
 		
-		this.ref = {link:this};
+		this.pointer = {link:this};
 		this.type = "tank";
 		
 		this.itemSize = this.getSize();
@@ -34,17 +34,48 @@ export class _tank {
 		
 		
 		this.checked = false;
+		this.connections = [];
 		
 	}
 
 	update(){
-		game.pipelist.push(this);
-		this.pressure = this.volume/1000;
-		this.destinationList = [];
-		this.sourceList = [];
-		this.inserted = false;
-
+		
+		
+		
 	}
+	
+	updateLinks(){
+		
+		this.checked = false;
+		
+		this.connections.length = 0;
+		
+		let a;
+		
+		let x = this.location.x;
+		let z = this.location.z;
+		
+		if (this.rotationIndex === 0){
+				
+			a = game.map.getItemFromCoord(x+1, z);
+			
+		} else if (this.rotationIndex === 1){
+			
+			a = game.map.getItemFromCoord(x, z-1);
+			
+		} else if (this.rotationIndex === 2){
+				
+			a = game.map.getItemFromCoord(x-1, z);
+			
+		} else {
+			
+			a = game.map.getItemFromCoord(x, z+1);
+		}
+		
+		if (a) this.connections.push(a.pointer);
+		
+	}
+	
 
 	save(){
 		var str = '"object":'+JSON.stringify(
@@ -66,7 +97,7 @@ export class _tank {
 		
 		this.mesh = mesh;
 		
-		mesh.item = this.ref;
+		mesh.item = this.pointer;
 		mesh.type = this.type;
 		mesh.isObject = true;
 		
@@ -113,7 +144,7 @@ export class _tank {
 	}
 	destruct(){
 		
-		this.ref.link = undefined;
+		this.pointer.link = undefined;
 		this.mesh.dispose();
 		
 	}

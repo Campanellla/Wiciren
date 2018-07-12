@@ -5,7 +5,7 @@ export class _pipe {
 	
 	constructor(args){
 		
-		this.ref = {link:this};
+		this.pointer = {link:this};
 		this.type = "pipe";
 		
 		this.subtype = args.subtype || "pipe";
@@ -32,11 +32,10 @@ export class _pipe {
 		this.Q = 0;
 		
 		this.checked = false;
+		this.inserted = false;
+		this.connections = [];
 		
-		this.links = [];
-		
-		this.offsetx = 0;
-		this.offsetz = 0;
+		this.isNode = false;
 		
 	}
 	
@@ -50,12 +49,14 @@ export class _pipe {
 		
 		this.checked = false;
 		
-		this.links.length = 0;
+		this.connections.length = 0;
+		
+		this.isNode = false;
 		
 		let a, b, c, d;
 		
-		let x = this.location.x //- this.offsetx;
-		let z = this.location.z //- this.offsetz;
+		let x = this.location.x;
+		let z = this.location.z;
 		
 		if (this.subtype === "pipe"){
 			
@@ -127,10 +128,10 @@ export class _pipe {
 			}
 		}
 		
-		if (a) this.links.push(a.ref);
-		if (b) this.links.push(b.ref);
-		if (c) this.links.push(c.ref);
-		if (d) this.links.push(d.ref);
+		if (a) this.connections.push(a.pointer);
+		if (b) this.connections.push(b.pointer);
+		if (c) this.connections.push(c.pointer);
+		if (d) this.connections.push(d.pointer);
 	}
 	
 
@@ -155,7 +156,7 @@ export class _pipe {
 		
 		this.mesh = mesh;
 		
-		mesh.item = this.ref;
+		mesh.item = this.pointer;
 		mesh.type = this.type;
 		mesh.isObject = true;
 		
@@ -222,9 +223,6 @@ export class _pipe {
 			
 		};
 		
-		this.offsetx = offsetx;
-		this.offsetz = offsetz;
-		
 		this.mesh.position.x = this.location.x + offsetx;
 		this.mesh.position.z = this.location.z + offsetz;
 		this.mesh.rotation.y = this.rotationIndex * game.TAU;
@@ -233,7 +231,7 @@ export class _pipe {
 	
 	destruct(){
 		
-		this.ref.link = undefined;
+		this.pointer.link = undefined;
 		this.mesh.dispose();
 		
 	}

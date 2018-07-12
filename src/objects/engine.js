@@ -5,7 +5,7 @@ export class _engine {
 	
 	constructor(args){
 		
-		this.ref = {link:this};
+		this.pointer = {link:this};
 		this.type = "engine";
 		
 		this.itemSize = this.getSize();
@@ -47,7 +47,7 @@ export class _engine {
 		
 		this.mesh = mesh;
 		
-		mesh.item = this.ref;
+		mesh.item = this.pointer;
 		mesh.type = this.type;
 		mesh.isObject = true;
 		
@@ -94,7 +94,7 @@ export class _engine {
 	}
 	destruct(){
 		
-		this.ref.link = undefined;
+		this.pointer.link = undefined;
 		this.mesh.dispose();
 		
 	}

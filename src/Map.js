@@ -83,7 +83,7 @@ export class GameMap {
 						
 		}	}	}	}
 		
-		tiles.forEach((tile) => {tile.object = item.ref});
+		tiles.forEach((tile) => {tile.object = item.pointer});
 		
 	}
 	
