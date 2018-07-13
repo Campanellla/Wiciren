@@ -14,6 +14,10 @@ export default class Pipelines {
 	
 	rebuild(){
 		
+		this.list.length = 0;
+		
+		console.time("rebuild");
+		
 		/// get pipe, pump, etc to list
 		
 		this.pipeList = game.map.objectsList.filter((pointer)=>{
@@ -44,13 +48,17 @@ export default class Pipelines {
 				pointer.link.isNode = true;
 				
 			}
+			
+			let result = buildPipeline(pointer);
+			
+			if (result) this.list.push(result);
+			
 		});
 		
-		//this.pipeList.forEach(p => console.log(getType(p)))
 		
-		buildPipeline(this.pipeList, this.list);
+		console.timeEnd("rebuild");
 		
-		console.log("rebuilt: ", this);
+		console.log("rebuilt: ", this.list);
 		
 	}
 	
@@ -98,6 +106,56 @@ export default class Pipelines {
 	
 	*/
 
+class CombinedPipe {
+	
+	constructor(list){
+		
+		this.pointer = {link:this};
+		this.type = "combpipe";
+		
+		this.list = list;
+		this.connections = [undefined, undefined];
+		
+		this.connections[0] = this.list[0].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
+	
+		if (this.connections[0]){
+		
+			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
+				return getType(pointer.link) !== "pipe" && pointer.link !== this.connections[0].link;	
+			});
+			
+		} else {
+			
+			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
+		}
+			
+		this.keys = '';
+		list.forEach((pointer) => {this.keys += ' ' + pointer.link.key.toString()});
+	}
+}
+
+
+class Node {
+	
+	constructor(item){
+		
+		this.pointer = {link:this};
+		this.type = "node";
+		
+		this.connections = [];
+		this.inserted = false;
+		
+		this.item = item;
+		
+		this.key = item.key;
+		
+		item.inserted = true;
+	}
+	
+	
+}
+
+
 
 function getType(item){
 	
@@ -116,151 +174,150 @@ function getType(item){
 	}
 	
 }
-	
 
-function buildPipeline(pipelist, pipelines){
+function collectPipe(pipe) {
 	
-	if (!pipelist){
-		console.log("error:", pipelist);
-		return
-	} else if(!pipelist[0]){
-		console.log("error:", pipelist);
-		return
-	}
+	if (getType(pipe) !== 'pipe') return null;
+	if (pipe.inserted) return null;
 	
+	var pointerStack = []
+	var pointerStackId = 0;
 	
-	/*
+	var currentitem;
+	var prevItem;
 	
+	var reversed = false;
 	
-	var currentitem = pipelist[0].link;
+	pointerStack.push(pipe.pointer);
+	pipe.inserted = true;
 	
-	var nodelist = [];
-	var nodestack = [];
-	var nodestackid = 0;
-	var winglist = [];
-	
-	var a = collectWing(currentitem);
-	
-	//console.log(a);
-	
-	if (a.node !== undefined){
+	while(pointerStackId < pointerStack.length) {
 		
-		nodelist.push(a.node);
-		nodestack.push(a.node);			
-	}
-	
-	if (nodestack[nodestackid] !== undefined){
-		nodestack[nodestackid].wingsides.push(a.wing);
-	}
-	
-	winglist.push(a.wing);	
-	
-	var loopcount = 0;
-	
-	var step = true;
-	
-	while (step){
+		currentitem = pointerStack[pointerStackId].link;
 		
-		var b = undefined;
-		
-		//console.log(nodestack[nodestackid])
-		
-		if (nodestack[nodestackid]) nodestack[nodestackid].links.forEach(function(item){
-			if (!item.link.checked) {
-				b = item.link;
-			} 
-		})
-		
-		if (b !== undefined){
+		let nextItem = currentitem.connections.find((pointer) =>{
 			
-			currentitem = b;
-			var a = collectWing(currentitem, nodestack[nodestackid]);
+			let item = pointer.link;
 			
-			//console.log(a);
-			
-			if (nodestack[nodestackid] !== undefined){
-				nodestack[nodestackid].wingsides.push(a.wing);
-			}
-			
-			if (a.node !== undefined){
-				a.node.wingsides.push(a.wing);
-				nodelist.push(a.node);
-				nodestack.push(a.node);
-				
-			}
-
-			winglist.push(a.wing);	
-			
-		} else {
-			
-			nodestackid++;
-			
-		}
-		
-		loopcount++;
-		if(nodestack[nodestackid] === undefined ||  loopcount > 100){
-			step = false;
-		}
-	}
-	
-	pipelines.push(new Pipeline(winglist, nodelist));
-	
-	console.log(winglist, nodelist)
-	
-	/*
-	
-	///   set levels for pipes and nodes /////
-	
-	var pipeline = pipelines[0];
-	var numcounter = 0;
-	
-	pipeline.wings.forEach(function(wing){
-		
-		if(wing.nodes.length < 2){
-			wing.level = 0;
-			numcounter++;
-		};
-		
-	});
-	
-	pipeline.nodes.forEach(function(node){
-		
-		var num = 0;
-		var sum = 0;
-		var haslevel0 = false;
-		
-		node.wingsides.forEach(function(wing){
-			num++;
-			if (wing.level !== undefined){
-				haslevel0 = true;
-				sum += wing.level;
-			} else {
-				sum += sum/num + 1;
-			}
+			return !item.inserted && getType(item) === "pipe";
 		});
 		
-		if (haslevel0 && num !== 0){
-			node.level = sum / num;
+		if (nextItem){
+			
+			reversed = false;
+			pointerStack.push(nextItem);
+			nextItem.link.inserted = true;
+			
+		} else if (!reversed) {
+			
+			reversed = true
+			pointerStack.reverse();
+			pointerStackId--;
+			
 		}
 		
-	});
+		pointerStackId++;
+		if (pointerStackId>1000) throw "collectpipe loop overflow";
+	}
 	
-	pipeline.wings.forEach(function(wing){
+	return new CombinedPipe(pointerStack);
+}
+
+
+	
+
+function buildPipeline(pointer){
+	
+	if (!pointer){
+		console.log("error:", pointer);
+		return
+	}
+	
+	if (pointer.link.inserted) return null;
+	
+	var nodes = [];
+	var pointerStack = [];
+	var pointerStackId = 0;
+	var resultStack = [];
+	var currentitem;
+	var currentPointer;
+	
+	pointerStack.push(pointer);
+	
+	
+	while(pointerStackId < pointerStack.length) {
 		
-		if(wing.level === undefined){
-			wing.level = 1;
-			numcounter++;
-		};
+		currentitem = pointerStack[pointerStackId].link;
 		
-	});
+		let a = getType(currentitem);
+		
+		if (a === "pipe" && !currentitem.inserted){
+			
+			let result = collectPipe(currentitem);
+			
+			if (result){ 
+				resultStack.push(result.pointer);
+				result.inserted = true;
+				
+				let filter = result.connections.filter((pointer) => {	
+					if (pointer) return !pointer.link.inserted; else return false;
+				});
+				
+				if (filter) filter.forEach(pointer => pointerStack.push(pointer));
+			}
+			
+		} else if (a === "node" && !currentitem.inserted){
+			
+			let node = new Node(currentitem)
+			
+			resultStack.push(node.pointer);
+			
+			node.inserted = true;
+			
+			let filter = currentitem.connections.filter((pointer) => {	
+				if (pointer) return !pointer.link.inserted; else return false;
+			});
+			
+			if (filter) filter.forEach(pointer => pointerStack.push(pointer));
+			
+		} else if ((a === "pump" || a === "tank") && !currentitem.inserted){
+			
+			resultStack.push(currentitem.pointer);
+			
+			currentitem.inserted = true;
+			
+			let filter = currentitem.connections.filter((pointer) => {	
+				if (pointer) return !pointer.link.inserted; else return false;
+			});
+			
+			if (filter) filter.forEach(pointer => pointerStack.push(pointer));
+			
+		}
+		
+		
+		pointerStackId++;
+		if (pointerStackId>1000) throw "buildPipeline loop overflow";
+		
+	}
 	
-	pipeline.wings.sort((a, b) => a.level - b.level);
-	pipeline.nodes.sort((a, b) => a.level - b.level);
+	//console.clear();
 	
-	console.log(numcounter)
-	
-	pipeline.maxlevel = 1;
+	/*
+	resultStack.forEach((pointer) => {
+		
+		if (pointer.link.type === "combpipe") {
+			console.log("combpipe: " + pointer.link.keys, pointer.link);
+			return
+		}
+		
+		console.log(pointer.link.type + ' ' + pointer.link.key, pointer.link);
+		
+	})
 	*/
+	//console.log(resultStack);
+	
+	return resultStack
+	
 }
 
 
@@ -377,6 +434,7 @@ class Pipeline {
 class JunctionNode {
 	
 	constructor(item){
+		
 		this.baseitem = item;
 		this.sides = item.sides;
 		this.wingsides = [];
@@ -804,7 +862,7 @@ class Wing {
 }
 
 
-class CombinedPipe {
+class CombinedPipe1 {
 	
 	constructor(pipes){
 		this.pipes = pipes;

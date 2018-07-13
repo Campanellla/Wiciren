@@ -68,6 +68,8 @@ export class GameWorkspace {
 	drawMenu(link){
 		if (!this.itemMenu) return
 		
+		if (!link) {console.log("error", link); return}
+		
 		let text = 	'type: ' + link.link.type + 
 					', \nkey: ' + link.link.key + 
 					', \npowr: ' + link.link.power +

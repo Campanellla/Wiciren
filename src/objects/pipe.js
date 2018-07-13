@@ -1,6 +1,9 @@
 import {game} from '../App.js';
 
 
+
+
+
 export class _pipe {
 	
 	constructor(args){
@@ -45,9 +48,11 @@ export class _pipe {
 		
 	}
 	
+	
 	updateLinks(){
 		
 		this.checked = false;
+		this.inserted = false;
 		
 		this.connections.length = 0;
 		
@@ -58,9 +63,11 @@ export class _pipe {
 		let x = this.location.x;
 		let z = this.location.z;
 		
+		
+		
 		if (this.subtype === "pipe"){
 			
-			if (!this.rotationIndex % 2){
+			if (!(this.rotationIndex % 2)){
 				
 				a = game.map.getItemFromCoord(x-1, z);
 				b = game.map.getItemFromCoord(x+1, z);
@@ -71,6 +78,7 @@ export class _pipe {
 				b = game.map.getItemFromCoord(x, z+1);
 				
 			}
+			
 		} else if (this.subtype === "3-way"){
 			
 			if (this.rotationIndex === 0){

@@ -47,7 +47,7 @@ export class _tank {
 	updateLinks(){
 		
 		this.checked = false;
-		
+		this.inserted = false;
 		this.connections.length = 0;
 		
 		let a;
@@ -78,7 +78,7 @@ export class _tank {
 	
 
 	save(){
-		var str = '"object":'+JSON.stringify(
+		var str = 
 			{
 				type: this.type,
 				location:this.location,
@@ -86,7 +86,7 @@ export class _tank {
 				inflow: this.inflow,
 				reversedflow: this.reversedflow,
 				rotationIndex :this.rotationIndex
-				})
+			}
 		return str;
 	}
 	

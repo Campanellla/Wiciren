@@ -52,7 +52,7 @@ export class _pump {
 	updateLinks(){
 		
 		this.checked = false;
-		
+		this.inserted = false;
 		this.connections.length = 0;
 		
 		let a, b;
@@ -91,12 +91,12 @@ export class _pump {
 	
 
 	save(){
-		var str = '"object":'+JSON.stringify(
-		{
-			type: this.type,
-			location:this.location,
-			rotationIndex: this.rotationIndex
-		})
+		var str = 
+			{
+				type: this.type,
+				location:this.location,
+				rotationIndex: this.rotationIndex
+			}
 		return str;
 	}
 	

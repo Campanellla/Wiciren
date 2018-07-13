@@ -105,11 +105,9 @@ export function onDoubleClick(evt){
 			let foundItem = false;
 			
 			if (pickedMesh.isObject && pickedMesh.item) if (pickedMesh.item.link) {
-			
+				
 				foundItem = true;
-				
 				game.drawMenu(pickResult.pickedMesh.item);
-				
 			}
 			
 			if (!foundItem){
@@ -122,9 +120,7 @@ export function onDoubleClick(evt){
 				if (itemFromPosition){
 					
 					foundItem = true;
-					
-					game.drawMenu(itemFromPosition.ref);
-					
+					game.drawMenu(itemFromPosition.pointer);
 				}
 			}
 			

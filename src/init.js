@@ -135,6 +135,9 @@ export default function init(){
 	};
 	
 	
+	document.temp = game.map.getItemFromCoord.bind(game.map);
+	
+	
 }
 
 export function ErrorOneTime(){
