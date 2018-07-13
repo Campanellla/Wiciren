@@ -74,51 +74,45 @@ class CombinedPipe {
 	
 	constructor(list){
 		
-		this.pointer = {link:this};
+		this.pointer = {link: this};
 		this.type = "combpipe";
 		this.exist = true;
+		
+		this.keys = '';
 		
 		this.list = list; // pointers inside
 		this.connections = [undefined, undefined];
 		
 		this.connections[0] = this.list[0].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
-	
-		if (this.connections[0]){
+		this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
+			return getType(pointer.link) !== "pipe" && pointer !== this.connections[0];
+		});
 		
-			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
-				return getType(pointer.link) !== "pipe" && pointer.link !== this.connections[0].link;	
-			});
+		
+		
+		for (let i = 0; i < this.list.length; i++){
 			
-		} else {
+			let pointer = this.list[i];
 			
-			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
+			this.keys += ' ' + pointer.link.key.toString();
+			this.volume += pointer.link.volume;
+			
 		}
-			
-		this.keys = '';
-		list.forEach((pointer) => {this.keys += ' ' + pointer.link.key.toString()});
-		
-		
-		this.flowResistance = this.list.length / 1000;
-		this.volume = 0;
-		
-		this.list.forEach((pointer) => {this.volume + pointer.link.volume});
-		
 		
 		if (this.connections[0]) {
 			
 			let index = this.connections[0].link.connections.findIndex((pointer) => {return (pointer === this.list[0]);})
-			
 			if (index > -1) this.connections[0].link.connections[index] = this.pointer;
-
 		}
 		if (this.connections[1]) {
 			
 			let index = this.connections[1].link.connections.findIndex((pointer) => {return (pointer === this.list[this.list.length-1]);})
-			
 			if (index > -1) this.connections[1].link.connections[index] = this.pointer;
-
 		}
 		
+		
+		this.flowResistance = this.list.length / 1000;
+		this.volume = 0;
 		
 		this.inflow = [];
 		
@@ -132,18 +126,22 @@ class CombinedPipe {
 		
 		if (!this.list.length) return ;
 		
+		let vmax = this.list.length * 25;
+		
+		this.pressure = this.volume / vmax;
+		
 		this.inflow.forEach((flow)=>{
 			
 			if (flow){
 				
-				if (this.volume + flow.Q < 1000){
+				if (this.volume + flow.Q < vmax){
 					
 					this.volume += flow.Q;
 					
 				} else {
 					
-					let a = 1000 - this.volume;
-					this.volume = 1000;
+					let a = vmax - this.volume;
+					this.volume = vmax;
 					flow.Q -= a;
 					
 					this.returnFlow.push({
@@ -168,12 +166,16 @@ class CombinedPipe {
 			
 			if (this.pressure > item.pressure){
 				
-				console.log(item);
+				if (this.volume > 0){
+					
+					item.inflow.push({
+						Q:(this.pressure - item.pressure)*10,
+						Source: this.pointer
+					})
+					
+					this.volume -= (this.pressure - item.pressure)*10;
+				}
 				
-				item.inflow.push({
-					Q:(this.pressure - item.pressure)/10,
-					Source: this.pointer
-				})
 			}
 		});
 		
@@ -181,6 +183,7 @@ class CombinedPipe {
 		
 		this.list.forEach(pointer => {
 			pointer.link.volume = b;
+			pointer.link.pressure = this.pressure;
 		})
 		
 		this.inflow.length = 0;
@@ -206,17 +209,110 @@ class Node {
 		this.key = item.key;
 		
 		item.inserted = true;
-		
 			
 		this.inflow = [];
 		this.pressure = 0;
 		
+		this.connections = this.itemPointer.link.connections.slice(0);
+		
+		for (let i = 0; i < this.connections.length; i++){
+			
+			let parentPointer = this.connections[i];
+			
+			if (parentPointer){
+				
+				let i = 0;
+			
+				let index = parentPointer.link.connections.forEach((pointer) => {
+				
+					if(pointer.link === this.itemPointer.link){
+						parentPointer.link.connections[i] = this.pointer;
+					}
+				i++
+				});				
+			}
+		}
+		/*
+		this.connections.forEach((parentPointer)=> {
+			
+			if (!parentPointer) return ;
+			
+			let i = 0;
+			
+			let index = parentPointer.link.connections.forEach((pointer) => {
+				
+				if(pointer.link === this.itemPointer.link){
+					parentPointer.link.connections[i] = this.pointer;
+				}
+			i++
+			});
+		});
+		*/
+		
+		
+		this.flowResistance = 0.001
+		this.volume = 0;
+		
+		this.returnFlow = [];
 	}
 	
 	updateFlow(dt){
 		
+		//if (!this.list.length) return ;
 		
+		this.pressure = this.volume / 25;
 		
+		this.inflow.forEach((flow)=>{
+			
+			if (flow){
+				
+				if (this.volume + flow.Q < 25){
+					
+					this.volume += flow.Q;
+					
+				} else {
+					
+					let a = 25 - this.volume;
+					this.volume = 25;
+					flow.Q -= a;
+					
+					this.returnFlow.push({
+						Q:flow.Q,
+						Source: flow.Source
+					});
+				};
+			};
+		});
+		
+		this.returnFlow.forEach((flow) => {
+			flow.Source.link.volume += flow.Q;
+		});
+		
+		this.returnFlow.length = 0;
+		
+		this.connections.forEach((pointer)=>{
+			
+			if (!pointer) return ;
+			
+			let item = pointer.link;
+			
+			if (this.pressure > item.pressure){
+				
+				if (this.volume > 0){
+					
+					item.inflow.push({
+						Q:(this.pressure - item.pressure)*10,
+						Source: this.pointer
+					})
+					
+					this.volume -= (this.pressure - item.pressure)*10;
+				}
+				
+			}
+		});
+		
+		this.itemPointer.link.volume = this.volume;
+		this.itemPointer.link.pressure = this.pressure;
 		
 		this.inflow.length = 0;
 	}

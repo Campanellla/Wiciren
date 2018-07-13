@@ -79,12 +79,20 @@ export class _tank {
 			
 			if (this.pressure > item.pressure){
 				
-				item.inflow.push({
-					Q:(this.pressure - item.pressure)/10,
-					Source: this.pointer
-				})
+				if (this.volume > 0){
+					
+					item.inflow.push({
+						Q:(this.pressure - item.pressure)*10,
+						Source: this.pointer
+					})
+					
+					this.volume -= (this.pressure - item.pressure)*10;
+				}
+				
 			}
 		});
+		
+		this.inflow.length = 0;
 		
 	}
 	
