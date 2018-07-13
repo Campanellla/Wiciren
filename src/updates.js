@@ -19,11 +19,7 @@ export function updateObjects(dtime){
 				
 	}
 	
-	console.time("update pipeline");
-	
 	game.pipelines.update();
-	
-	console.timeEnd("update pipeline");
 	
 };
 

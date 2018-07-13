@@ -246,23 +246,6 @@ class Node {
 				});				
 			}
 		}
-		/*
-		this.connections.forEach((parentPointer)=> {
-			
-			if (!parentPointer) return ;
-			
-			let i = 0;
-			
-			let index = parentPointer.link.connections.forEach((pointer) => {
-				
-				if(pointer.link === this.itemPointer.link){
-					parentPointer.link.connections[i] = this.pointer;
-				}
-			i++
-			});
-		});
-		*/
-		
 		
 		this.flowResistance = 0.001
 		this.volume = 0;
@@ -271,8 +254,6 @@ class Node {
 	}
 	
 	updateFlow(dt){
-		
-		//if (!this.list.length) return ;
 		
 		this.pressure = this.volume / 25;
 		
@@ -309,17 +290,10 @@ class Node {
 			if (!pointer) return ;
 			
 			let item = pointer.link;
-			
-			if (!item) return
 				
 			if (this.pressure > item.pressure){
 				
 				if (this.volume > 0){
-					
-					if (!item.inflow) {
-						console.log("ITEM", item);
-						return
-					}
 					
 					item.inflow.push({
 						Q:(this.pressure - item.pressure)*10,
@@ -328,7 +302,6 @@ class Node {
 					
 					this.volume -= (this.pressure - item.pressure)*10;
 				}
-				
 			}
 		});
 		
@@ -337,8 +310,6 @@ class Node {
 		
 		this.inflow.length = 0;
 	}
-	
-	
 	
 }
 
