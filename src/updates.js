@@ -18,8 +18,12 @@ export function updateObjects(dtime){
 		game.pipelines.rebuild();
 				
 	}
-			
+	
+	console.time("update pipeline");
+	
 	game.pipelines.update();
+	
+	console.timeEnd("update pipeline");
 	
 };
 

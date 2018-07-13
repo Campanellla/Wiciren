@@ -33,11 +33,11 @@ export default class Pipelines {
 		
 		this.pipeList.forEach((pointer) => {
 			
-			let currentitem = pointer.link;
+			let currentitem = pointer;
 			
 			pointer.link.connections = pointer.link.connections.filter((pointer) => {
 				
-				return pointer.link.connections.find((pointer) => {return (pointer.link === currentitem)});
+				return pointer.link.connections.find((pointer) => {return (pointer === currentitem)});
 				
 			});
 			
@@ -84,11 +84,17 @@ class CombinedPipe {
 		this.connections = [undefined, undefined];
 		
 		this.connections[0] = this.list[0].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
-		this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
-			return getType(pointer.link) !== "pipe" && pointer !== this.connections[0];
-		});
 		
 		
+		if(this.list.length === 1) {
+			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
+				return getType(pointer.link) !== "pipe" && pointer !== this.connections[0];
+			}); 
+		} else {
+			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
+				return getType(pointer.link) !== "pipe";
+			}); 
+		}
 		
 		for (let i = 0; i < this.list.length; i++){
 			
@@ -225,6 +231,14 @@ class Node {
 			
 				let index = parentPointer.link.connections.forEach((pointer) => {
 				
+					if (!pointer || !pointer.link) {
+						
+						console.log("removed")
+						
+						parentPointer.link.connections[i] = undefined;
+						return
+					};
+				
 					if(pointer.link === this.itemPointer.link){
 						parentPointer.link.connections[i] = this.pointer;
 					}
@@ -296,9 +310,16 @@ class Node {
 			
 			let item = pointer.link;
 			
+			if (!item) return
+				
 			if (this.pressure > item.pressure){
 				
 				if (this.volume > 0){
+					
+					if (!item.inflow) {
+						console.log("ITEM", item);
+						return
+					}
 					
 					item.inflow.push({
 						Q:(this.pressure - item.pressure)*10,
