@@ -6,6 +6,7 @@ export class _engine {
 	constructor(args){
 		
 		this.pointer = {link:this};
+		this.exist = true;
 		this.type = "engine";
 		
 		this.itemSize = this.getSize();
@@ -93,7 +94,7 @@ export class _engine {
 		
 	}
 	destruct(){
-		
+		this.exist = false;
 		this.pointer.link = undefined;
 		this.mesh.dispose();
 		

@@ -6,6 +6,7 @@ export class _pump {
 	constructor(args){
 		
 		this.pointer = {link:this};
+		this.exist = true;
 		this.type = 'pump';
 		
 		this.itemSize = this.getSize();
@@ -153,7 +154,7 @@ export class _pump {
 		
 	}
 	destruct(){
-		
+		this.exist = false;
 		this.pointer.link = undefined;
 		this.mesh.dispose();
 		

@@ -9,6 +9,8 @@ export class _pipe {
 	constructor(args){
 		
 		this.pointer = {link:this};
+		this.exist = true;
+		
 		this.type = "pipe";
 		
 		this.subtype = args.subtype || "pipe";
@@ -50,7 +52,7 @@ export class _pipe {
 	
 	
 	updateLinks(){
-		
+
 		this.checked = false;
 		this.inserted = false;
 		
@@ -238,7 +240,7 @@ export class _pipe {
 	}
 	
 	destruct(){
-		
+		this.exist = false;
 		this.pointer.link = undefined;
 		this.mesh.dispose();
 		

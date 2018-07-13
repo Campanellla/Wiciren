@@ -19,6 +19,8 @@ export default class InterfaceView extends Component {
 		this.appendItem = this.appendItem.bind(this);
 		this.prependItem = this.prependItem.bind(this);
 		
+		this.key = 0;
+		
 	}
 	
 	componentDidMount(){

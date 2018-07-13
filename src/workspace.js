@@ -71,9 +71,10 @@ export class GameWorkspace {
 		if (!link) {console.log("error", link); return}
 		
 		let text = 	'type: ' + link.link.type + 
-					', \nkey: ' + link.link.key + 
+					', \nkey: ' + link.link.key +
+					', \nvolume: ' + link.link.volume.toFixed(1) +
+					', \npressure: ' + link.link.pressure.toFixed(1)+
 					', \npowr: ' + link.link.power +
-					', \nvolume: ' + link.link.volume +
 					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
 		
 		this.itemMenu.setState({hidden:false, text:text, item:link });
@@ -83,13 +84,17 @@ export class GameWorkspace {
 	
 	updateMenu(){
 		if (!this.itemMenu) return
-			
+		
 		let link = this.itemMenu.state.item;
+	
+		if (!link) return
+		if (!link.link) return
 			
 		let text = 	'type: ' + link.link.type + 
-					', \nkey: ' + link.link.key + 
+					', \nkey: ' + link.link.key +
+					', \nvolume: ' + link.link.volume.toFixed(1) +
+					', \npressure: ' + link.link.pressure.toFixed(1)+
 					', \npowr: ' + link.link.power +
-					', \nvolume: ' + link.link.volume +
 					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
 		
 		this.itemMenu.setState({text:text});

@@ -17,9 +17,6 @@ import {assignEvents, SelectAction, SelectToggle} from './events.js';
 
 import {updateObjects, updatePipeline, updatePipeline1} from './updates.js';
 
-
-
-
 import {createMap, load, save, setCanvasSize, showAxis} from './workspace.js';
 
 import {loadMeshes} from './meshesLoader.js';
@@ -91,6 +88,8 @@ export default function init(){
 			let timeText = time.toFixed(1) + ' s,';
 			
 			try{
+				
+				game.updateMenu();
 				
 				timeText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
 				//timeText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);

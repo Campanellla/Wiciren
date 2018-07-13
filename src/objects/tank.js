@@ -6,6 +6,7 @@ export class _tank {
 	constructor(args){
 		
 		this.pointer = {link:this};
+		this.exist = true;
 		this.type = "tank";
 		
 		this.itemSize = this.getSize();
@@ -24,18 +25,11 @@ export class _tank {
 			
 		}
 		
-		this.lastQ = 0;
-		this.Q = 0;
-		
-		this.input = [];
-		this.output = [];
-		this.received = [];
-		this.return = [];
-		
-		
 		this.checked = false;
-		this.connections = [];
+		this.connections = []; /// pointers inside
 		
+		this.returnFlow = [];
+		this.inflow = [];
 	}
 
 	update(){
@@ -43,6 +37,57 @@ export class _tank {
 		
 		
 	}
+	
+	
+	updateFlow(dt){
+		
+		this.pressure = this.volume / 1000;
+		
+		this.inflow.forEach((flow)=>{
+			
+			if (flow){
+				
+				if (this.volume + flow.Q < 1000){
+					
+					this.volume += flow.Q;
+					
+				} else {
+					
+					let a = 1000 - this.volume;
+					this.volume = 1000;
+					flow.Q -= a;
+					
+					this.returnFlow.push({
+						Q:flow.Q,
+						Source: flow.Source
+					});
+				};
+			};
+		});
+		
+		this.returnFlow.forEach((flow) => {
+			flow.Source.link.volume += flow.Q;
+		});
+		
+		this.returnFlow.length = 0;
+		
+		this.connections.forEach((pointer)=>{
+			
+			if (!pointer) return ;
+			
+			let item = pointer.link;
+			
+			if (this.pressure > item.pressure){
+				
+				item.inflow.push({
+					Q:(this.pressure - item.pressure)/10,
+					Source: this.pointer
+				})
+			}
+		});
+		
+	}
+	
 	
 	updateLinks(){
 		
@@ -144,6 +189,7 @@ export class _tank {
 	}
 	destruct(){
 		
+		this.exist = false;
 		this.pointer.link = undefined;
 		this.mesh.dispose();
 		
