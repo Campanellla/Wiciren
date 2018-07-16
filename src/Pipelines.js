@@ -35,7 +35,11 @@ export default class Pipelines {
 			
 			let currentitem = pointer;
 			
+			if (!currentitem) return;
+			
 			pointer.link.connections = pointer.link.connections.filter((pointer) => {
+				
+				if (!pointer) return ;
 				
 				return pointer.link.connections.find((pointer) => {return (pointer === currentitem)});
 				
@@ -295,12 +299,14 @@ class Node {
 				
 				if (this.volume > 0){
 					
-					item.inflow.push({
-						Q:(this.pressure - item.pressure)*10,
-						Source: this.pointer
-					})
+					if (item.inflow){ ////// attantion
+						item.inflow.push({
+							Q:(this.pressure - item.pressure)*10,
+							Source: this.pointer
+						})
 					
-					this.volume -= (this.pressure - item.pressure)*10;
+						this.volume -= (this.pressure - item.pressure)*10;
+					}
 				}
 			}
 		});

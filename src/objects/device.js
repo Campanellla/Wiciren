@@ -1,100 +1,59 @@
 import {game} from '../App.js';
 
+import {Construction} from './Base.js';
 
-export class _device {
+
+
+export class _device extends Construction {
 	
 	constructor(args){
 		
-		this.pointer = {link:this};
-		this.exist = true;
+		super();
+		
 		this.type = "device";
 		
 		this.itemSize = this.getSize();
 		
-		if (args) {
+		if (!args) args = {};
+		
+		if (args.key) this.key = args.key; else this.key = -1;
+		this.location = args.location || {};
+		this.rotationIndex = args.rotationIndex || 0;
 			
-			if (args.key) this.key = args.key; else this.key = -1;
-			if (args.location) this.location = args.location; else this.location = {};
-			
-			this.rotationIndex = args.rotationIndex || 0;
-			
-		};
 		
 	}
 	
+	
 	update(dt){
-		
-		
 		
 	}
 	
 	save(){
-		var str = '"object":'+JSON.stringify(
+		var str = 
 			{
 				type: this.type,
 				location:this.location,
 				rotationIndex:this.rotationIndex
-			})
+			};
 		return str;
 	}
 	
 	
-	draw(){
+	drawMesh(instance, subtype){
 		
-		var mesh = this.drawMesh();
+		subtype = subtype || this.subtype;
 		
-		this.mesh = mesh;
+		let mesh;
+		let a = game.meshes.device;
 		
-		mesh.item = this.pointer;
-		mesh.type = this.type;
-		mesh.isObject = true;
-		
-		mesh.position.y = 0;
-		
-		this.rotate(this.rotationIndex);
-	}
-	
-	drawMesh(instance){
-		
-		if (instance){
-			var mesh = game.meshes.device.createInstance('index: ' + this.keynum);
-		} else {
-			var mesh = new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, game.meshes.device);
-		}
+		mesh = this.getMesh(a, this.keynum, instance);
 		
 		return mesh;
-		
 	}
 	
 	getSize(){
 		
 		return {h:2, w:2};
-		
-	}
-	
-	rotate(rotationIndex){
-		
-		var offsetx = 0;
-		var offsetz = 0;
-		
-		switch(this.rotationIndex){
-			
-			case(1): offsetz = this.itemSize.w; break;
-			case(2): offsetz = this.itemSize.h; offsetx = this.itemSize.w; break;
-			case(3): offsetx = this.itemSize.h; break;
-			
-		};
-		
-		this.mesh.position.x = this.location.x + offsetx;
-		this.mesh.position.z = this.location.z + offsetz;
-		this.mesh.rotation.y = this.rotationIndex * game.TAU;
-		
-	}
-	destruct(){
-		
-		this.exist = false;
-		this.pointer.link = undefined;
-		this.mesh.dispose();
 		
 	}
 	
