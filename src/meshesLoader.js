@@ -3,8 +3,8 @@ import * as BABYLON from 'babylonjs';
 
 
 export function loadMeshes(scene){
-
-
+	
+	
 	BABYLON.SceneLoader.ImportMesh(["pipe", "pipeM", "pipeS"], "./", "pipe.babylon", scene, function (newMeshes, particleSystems) {
 		var meshes = newMeshes;
 		
@@ -150,6 +150,10 @@ export function loadMeshes(scene){
 		game.meshes.device = meshes[0];
 		game.meshes.device.setEnabled(false);
 	}); 
-	
+	BABYLON.SceneLoader.ImportMesh("arrow", "./", "arrow.babylon", scene, function (newMeshes, particleSystems) {
+		var meshes = newMeshes;
+		game.meshes.arrow = meshes[0];
+		game.meshes.arrow.setEnabled(false);
+	}); 
 	
 }

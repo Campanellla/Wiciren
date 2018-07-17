@@ -74,13 +74,20 @@ export class Selection {
 		}
 		
 		if (mesh){
+				
+			this.activeMesh = mesh;
+			
+			this.activeMesh.isVisible = this.squareMesh.isVisible;
 			
 			this.squareMesh.isVisible = false;
-			this.activeMesh = mesh;
+			this.activeMesh.position = this.squareMesh.position;
+			
 			
 		} else {
 			
 			if (!(this.activeMesh === this.squareMesh)){
+				
+				this.squareMesh.position = this.activeMesh.position;
 				
 				this.activeMesh = this.squareMesh;
 				this.activeMesh.isVisible = true;

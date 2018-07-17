@@ -14,11 +14,7 @@ export class Construction {
 		
 		this.connections = [];
 		
-		
-		
-		//// not used
-		this.checked = false;
-		
+		document.a = this;
 		
 	}
 	
@@ -39,61 +35,108 @@ export class Construction {
 	}
 	
 	
-	updateLinks(){
+	makeArrows(){
 		
-		this.inserted = false;
+		let a = this.getConnectionsCoordinates();
 		
-		this.connections.length = 0;
+		let meshes = [];
 		
-		this.isNode = false;
+		a.forEach((c) => {
+			
+			let mesh = this.getMesh(game.meshes.arrow, '');
+			
+			if (!mesh) return
+			
+			mesh.rotation.y = c.rotationIndex * game.TAU;
+			
+			mesh.material = game.materials.ycolor;
+			mesh.isPickable = false;
+			
+			meshes.push(mesh);
+			
+			mesh.position.x = this.location.x + c.x + 0.5;
+			mesh.position.y = this.location.y || 0.25;
+			mesh.position.z = this.location.z + c.z + 0.5;
+			
+		});
 		
-		let a, b, c, d;
+		return meshes;
 		
-		let x = this.location.x;
-		let z = this.location.z;
+	}
+	
+	
+	getConnectionsCoordinates(){
 		
 		let h = this.itemSize.h;
 		let w = this.itemSize.w;
+		let r = this.rotationIndex;
 		
-		for (let i = 0;  i < this.connectionsMap.length; i++){
+		let coordinates = [];
+		
+		const sides = ["bottom", "right", "top", "left"];
+		
+		for(let i = 0; i < this.connectionsMap.length; i++){
 			
-			let xx = x;
-			let zz = z;
-			
-			let sides = ["bottom", "right", "top", "left"];
-			
-			let a = this.rotationIndex;
+			let x = 0;
+			let z = 0;
 			let map = [];
+			let rotationIndex = 0;
 			
 			for (let ii = 0; ii < 4; ii++){
 				
 				let sign = 1;
-				let b = (a + ii) % 4;
+				let b = (r + ii) % 4;
 				
 				if ( !(b % 3) && (ii % 3) || (b % 3) && !(ii % 3) ) sign = -1;
 				
-				let result = this.connectionsMap[i][sides[(a + ii) % 4]];
+				let result = this.connectionsMap[i][sides[b]];
 				if (result !== undefined) map[sides[ii]] = result * sign;
-						
 			}
 			
 			if (typeof(map.right) === "number"){
 				
-				xx += w - 1 + map.right;
+				x += w - 1 + map.right;
+				if (map.right) rotationIndex = 2;
 				
 			} else {
 				
-				xx += map.left || 0;
+				x += map.left || 0;
+				if (map.left < 0) rotationIndex = 0;
 			}
 			
 			if (typeof(map.top) === "number"){
 				
-				zz += h - 1 + map.top;
+				z += h - 1 + map.top;
+				if (map.top) rotationIndex = 1;
 				
 			} else {
 				
-				zz += map.bottom || 0;
+				z += map.bottom || 0;
+				if (map.bottom < 0) rotationIndex = 3;
 			}
+			
+			coordinates.push({x:x, z:z, rotationIndex:rotationIndex});		
+		}
+		
+		return coordinates
+	}
+	
+	
+	updateLinks(){
+		
+		this.inserted = false;
+		this.connections.length = 0;
+		this.isNode = false;
+		
+		let x = this.location.x;
+		let z = this.location.z;
+		
+		let rotatedConnectionsMap = this.getConnectionsCoordinates();
+		
+		for (let i = 0;  i < rotatedConnectionsMap.length; i++){
+			
+			let xx = rotatedConnectionsMap[i].x + x;
+			let zz = rotatedConnectionsMap[i].z + z;
 			
 			let item = game.map.getItemFromCoord(xx, zz);
 			
@@ -126,14 +169,16 @@ export class Construction {
 		
 	}
 	
+	
 	getMesh(origin, key, instance){
 		
 		if(!origin) return null;
 		
 		if (instance) return origin.createInstance('index: ' + key);
-		return new game.BABYLON.Mesh('index: ' + this.keynum, game.scene, null, origin);
+		return new game.BABYLON.Mesh('index: ' + key, game.scene, null, origin);
 		
 	}
+	
 	
 	destruct(){
 		
