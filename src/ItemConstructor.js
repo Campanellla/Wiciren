@@ -17,8 +17,10 @@ export class ItemConstructor {
 		
 		this.rotationIndex = 0;
 		this.activeConstructor = false;
-		this.activeConstructorSize = {h:0, w:0};
-		this.constructorMesh = undefined;
+		
+		this.activeItem;
+		this.constructorMesh;
+		
 		this.keynum = 0;
 		
 		this.constructorItemList = {
@@ -34,11 +36,6 @@ export class ItemConstructor {
 			pipeA:{item: _pipe, subtype: 'angle'}
 			
 		}
-		
-		this._mesh;
-		this._item;
-		
-		this.activeItem;
 		
 	}
 	
@@ -69,24 +66,19 @@ export class ItemConstructor {
 		
 		this.activeConstructor = false;
 				
-		if(this.constructorMesh) {
-			
-			game.selection.setActiveItem();
-			
-			if (this.activeItem){
-				
-				this.activeItem.destruct();
-				
-			}
-		}
+		if(this.constructorMesh) game.selection.setActiveItem();
+		
+		if (this.activeItem) this.activeItem.destruct();
+		
 	}
+	
 	
 	constructActiveObject(){
 		
 		if (this.activeConstructor){
 			
-			var blockx = game.selection.position.x; //this.constructorMesh.position.x;
-			var blocky = game.selection.position.z; //this.constructorMesh.position.z;
+			var blockx = game.selection.position.x;
+			var blocky = game.selection.position.z;
 			
 			if(!game.map.getItemFromCoord(Math.round(blockx), Math.round(blocky))){
 				
@@ -102,26 +94,21 @@ export class ItemConstructor {
 					
 					this.activeItem.key = this.keynum++;
 					
-					var item = this.activeItem; //new this.constructorItemList[this.activeConstructor].item(object);
+					var item = this.activeItem; 
 					
 					if (item){
 						
-						//item.draw(true);
+						this.activeItem.setState("active");
+						
 						game.map.insertItem(item, item.location.x, item.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
 						game.map.objectsList.push(item.pointer);
 						
-						item.mesh.visibility = 1;
-						item.mesh.isPickable = true;
-						
-						console.log(item.mesh);
-						
-						item.mesh.position = new BABYLON.Vector3(item.location.x, 0, item.location.z);
+						//item.mesh.position = new BABYLON.Vector3(item.location.x, 0, item.location.z);
 						
 						item.rotate();
 						
 						//game.selection.setMesh();
 						
-						this._item = undefined;
 						this.constructorMesh = undefined;
 						
 						this.setActiveConstructor();

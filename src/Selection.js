@@ -74,6 +74,8 @@ export class Selection {
 		
 		if (!this.activeMesh.isVisible) this.activeMesh.isVisible = true;
 		
+		if (!position) return ;
+		
 		this.position = position;
 		
 		this.activeMesh.position.x = position.x + this.offsetx;
@@ -124,7 +126,7 @@ export class Selection {
 	setRotation(rotationIndex){
 		
 		if (rotationIndex === undefined) return;
-			
+		
 		this.activeMesh.rotation.y = rotationIndex * game.TAU;
 		
 		this.offsetx = 0;

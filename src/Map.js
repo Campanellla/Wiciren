@@ -60,7 +60,7 @@ export class GameMap {
 		if (!height) height = 1;
 		
 		if (rotationIndex%2){
-			let w = width;
+			let w = height;
 			height = width;
 			width = w;
 		}

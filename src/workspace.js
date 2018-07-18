@@ -69,7 +69,7 @@ export class GameWorkspace {
 		if (!this.itemMenu) return
 		
 		if (!link) {console.log("error", link); return}
-		
+		try{
 		let text = 	'type: ' + link.link.type + 
 					', \nkey: ' + link.link.key +
 					', \nvolume: ' + link.link.volume.toFixed(1) +
@@ -79,7 +79,9 @@ export class GameWorkspace {
 		
 		this.itemMenu.setState({hidden:false, text:text, item:link });
 		this.itemMenuDrawn = true;
-		
+		} catch (e){
+			console.log(e);
+		}
 	}
 	
 	updateMenu(){
@@ -89,7 +91,7 @@ export class GameWorkspace {
 	
 		if (!link) return
 		if (!link.link) return
-			
+		try{
 		let text = 	'type: ' + link.link.type + 
 					', \nkey: ' + link.link.key +
 					', \nvolume: ' + link.link.volume.toFixed(1) +
@@ -98,7 +100,9 @@ export class GameWorkspace {
 					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
 		
 		this.itemMenu.setState({text:text});
-		
+		} catch (e){
+			console.log(e);
+		}
 	}
 	
 	hideMenu(){
