@@ -14,6 +14,7 @@ import {_device} from './objects/device.js';
 export class ItemConstructor {
 	
 	constructor(){
+		
 		this.rotationIndex = 0;
 		this.activeConstructor = false;
 		this.activeConstructorSize = {h:0, w:0};
@@ -30,27 +31,33 @@ export class ItemConstructor {
 			pipe:{item: _pipe, subtype: 'pipe'},
 			pipe3:{item: _pipe, subtype: '3-way'},
 			pipe4:{item: _pipe, subtype: '4-way'},
-			pipeA:{item: _pipe, subtype: 'angle'},
+			pipeA:{item: _pipe, subtype: 'angle'}
 			
 		}
+		
+		this._mesh;
+		this._item;
+		
+		this.activeItem;
+		
 	}
 	
 	setActiveConstructor(item){
 		
-		if(!this.activeConstructor) {
+		if(this.activeConstructor || item) {
 			
-			this.activeConstructor = item;
+			this.activeConstructor = item || this.activeConstructor;
 			
-			this.constructorMesh = this.constructorItemList[this.activeConstructor].item.prototype.drawMesh(false, this.constructorItemList[this.activeConstructor].subtype);
-			this.activeConstructorSize = this.constructorItemList[this.activeConstructor].item.prototype.getSize();
+			let object = {subtype:this.constructorItemList[this.activeConstructor].subtype};
 			
-			game.selection.setMesh(this.constructorMesh, this.activeConstructorSize);
+			this.activeItem = new this.constructorItemList[this.activeConstructor].item(object);
+			
+			this.activeItem.setState("constructor");
+			
+			this.constructorMesh = this.activeItem.mesh;
+			
+			game.selection.setActiveItem(this.activeItem);
 			game.selection.setRotation(this.rotationIndex);
-			
-			this.constructorMesh.material = game.materials.ycolor;
-			this.constructorMesh.visibility = 0.5;
-			this.constructorMesh.isPickable = false;
-			
 			
 		}
 		
@@ -64,19 +71,22 @@ export class ItemConstructor {
 				
 		if(this.constructorMesh) {
 			
-			game.selection.setMesh();
-			this.constructorMesh.dispose();
+			game.selection.setActiveItem();
 			
+			if (this.activeItem){
+				
+				this.activeItem.destruct();
+				
+			}
 		}
-		game.selection.visibility = 1;
 	}
 	
 	constructActiveObject(){
 		
 		if (this.activeConstructor){
 			
-			var blockx = game.selection.position.x;//this.constructorMesh.position.x;
-			var blocky = game.selection.position.z;//this.constructorMesh.position.z;
+			var blockx = game.selection.position.x; //this.constructorMesh.position.x;
+			var blocky = game.selection.position.z; //this.constructorMesh.position.z;
 			
 			if(!game.map.getItemFromCoord(Math.round(blockx), Math.round(blocky))){
 				
@@ -84,21 +94,37 @@ export class ItemConstructor {
 					
 					if (!this.checkConstructor(blockx, blocky)) return
 					
-					var object = {location:{x:blockx, z:blocky}};
-				
-					object.rotationIndex = this.rotationIndex || 0;
-				
-					object.subtype = this.constructorItemList[this.activeConstructor].subtype;
+					this.activeItem.location = {x:blockx, z:blocky};
 					
-					object.key = this.keynum++;
+					this.activeItem.rotationIndex = this.rotationIndex || 0;
 					
-					var item = new this.constructorItemList[this.activeConstructor].item(object);
+					this.activeItem.subtype = this.constructorItemList[this.activeConstructor].subtype;
+					
+					this.activeItem.key = this.keynum++;
+					
+					var item = this.activeItem; //new this.constructorItemList[this.activeConstructor].item(object);
 					
 					if (item){
 						
-						item.draw(true);
-						game.map.insertItem(item, object.location.x, object.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
+						//item.draw(true);
+						game.map.insertItem(item, item.location.x, item.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
 						game.map.objectsList.push(item.pointer);
+						
+						item.mesh.visibility = 1;
+						item.mesh.isPickable = true;
+						
+						console.log(item.mesh);
+						
+						item.mesh.position = new BABYLON.Vector3(item.location.x, 0, item.location.z);
+						
+						item.rotate();
+						
+						//game.selection.setMesh();
+						
+						this._item = undefined;
+						this.constructorMesh = undefined;
+						
+						this.setActiveConstructor();
 						
 					}
 					/////////////////////////////
@@ -150,20 +176,23 @@ export class ItemConstructor {
 	checkConstructor(blockx, blocky){
 	
 		if (this.rotationIndex%2) {
-			var sizeOffset = {x: this.activeConstructorSize.h, z: this.activeConstructorSize.w};
+			var sizeOffset = {x: this.activeItem.itemSize.h, z: this.activeItem.itemSize.w};
 		} else {
-			var sizeOffset = {x: this.activeConstructorSize.w, z: this.activeConstructorSize.h};
+			var sizeOffset = {x: this.activeItem.itemSize.w, z: this.activeItem.itemSize.h};
 		}
+		
+		if (!this.activeItem) return;
 		
 		for (let x = 0; x < sizeOffset.x; x++){
 			for(let z = 0; z < sizeOffset.z; z++){
 				if (game.map.getItemFromCoord(blockx + x, blocky + z)){
-					this.constructorMesh.renderOverlay = true;
+					this.activeItem.mesh.renderOverlay = true;
 					return false
 				}
 			}
 		}
-		this.constructorMesh.renderOverlay = false;
+		
+		this.activeItem.mesh.renderOverlay = false;
 		return true
 	}
 	

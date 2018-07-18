@@ -10,6 +10,8 @@ export class Construction {
 		this.exist = true;
 		this.inserted = false;
 		
+		this.visible = false;
+		
 		this.mesh;
 		
 		this.connections = [];
@@ -31,11 +33,13 @@ export class Construction {
 		
 		this.mesh.position.y = 0;
 		
+		this.visible = true;
+		
 		this.rotate(this.rotationIndex);
 	}
 	
 	
-	makeArrows(){
+	makeArrows() {
 		
 		let a = this.getConnectionsCoordinates();
 		
@@ -155,7 +159,9 @@ export class Construction {
 		var offsetx = 0;
 		var offsetz = 0;
 		
-		switch(this.rotationIndex){
+		rotationIndex = rotationIndex || this.rotationIndex;
+		
+		switch(rotationIndex){
 			
 			case(1): offsetz = this.itemSize.w; break;
 			case(2): offsetz = this.itemSize.h; offsetx = this.itemSize.w; break;
@@ -165,7 +171,9 @@ export class Construction {
 		
 		this.mesh.position.x = this.location.x + offsetx;
 		this.mesh.position.z = this.location.z + offsetz;
-		this.mesh.rotation.y = this.rotationIndex * game.TAU;
+		this.mesh.rotation.y = rotationIndex * game.TAU;
+		
+		
 		
 	}
 	
@@ -185,6 +193,46 @@ export class Construction {
 		this.exist = false;
 		this.pointer.link = undefined;
 		this.mesh.dispose();
+		
+		this.visible = false;
+		
+	}
+	
+	setState(state){
+		
+		switch (state){
+			
+			case "constructor": 
+			
+				if (!this.visible) this.draw();
+			
+				this.mesh.visibility = 0.5;
+				this.mesh.isPickable = false;
+				break;
+				
+			case "active" :
+			
+				if (!this.visible) this.draw();
+				
+				this.mesh.visibility = 1;
+				this.mesh.isPickable = true;
+				break;
+				
+			case "inactive" :
+			
+				if (this.visible){
+					
+					this.mesh.dispose();
+					this.visible = true;
+				}
+				break;
+				
+			default : break;
+			
+			
+		}
+		
+		
 		
 	}
 	

@@ -10,13 +10,13 @@ export class _tank extends Construction {
 		
 		super();
 		
+		if (!args) args = {};
+		
 		this.type = "tank";
 		
 		this.isNode = false;
 		
 		this.itemSize = this.getSize();
-		
-		if (!args) args = {};
 		
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};

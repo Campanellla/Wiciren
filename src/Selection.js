@@ -22,14 +22,27 @@ export class Selection {
 		this.squareMesh.material = material;
 		
 		this.squareMeshVertexData = new BABYLON.VertexData();
-		this.squareMeshVertexData.positions = [	
-		0, 0, 0,	0, 0, 1,	1, 0, 1, 	1, 0, 0 ];
+		this.squareMeshVertexData.positions = 
+			[	
+				0, 0, 0,	
+				0, 0, 1,	
+				1, 0, 1, 	
+				1, 0, 0 
+			];
 					
-		this.squareMeshVertexData.indices = [ 	
-		0, 3, 1, 	3, 2, 1 ];
+		this.squareMeshVertexData.indices = 
+			[ 	
+				0, 3, 1, 	
+				3, 2, 1 
+			];
 		
-		this.squareMeshVertexData.uvs = [ 
-		0, 0, 		0, 1, 		1, 1, 		1, 0 ];	
+		this.squareMeshVertexData.uvs = 
+			[ 
+				0, 0, 		
+				0, 1, 		
+				1, 1, 		
+				1, 0 
+			];	
 		
 		this.squareMeshVertexData.normals = [];
 		BABYLON.VertexData.ComputeNormals(	this.squareMeshVertexData.positions,
@@ -53,6 +66,8 @@ export class Selection {
 		
 		this.position = {x:0, y:0, z:0};
 		
+		this.activeItem;
+		
 	}
 	
 	setPosition(position){
@@ -67,27 +82,31 @@ export class Selection {
 		
 	}
 	
-	setMesh(mesh, size, position){
-		
-		if (size) {
-			this.itemSize = size;
-		}
-		
-		if (mesh){
-				
-			this.activeMesh = mesh;
+	
+	setActiveItem(item){
 			
+		if (item){
+			
+			this.itemSize = item.itemSize;
+			
+			this.activeItem = item;
+			
+			this.activeMesh = item.mesh;
+		
 			this.activeMesh.isVisible = this.squareMesh.isVisible;
 			
 			this.squareMesh.isVisible = false;
-			this.activeMesh.position = this.squareMesh.position;
-			
+			this.activeMesh.position.x = this.squareMesh.position.x;
+			this.activeMesh.position.z = this.squareMesh.position.z;
 			
 		} else {
 			
+			this.activeItem = undefined;
+			
 			if (!(this.activeMesh === this.squareMesh)){
-				
-				this.squareMesh.position = this.activeMesh.position;
+			
+				this.squareMesh.position.x = this.activeMesh.position.x;
+				this.squareMesh.position.z = this.activeMesh.position.z;
 				
 				this.activeMesh = this.squareMesh;
 				this.activeMesh.isVisible = true;
@@ -95,52 +114,44 @@ export class Selection {
 				this.offsetx = 0;
 				this.offsetz = 0;
 				
+				this.itemSize = {w:1, h:1};
+				
 			}
 		}
-		
-		if (position){
-			
-			this.position = position;
-			
-			this.activeMesh.position.x = position.x;
-			this.activeMesh.position.y = position.y;
-			this.activeMesh.position.z = position.z;
-			
-		}
-		
 	}
+	
 	
 	setRotation(rotationIndex){
 		
-		if (rotationIndex !== undefined){
+		if (rotationIndex === undefined) return;
 			
-			this.activeMesh.rotation.y = rotationIndex * game.TAU;
+		this.activeMesh.rotation.y = rotationIndex * game.TAU;
+		
+		this.offsetx = 0;
+		this.offsetz = 0;
+		
+		switch(game.itemConstructor.rotationIndex){
 			
-			this.offsetx = 0;
-			this.offsetz = 0;
+			case(1):this.offsetz = this.itemSize.w; break;
+			case(2):this.offsetz = this.itemSize.h; 
+					this.offsetx = this.itemSize.w; break;
+			case(3):this.offsetx = this.itemSize.h; break;
 			
-			switch(game.itemConstructor.rotationIndex){
-				
-				case(1):this.offsetz = this.itemSize.w; break;
-				case(2):this.offsetz = this.itemSize.h; 
-						this.offsetx = this.itemSize.w; break;
-				case(3):this.offsetx = this.itemSize.h; break;
-				
-			};
-			
-			this.activeMesh.position.x = this.position.x + this.offsetx;
-			this.activeMesh.position.z = this.position.z + this.offsetz;
-			this.activeMesh.position.y = this.position.y;
-			
-		}
+		};
+		
+		this.activeMesh.position.x = this.position.x + this.offsetx;
+		this.activeMesh.position.z = this.position.z + this.offsetz;
+		this.activeMesh.position.y = this.position.y;
 		
 	}
+	
 	
 	setInvisible(){
 		
 		this.activeMesh.isVisible = false;
 		
 	}
+	
 	
 	setVisible(){
 		
