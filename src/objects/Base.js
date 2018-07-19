@@ -7,6 +7,9 @@ export class Construction {
 		
 		this.pointer = {link:this};
 		
+		this.type;
+		this.subtype;
+		
 		this.exist = true;
 		this.inserted = false;
 		
@@ -16,7 +19,11 @@ export class Construction {
 		
 		this.connections = [];
 		
-		document.a = this;
+		this.childItems = [];
+		
+		this.connectionsMap;
+		
+		this.arrows = [];
 		
 	}
 	
@@ -39,33 +46,40 @@ export class Construction {
 	}
 	
 	
-	makeArrows() {
+	makeArrows(arg) {
+		
+		if (this.arrows.length > 0){
+			
+			this.arrows.forEach(mesh => mesh.dispose());
+			this.arrows.length = 0;
+		}
+		
+		if (arg === false) return ;
 		
 		let a = this.getConnectionsCoordinates();
-		
-		let meshes = [];
-		
+				
 		a.forEach((c) => {
 			
 			let mesh = this.getMesh(game.meshes.arrow, '');
 			
-			if (!mesh) return
+			if (!mesh) return ;
 			
 			mesh.rotation.y = c.rotationIndex * game.TAU;
 			
 			mesh.material = game.materials.ycolor;
 			mesh.isPickable = false;
 			
-			meshes.push(mesh);
+			this.arrows.push(mesh);
 			
 			mesh.position.x = this.location.x + c.x + 0.5;
 			mesh.position.y = this.location.y || 0.25;
 			mesh.position.z = this.location.z + c.z + 0.5;
 			
+			mesh.itemOffset = { x:c.x + 0.5, z:c.z + 0.5 };
+			
 		});
 		
-		return meshes;
-		
+		return this.arrows;
 	}
 	
 	

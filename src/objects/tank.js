@@ -2,7 +2,7 @@ import {game} from '../App.js';
 
 import {Construction} from './Base.js';
 
-
+import {TankModel} from './models/TankModel.js';
 
 export class _tank extends Construction {
 
@@ -31,7 +31,13 @@ export class _tank extends Construction {
 		this.returnFlow = [];
 		this.inflow = [];
 		
+		this.models = [];
+		
 		this.connectionsMap = [{right: 1}];
+		
+		this.childItems.push(new TankModel());
+		
+		this.models.push(new TankModel());
 	}
 	
 	

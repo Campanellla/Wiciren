@@ -1,7 +1,7 @@
 import {game} from '../App.js';
 
 import {Construction} from './Base.js';
-
+import {PipeModel} from './models/PipeModel.js';
 
 
 export class _pipe extends Construction {
@@ -34,15 +34,22 @@ export class _pipe extends Construction {
 		this.lastQ = 0;
 		this.Q = 0;
 		
+		this.models = [];
 		
 		switch(this.subtype){
 			
-			case "3-way": this.connectionsMap = [{left: -1}, {right: 1}, {bottom: -1}]; break;
-			case "4-way": this.connectionsMap = [{left: -1}, {top: 1}, {right: 1}, {bottom: -1}]; break;
-			case "angle": this.connectionsMap = [{left: -1}, {bottom: -1}]; break;
-			default     : this.connectionsMap = [{left: -1}, {right: 1}]; break;
+			case "3-way": this.connectionsMap = [{left: -1}, 			{right: 1},	{bottom: -1}]; break;
+			case "4-way": this.connectionsMap = [{left: -1}, {top: 1},	{right: 1},	{bottom: -1}]; break;
+			case "angle": this.connectionsMap = [{left: -1}, 						{bottom: -1}]; break;
+			default     : this.connectionsMap = [{left: -1}, 			{right: 1}				]; break;
 		}
-			
+		
+		
+		this.childItems.push(new PipeModel());
+		
+		this.models.push(new PipeModel());
+		
+		
 	}
 	
 	

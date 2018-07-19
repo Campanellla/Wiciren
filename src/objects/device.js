@@ -19,7 +19,8 @@ export class _device extends Construction {
 		if (args.key) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
-			
+		
+		this.connectionsMap = [];
 		
 	}
 	

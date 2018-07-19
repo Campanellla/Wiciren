@@ -2,6 +2,7 @@ import {game} from '../App.js';
 
 import {Construction} from './Base.js';
 
+import {TankModel} from './models/TankModel.js';
 
 
 export class _engine extends Construction {
@@ -23,6 +24,11 @@ export class _engine extends Construction {
 		
 		this.power = 100;
 		
+		this.models = [];
+		
+		this.connectionsMap = [{left: -1}];
+		
+		this.models.push(new TankModel());
 	}
 	
 	

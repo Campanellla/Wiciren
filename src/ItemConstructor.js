@@ -21,7 +21,11 @@ export class ItemConstructor {
 		this.activeItem;
 		this.constructorMesh;
 		
+		this.helperMeshes = [];
+		
 		this.keynum = 0;
+		
+		this.isFreeSpace = false;
 		
 		this.constructorItemList = {
 			
@@ -51,25 +55,33 @@ export class ItemConstructor {
 			
 			this.activeItem.setState("constructor");
 			
+			this.activeItem.rotationIndex = this.rotationIndex;
+			
 			this.constructorMesh = this.activeItem.mesh;
 			
 			game.selection.setActiveItem(this.activeItem);
 			game.selection.setRotation(this.rotationIndex);
 			
+			this.checkConstructor(game.selection.position.x, game.selection.position.z);
+			
+			this.helperMeshes = this.activeItem.makeArrows();
+			
 		}
-		
 	}
+	
 	
 	setInactiveConstructor(){
 		
-		if(!this.activeConstructor) return
+		if(!this.activeConstructor) return;
 		
 		this.activeConstructor = false;
 				
 		if(this.constructorMesh) game.selection.setActiveItem();
 		
-		if (this.activeItem) this.activeItem.destruct();
-		
+		if (this.activeItem) {
+			this.activeItem.makeArrows(false);
+			this.activeItem.destruct();
+		}
 	}
 	
 	
@@ -80,16 +92,16 @@ export class ItemConstructor {
 			var blockx = game.selection.position.x;
 			var blocky = game.selection.position.z;
 			
-			if(!game.map.getItemFromCoord(Math.round(blockx), Math.round(blocky))){
+			if(this.checkConstructor(blockx, blocky)){
 				
 				if (this.activeConstructor){
 					
 					if (!this.checkConstructor(blockx, blocky)) return
 					
+					this.activeItem.makeArrows(false);
+					
 					this.activeItem.location = {x:blockx, z:blocky};
-					
 					this.activeItem.rotationIndex = this.rotationIndex || 0;
-					
 					this.activeItem.subtype = this.constructorItemList[this.activeConstructor].subtype;
 					
 					this.activeItem.key = this.keynum++;
@@ -103,17 +115,15 @@ export class ItemConstructor {
 						game.map.insertItem(item, item.location.x, item.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
 						game.map.objectsList.push(item.pointer);
 						
-						//item.mesh.position = new BABYLON.Vector3(item.location.x, 0, item.location.z);
-						
 						item.rotate();
 						
-						//game.selection.setMesh();
+						game.selection.setActiveItem();
 						
 						this.constructorMesh = undefined;
 						
 						this.setActiveConstructor();
 						
-					}
+					};
 					/////////////////////////////
 					game.updatePipelines = true;
 					
@@ -161,7 +171,21 @@ export class ItemConstructor {
 	}
 	
 	checkConstructor(blockx, blocky){
-	
+		
+		if (this.helperMeshes.length > 0) {
+			
+			this.helperMeshes.forEach(mesh => {
+				mesh.position.x = game.selection.position.x + mesh.itemOffset.x;
+				mesh.position.z = game.selection.position.z + mesh.itemOffset.z;
+			});
+					
+		}
+		
+		if (this.activeItem) {
+			this.activeItem.location.x = game.selection.position.x;
+			this.activeItem.location.z = game.selection.position.z;
+		}
+		
 		if (this.rotationIndex%2) {
 			var sizeOffset = {x: this.activeItem.itemSize.h, z: this.activeItem.itemSize.w};
 		} else {
@@ -174,13 +198,15 @@ export class ItemConstructor {
 			for(let z = 0; z < sizeOffset.z; z++){
 				if (game.map.getItemFromCoord(blockx + x, blocky + z)){
 					this.activeItem.mesh.renderOverlay = true;
+					this.isFreeSpace = false;
 					return false
 				}
 			}
 		}
 		
 		this.activeItem.mesh.renderOverlay = false;
-		return true
+		this.isFreeSpace = true;
+		return true;
 	}
 	
 	

@@ -1,20 +1,27 @@
 import {game} from './App.js';
 
+
 export default class Pipelines {
-	
 	
 	constructor(){
 		
 		this.list = [];
 		this.pipeList = [];
 		
+		
+		this.models = [];
+		
+		
 	}
 	
 	rebuild(){
 		
 		this.list.length = 0;
+		this.models.length = 0;
+		
 		
 		console.time("rebuild");
+		
 		
 		/// get pipe, pump, etc to list
 		
@@ -28,6 +35,20 @@ export default class Pipelines {
 		});
 		
 		this.pipeList.forEach((pointer) => { pointer.link.updateLinks() });
+		
+		
+		this.pipeList.forEach(pointer =>{
+			
+			if (!pointer.link.models[0].modelType === "pipeline") return ;
+			
+			this.models.push(pointer.link.models[0]);
+			
+			console.log(pointer.link.key, pointer.link.models[0]);
+			
+		});
+		
+		console.log(this.models)
+		
 		
 		/// remove connection if it only from one side and check if item is node
 		
@@ -45,17 +66,25 @@ export default class Pipelines {
 				
 			});
 			
-			if (pointer.link.type === "pipe" && pointer.link.connections > 2) {
+			if (pointer.link.type === "pipe" && pointer.link.connections.length > 2) {
 				
 				pointer.link.isNode = true;
 				
 			}
+			
+		});
+		
+		
+		
+		
+		this.pipeList.forEach((pointer) => {
 			
 			let result = buildPipeline(pointer);
 			
 			if (result) this.list.push(result);
 			
 		});
+		
 		
 		console.timeEnd("rebuild");
 		
@@ -237,7 +266,7 @@ class Node {
 				
 					if (!pointer || !pointer.link) {
 						
-						console.log("removed")
+						console.log("removed:", parentPointer.link, parentPointer.link.connections[i+1]);
 						
 						parentPointer.link.connections[i] = undefined;
 						return

@@ -70,12 +70,38 @@ export class GameWorkspace {
 		
 		if (!link) {console.log("error", link); return}
 		try{
+			/*
 		let text = 	'type: ' + link.link.type + 
 					', \nkey: ' + link.link.key +
 					', \nvolume: ' + link.link.volume.toFixed(1) +
 					', \npressure: ' + link.link.pressure.toFixed(1)+
 					', \npowr: ' + link.link.power +
 					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
+		*/
+		
+		let a = link.link.save();
+		
+		let text = '';
+    
+		for (let prop in a) {
+			
+			switch(typeof(a[prop])){
+				
+				case "number": text += prop + " = " + a[prop].toFixed(1) + '\n'; break;
+				case "string": text += prop + " = " + a[prop] + '\n'; break;
+				case "object": 
+					for (let subprop in a[prop]) {
+						switch(typeof(a[prop][subprop])){
+							
+							case "number": text += prop + ' ' + subprop + " = " + a[prop][subprop].toFixed(1) + '\n'; break;
+							case "string": text += prop + ' ' + subprop + " = " + a[prop][subprop] + '\n'; break;
+							default: break;
+						}
+					};
+					break;
+				default: break;
+			}
+		}
 		
 		this.itemMenu.setState({hidden:false, text:text, item:link });
 		this.itemMenuDrawn = true;
@@ -92,12 +118,38 @@ export class GameWorkspace {
 		if (!link) return
 		if (!link.link) return
 		try{
+			/*
 		let text = 	'type: ' + link.link.type + 
 					', \nkey: ' + link.link.key +
 					', \nvolume: ' + link.link.volume.toFixed(1) +
 					', \npressure: ' + link.link.pressure.toFixed(1)+
 					', \npowr: ' + link.link.power +
 					', \npos x:' + link.link.location.x + ' z: ' + link.link.location.z;
+		*/
+		
+		let a = link.link.save();
+		
+		let text = '';
+    
+		for (let prop in a) {
+			
+			switch(typeof(a[prop])){
+				
+				case "number": text += prop + " = " + a[prop].toFixed(1) + '\n'; break;
+				case "string": text += prop + " = " + a[prop] + '\n'; break;
+				case "object": 
+					for (let subprop in a[prop]) {
+						switch(typeof(a[prop][subprop])){
+							
+							case "number": text += prop + ' ' + subprop + " = " + a[prop][subprop].toFixed(1) + '\n'; break;
+							case "string": text += prop + ' ' + subprop + " = " + a[prop][subprop] + '\n'; break;
+							default: break;
+						}
+					};
+					break;
+				default: break;
+			}
+		}
 		
 		this.itemMenu.setState({text:text});
 		} catch (e){
