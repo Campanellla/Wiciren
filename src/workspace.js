@@ -81,7 +81,7 @@ export class GameWorkspace {
 		
 		let a = link.link.save();
 		
-		let text = '';
+		let text = 'key: ' + link.link.key + '\n';
     
 		for (let prop in a) {
 			
@@ -129,7 +129,7 @@ export class GameWorkspace {
 		
 		let a = link.link.save();
 		
-		let text = '';
+		let text = 'key: ' + link.link.key + '\n';
     
 		for (let prop in a) {
 			

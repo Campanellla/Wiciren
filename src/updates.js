@@ -8,7 +8,7 @@ export function updateObjects(dtime){
 	game.pipelist = [];
 	
 	game.map.objectsList.forEach(function(object){
-		if (!object.link) return
+		if (!object.link) return;
 		object.link.update(dtime);
 	});
 	

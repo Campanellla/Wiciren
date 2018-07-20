@@ -37,17 +37,22 @@ export default class Pipelines {
 		this.pipeList.forEach((pointer) => { pointer.link.updateLinks() });
 		
 		
-		this.pipeList.forEach(pointer =>{
+		///// models ///
+		
+		game.map.objectsList.forEach(pointer =>{
+			
+			if (!pointer) return;
+			if (!pointer.link) return;
 			
 			if (!pointer.link.models[0].modelType === "pipeline") return ;
 			
 			this.models.push(pointer.link.models[0]);
 			
-			console.log(pointer.link.key, pointer.link.models[0]);
+			//console.log(pointer.link.key, pointer.link.models[0]);
 			
 		});
 		
-		console.log(this.models)
+		console.log(this.models);
 		
 		
 		/// remove connection if it only from one side and check if item is node

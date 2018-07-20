@@ -4,16 +4,22 @@ import {game} from '../../App.js';
 export class PipeModel {
 	
 	
-	constructor(){
+	constructor(setup){
 		
 		this.type = "model";
 		this.subtype = "pipemodel";
-		
 		this.modelType = "pipeline";
+		
 		
 		this.connections = [];
 		
+		
+		this.connectionsMap = setup.connections;
+		
 	}
+	
+	
+	
 	
 		
 }

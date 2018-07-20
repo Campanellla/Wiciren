@@ -75,7 +75,7 @@ export default function init(){
 		
 		var time = 0.0;
 		
-		var updatetime = 0.1;
+		var updatetime = 0.02;
 		
 		
 		

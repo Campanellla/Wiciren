@@ -33,11 +33,15 @@ export class _tank extends Construction {
 		
 		this.models = [];
 		
-		this.connectionsMap = [{right: 1}];
+		this.connectionsMap = [{right: 1}]; //{left: -1},{top: 1},{bottom: -1}
 		
-		this.childItems.push(new TankModel());
+		let setup = {
+			
+			connections:this.connectionsMap
+			
+		}
 		
-		this.models.push(new TankModel());
+		this.models.push(new TankModel(setup));
 	}
 	
 	
@@ -89,11 +93,11 @@ export class _tank extends Construction {
 				if (this.volume > 0){
 					
 					item.inflow.push({
-						Q:(this.pressure - item.pressure)*10,
+						Q:(this.pressure - item.pressure)*20,
 						Source: this.pointer
 					})
 					
-					this.volume -= (this.pressure - item.pressure)*10;
+					this.volume -= (this.pressure - item.pressure)*20;
 				}
 				
 			}

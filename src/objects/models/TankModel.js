@@ -5,14 +5,17 @@ import {game} from '../../App.js';
 export class TankModel {
 	
 	
-	constructor(){
+	constructor(setup){
 		
 		this.type = "model";
-		this.subtype = "pipemodel";
-		
+		this.subtype = "tankmodel";
 		this.modelType = "pipeline";
 		
+		
 		this.connections = [];
+		
+		
+		this.connectionsMap = setup.connections;
 		
 	}
 	

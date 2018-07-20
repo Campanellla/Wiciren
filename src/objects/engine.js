@@ -28,7 +28,13 @@ export class _engine extends Construction {
 		
 		this.connectionsMap = [{left: -1}];
 		
-		this.models.push(new TankModel());
+		let setup = {
+			
+			connections:this.connectionsMap
+			
+		}
+		
+		this.models.push(new TankModel(setup));
 	}
 	
 	

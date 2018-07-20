@@ -45,9 +45,16 @@ export class _pipe extends Construction {
 		}
 		
 		
-		this.childItems.push(new PipeModel());
+		let setup = {
+			
+			connections:this.connectionsMap
+			
+		}
 		
-		this.models.push(new PipeModel());
+		
+		//this.childItems.push(new PipeModel());
+		
+		this.models.push(new PipeModel(setup));
 		
 		
 	}
