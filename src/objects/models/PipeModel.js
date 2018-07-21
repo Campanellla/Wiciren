@@ -10,11 +10,14 @@ export class PipeModel {
 		this.subtype = "pipemodel";
 		this.modelType = "pipeline";
 		
+		setup.connections.forEach(connection => {
+			
+			connection.model = this;
+			
+		});
 		
-		this.connections = [];
+		this.connections = setup.connections;
 		
-		
-		this.connectionsMap = setup.connections;
 		
 	}
 	

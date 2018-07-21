@@ -28,9 +28,17 @@ export class _engine extends Construction {
 		
 		this.connectionsMap = [{left: -1}];
 		
+		let s = [];
+		
+		this.connectionsMap.forEach(position => {
+			
+			s.push(new game.class.Connection(position, this.pointer));
+			
+		});
+		
 		let setup = {
 			
-			connections:this.connectionsMap
+			connections:s
 			
 		}
 		

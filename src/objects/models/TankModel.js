@@ -12,10 +12,13 @@ export class TankModel {
 		this.modelType = "pipeline";
 		
 		
-		this.connections = [];
+		setup.connections.forEach(connection => {
+			
+			connection.model = this;
+			
+		});
 		
-		
-		this.connectionsMap = setup.connections;
+		this.connections = setup.connections;
 		
 	}
 	

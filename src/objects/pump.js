@@ -1,7 +1,7 @@
 import {game} from '../App.js';
 
 import {Construction} from './Base.js';
-
+import {PumpModel} from './models/PumpModel.js';
 
 
 export class _pump extends Construction {
@@ -34,6 +34,25 @@ export class _pump extends Construction {
 		this.Q = 0;
 		
 		this.connectionsMap = [{left:-1, forced:true}, {right: 1, forced:true}];
+		
+		this.models = [];
+		
+		let s = [];
+		
+		this.connectionsMap.forEach(position => {
+			
+			s.push(new game.class.Connection(position, this.pointer));
+			
+		});
+		
+		let setup = {
+			
+			connections:s
+			
+		}
+		
+		this.models.push(new PumpModel(setup));
+		
 	}
 	
 	

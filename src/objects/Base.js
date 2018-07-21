@@ -89,52 +89,70 @@ export class Construction {
 		let w = this.itemSize.w;
 		let r = this.rotationIndex;
 		
+		if (r % 2){
+			
+			let a = h;
+			h = w;
+			w = a;
+			
+		}
+		
+		
 		let coordinates = [];
 		
 		const sides = ["bottom", "right", "top", "left"];
 		
-		for(let i = 0; i < this.connectionsMap.length; i++){
+		this.models.forEach(model => {
 			
-			let x = 0;
-			let z = 0;
-			let map = [];
-			let rotationIndex = 0;
-			
-			for (let ii = 0; ii < 4; ii++){
+			model.connections.forEach(connection => {
 				
-				let sign = 1;
-				let b = (r + ii) % 4;
+				let x = 0;
+				let z = 0;
+				let map = [];
+				let rotationIndex = 0;
 				
-				if ( !(b % 3) && (ii % 3) || (b % 3) && !(ii % 3) ) sign = -1;
+				for (let ii = 0; ii < 4; ii++){
+					
+					let sign = 1;
+					let b = (r + ii) % 4;
+					
+					if ( !(b % 3) && (ii % 3) || (b % 3) && !(ii % 3) ) sign = -1;
+					
+					let result = connection.position[sides[b]];
+					if (result !== undefined) map[sides[ii]] = result * sign;
+				}
 				
-				let result = this.connectionsMap[i][sides[b]];
-				if (result !== undefined) map[sides[ii]] = result * sign;
-			}
-			
-			if (typeof(map.right) === "number"){
+				console.log("map: ", map);
+				console.log("itemsize: ", h);
 				
-				x += w - 1 + map.right;
-				if (map.right) rotationIndex = 2;
+				if (typeof(map.right) === "number"){
+					
+					x += w - 1 + map.right;
+					if (map.right) rotationIndex = 2;
+					
+				} else {
+					
+					x += map.left || 0;
+					if (map.left < 0) rotationIndex = 0;
+				}
 				
-			} else {
+				if (typeof(map.top) === "number"){
+					
+					z += h - 1 + map.top;
+					if (map.top) rotationIndex = 1;
+					
+				} else {
+					
+					z += map.bottom || 0;
+					if (map.bottom < 0) rotationIndex = 3;
+				}
 				
-				x += map.left || 0;
-				if (map.left < 0) rotationIndex = 0;
-			}
-			
-			if (typeof(map.top) === "number"){
+				coordinates.push({x:x, z:z, rotationIndex:rotationIndex, connection:connection});
 				
-				z += h - 1 + map.top;
-				if (map.top) rotationIndex = 1;
-				
-			} else {
-				
-				z += map.bottom || 0;
-				if (map.bottom < 0) rotationIndex = 3;
-			}
-			
-			coordinates.push({x:x, z:z, rotationIndex:rotationIndex});		
-		}
+			});
+		});
+		
+		console.log("coordinates", coordinates);
 		
 		return coordinates
 	}
@@ -163,6 +181,8 @@ export class Construction {
 			} else if (this.connectionsMap[i].forced) {
 				this.connections.push(null);
 			}
+			
+			rotatedConnectionsMap[i].connection.connectionItemPointer = this.connections[this.connections.length-1];
 			
 		}
 	}

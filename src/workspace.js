@@ -11,6 +11,26 @@ import Interface from './Interface.js';
 import Pipelines from './Pipelines.js';
 
 
+
+class Connection {
+	
+	constructor(position, itemPointer){
+		
+		this.position = position;
+		
+		this.itemPointer = itemPointer || game.nullpointer;
+		
+		this.model;
+		
+		this.connectionItemPointer = game.nullpointer;
+	}
+	
+	
+	
+}
+
+
+
 export class GameWorkspace {
 	
 	constructor(){
@@ -58,9 +78,17 @@ export class GameWorkspace {
 		this.canvas = undefined;
 		this.map = undefined;
 		
+		this.nullpointer = {link:null};
 		
 		document.save = save.bind(this);
 		document.load = load.bind(this);
+		
+		
+		this.class = {
+			
+			Connection:Connection
+			
+		}
 		
 		
 	}
@@ -208,7 +236,19 @@ export function save(items){
 						camera:{position: game.camera.position, rotation: game.camera.rotation}
 					};
 	
-	return JSON.stringify(saveObject);
+	var a;
+	
+	try{
+		a = JSON.stringify(saveObject);
+	} catch(e){
+		
+		console.log(saveObject);
+		console.log(e);
+		
+	}
+	
+	
+	return a
 }
 
 

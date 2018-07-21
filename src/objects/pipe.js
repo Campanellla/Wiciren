@@ -44,17 +44,15 @@ export class _pipe extends Construction {
 			default     : this.connectionsMap = [{left: -1}, 			{right: 1}				]; break;
 		}
 		
+		let connections = [];
 		
-		let setup = {
+		this.connectionsMap.forEach(position => {
 			
-			connections:this.connectionsMap
+			connections.push(new game.class.Connection(position, this.pointer));
 			
-		}
+		});
 		
-		
-		//this.childItems.push(new PipeModel());
-		
-		this.models.push(new PipeModel(setup));
+		this.models.push(new PipeModel( { connections: connections } ));
 		
 		
 	}

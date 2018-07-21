@@ -35,9 +35,17 @@ export class _tank extends Construction {
 		
 		this.connectionsMap = [{right: 1}]; //{left: -1},{top: 1},{bottom: -1}
 		
+		let s = [];
+		
+		this.connectionsMap.forEach(position => {
+			
+			s.push(new game.class.Connection(position, this.pointer));
+			
+		});
+		
 		let setup = {
 			
-			connections:this.connectionsMap
+			connections:s
 			
 		}
 		
@@ -114,8 +122,6 @@ export class _tank extends Construction {
 				type: this.type,
 				location:this.location,
 				volume: this.volume,
-				inflow: this.inflow,
-				reversedflow: this.reversedflow,
 				rotationIndex :this.rotationIndex
 			}
 		return str;
