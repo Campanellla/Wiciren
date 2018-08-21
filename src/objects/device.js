@@ -1,7 +1,7 @@
 import {game} from '../App.js';
 
 import {Construction} from './Base.js';
-
+import {DeviceModel} from './models/DeviceModel.js';
 
 
 export class _device extends Construction {
@@ -22,10 +22,29 @@ export class _device extends Construction {
 		
 		this.connectionsMap = [];
 		
+		let c = new game.class.Connection({location: {x:0, z:0}, size: {h:2, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer})
+		
+		
+		this.models.push(new DeviceModel({ 	connections: [c],
+											location: {x:0, z:0}, 
+											size: {h:2, w:2} 
+										}, this));
+		
+		this.models[0].connections[0].modelPointer = this.models[0].pointer;
+		
+		
+		this.volume = 0;
+		this.speed = 0;
+		this.controlIndex = 0;
+		
 	}
 	
 	
 	update(dt){
+		
+		this.models[0].connections[0].updateLinks();
+		
+		this.models[0].update(0.02);
 		
 	}
 	
@@ -34,7 +53,10 @@ export class _device extends Construction {
 			{
 				type: this.type,
 				location:this.location,
-				rotationIndex:this.rotationIndex
+				rotationIndex:this.rotationIndex,
+				volume: this.volume,
+				speed: this.speed,
+				controlIndex: this.controlIndex
 			};
 		return str;
 	}

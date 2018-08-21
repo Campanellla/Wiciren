@@ -9,7 +9,11 @@ export class EngineModel extends BaseModel {
 		
 		super();
 		
+		this.subtype = "enginemodel";
+		this.class = "electric";
 		
+		this.connections = args.connections;
+		this.location = args.location;
 		this.parent = parent.pointer;
 		
 		this.speed = parent.speed;
@@ -24,42 +28,26 @@ export class EngineModel extends BaseModel {
 	
 	update(dt){
 		
-		
-		
-		
 		let speed = this.parent.link.speed;
 		let volume = this.parent.link.volume;
 		
 		let controlIndex = this.parent.link.controlIndex;
 		
 		let resistancea = 10;
-		let resistanceb = 250;
+		let resistanceb = 25000;
 		
-		
-		if (speed > 800){
-			
-			this.load = 70000
-			
-		} 
-		
-		if (speed < 700){
-			
-			this.load = 0
-			
-		} 
-		
-		//console.log("speed:", speed, "controlIndex: ", controlIndex);
+		if (speed < 0) speed = 0;
 		
 		this.I = (900 - speed) * dt * 1 + this.I;
 		
-		if (Math.abs(this.I) > 25){
+		if (Math.abs(this.I) > 10){
 			
-			if (this.I > 0) this.I = 25;
-			if (this.I < 0) this.I = -25;
+			if (this.I > 0) this.I = 10;
+			if (this.I < 0) this.I = -10;
 		}
 		
 		let I = this.I;
-		let P = (900 - speed)*25;
+		let P = (900 - speed) * 25;
 		
 		let cisetPoint = I + P;
 		
@@ -78,17 +66,15 @@ export class EngineModel extends BaseModel {
 		
 		let fuelIndex = Math.round(controlIndex) * speed;
 		
-		let volumeChange = fuelIndex / 10000 * dt;
+		let volumeChange = fuelIndex / 100000 * dt;
 		
-		if (volume < volumeChange) fuelIndex = volume * 10000 / dt;
+		if (volume < volumeChange) fuelIndex = volume * 100000 / dt;
 		
 		volume -= volumeChange;
 		
-		let balance = (fuelIndex - resistancea * speed - resistanceb - this.load) / 200 * dt;
+		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed + 1) - this.load) / 250 * dt;
 		
 		speed += balance;
-		
-		
 		
 		
 		//console.log("speed:", speed, "controlIndex: ", controlIndex, "balance", balance);
@@ -102,6 +88,9 @@ export class EngineModel extends BaseModel {
 		this.parent.link.speed = speed;
 		this.parent.link.volume = volume;
 		this.parent.link.controlIndex = controlIndex;
+		this.parent.link.load = this.load;
+		
+		this.load = 0;
 		
 	}
 	

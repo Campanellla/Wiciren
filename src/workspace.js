@@ -124,6 +124,8 @@ class Connection {
 				
 				if (model.location.x + model.parent.link.location.x === xx && model.location.z + model.parent.link.location.z === zz){
 					
+					if (!this.modelPointer.link) console.log(this);
+					
 					if (this.modelPointer.link.class === model.class){
 						
 						this.connectedModelPointer = model.pointer;
