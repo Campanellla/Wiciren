@@ -1,17 +1,17 @@
 import {game} from './App.js';
 
+import {PipeNodeModel} from "./objects/models/PipeNodeModel.js";
+import {PipeCollectionModel} from "./objects/models/PipeCollectionModel.js";
+
 
 export default class Pipelines {
 	
 	constructor(){
 		
 		this.list = [];
-		this.pipeList = [];
-		
-		
 		this.models = [];
 		
-		
+		this.pipeList = [];
 	}
 	
 	rebuild(){
@@ -19,76 +19,80 @@ export default class Pipelines {
 		this.list.length = 0;
 		this.models.length = 0;
 		
-		
 		console.time("rebuild");
 		
 		
-		/// get pipe, pump, etc to list
-		
-		this.pipeList = game.map.objectsList.filter((pointer)=>{
-			if (!pointer.link) return false
-			if (pointer.link.type === "pipe" 
-				|| pointer.link.type === "tank" 
-				|| pointer.link.type === "pump"){
-				return true;
-			};
-		});
-		
-		this.pipeList.forEach((pointer) => { pointer.link.updateLinks() });
-		
-		
-		///// models ///
-		
-		game.map.objectsList.forEach(pointer =>{
+		/// collect all models
+		game.map.objectsList.forEach(object => {
 			
-			if (!pointer) return;
-			if (!pointer.link) return;
+			if (!object) { console.log("%cobject not exist", "color:red"); return false; }
 			
-			if (!pointer.link.models[0].modelType === "pipeline") return ;
-			
-			this.models.push(pointer.link.models[0]);
-			
-			//console.log(pointer.link.key, pointer.link.models[0]);
-			
-		});
-		
-		console.log(this.models);
-		
-		
-		/// remove connection if it only from one side and check if item is node
-		
-		this.pipeList.forEach((pointer) => {
-			
-			let currentitem = pointer;
-			
-			if (!currentitem) return;
-			
-			pointer.link.connections = pointer.link.connections.filter((pointer) => {
+			object.models.forEach(model => {
 				
-				if (!pointer) return ;
 				
-				return pointer.link.connections.find((pointer) => {return (pointer === currentitem)});
 				
 			});
 			
-			if (pointer.link.type === "pipe" && pointer.link.connections.length > 2) {
+			
+			object.models.forEach(model => {
 				
-				pointer.link.isNode = true;
+				if (model.class === "pipeline") {
+					
+					if (model.reset) {
+						let m = model.reset();
+						this.models.push(m);
+					} else {
+						this.models.push(model);
+					}
+				}
+			});
+		});
+		
+		
+		///// update connections
+		this.models.forEach((model) => {
+			
+			model.inserted = false;
+			
+			model.connections.forEach(connection => connection.updateLinks());
+		})
+		
+		
+		/// remove assymetric connections for models
+		this.models.forEach((model) => {
+			
+			model.connections.forEach(connection => connection.checkLinks());
+			
+			let a = 0;
+			
+			model.connections.forEach(connection => {
 				
+				if (!connection) return ;
+				let model = connection.connectedModelPointer.link;
+				if (model) a++;
+				
+			});
+			
+			model.isNode = (model.subtype === "pipemodel" && a > 2);
+			
+		});
+		
+		
+		this.models.forEach((model) => {
+			
+			let result = buildPipeline(model);
+			
+			if (result) {
+				
+				//result.list.forEach(model => {if (model.updateSubconnections) model.updateSubconnections();})
+				this.list.push(result);
 			}
 			
 		});
 		
+		//this.models.forEach(e => console.log(e))
 		
 		
-		
-		this.pipeList.forEach((pointer) => {
-			
-			let result = buildPipeline(pointer);
-			
-			if (result) this.list.push(result);
-			
-		});
 		
 		
 		console.timeEnd("rebuild");
@@ -101,418 +105,182 @@ export default class Pipelines {
 		
 		this.list.forEach(pipeline => pipeline.update());
 		
-		//console.log("update");
-		
-	}
-	
-}
-
-
-class CombinedPipe {
-	
-	constructor(list){
-		
-		this.pointer = {link: this};
-		this.type = "combpipe";
-		this.exist = true;
-		
-		this.keys = '';
-		
-		this.list = list; // pointers inside
-		this.connections = [undefined, undefined];
-		
-		this.connections[0] = this.list[0].link.connections.find((pointer)=>{return getType(pointer.link) !== "pipe"});
-		
-		
-		if(this.list.length === 1) {
-			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
-				return getType(pointer.link) !== "pipe" && pointer !== this.connections[0];
-			}); 
-		} else {
-			this.connections[1] = this.list[list.length-1].link.connections.find((pointer)=>{
-				return getType(pointer.link) !== "pipe";
-			}); 
-		}
-		
-		for (let i = 0; i < this.list.length; i++){
-			
-			let pointer = this.list[i];
-			
-			this.keys += ' ' + pointer.link.key.toString();
-			this.volume += pointer.link.volume;
-			
-		}
-		
-		if (this.connections[0]) {
-			
-			let index = this.connections[0].link.connections.findIndex((pointer) => {return (pointer === this.list[0]);})
-			if (index > -1) this.connections[0].link.connections[index] = this.pointer;
-		}
-		if (this.connections[1]) {
-			
-			let index = this.connections[1].link.connections.findIndex((pointer) => {return (pointer === this.list[this.list.length-1]);})
-			if (index > -1) this.connections[1].link.connections[index] = this.pointer;
-		}
-		
-		
-		this.flowResistance = this.list.length / 1000;
-		this.volume = 0;
-		
-		this.inflow = [];
-		
-		this.pressure = 0;
-		this.returnFlow = [];
-		
-	}
-	
-	
-	updateFlow(dt){
-		
-		if (!this.list.length) return ;
-		
-		let vmax = this.list.length * 25;
-		
-		this.pressure = this.volume / vmax;
-		
-		this.inflow.forEach((flow)=>{
-			
-			if (flow){
-				
-				if (this.volume + flow.Q < vmax){
-					
-					this.volume += flow.Q;
-					
-				} else {
-					
-					let a = vmax - this.volume;
-					this.volume = vmax;
-					flow.Q -= a;
-					
-					this.returnFlow.push({
-						Q:flow.Q,
-						Source: flow.Source
-					});
-				};
-			};
-		});
-		
-		this.returnFlow.forEach((flow) => {
-			flow.Source.link.volume += flow.Q;
-		});
-		
-		this.returnFlow.length = 0;
-		
-		this.connections.forEach((pointer)=>{
-			
-			if (!pointer) return ;
-			
-			let item = pointer.link;
-			
-			if (this.pressure > item.pressure){
-				
-				if (this.volume > 0){
-					
-					item.inflow.push({
-						Q:(this.pressure - item.pressure)*10,
-						Source: this.pointer
-					})
-					
-					this.volume -= (this.pressure - item.pressure)*10;
-				}
-				
-			}
-		});
-		
-		let b = this.volume / this.list.length;
-		
-		this.list.forEach(pointer => {
-			pointer.link.volume = b;
-			pointer.link.pressure = this.pressure;
-		})
-		
-		this.inflow.length = 0;
-	}
-	
-	
-}
-
-
-class Node {
-	
-	constructor(item){
-		
-		this.pointer = {link:this};
-		this.type = "node";
-		this.exist = true;
-		
-		this.connections = [];
-		this.inserted = false;
-		
-		this.itemPointer = item.pointer;
-		
-		this.key = item.key;
-		
-		item.inserted = true;
-			
-		this.inflow = [];
-		this.pressure = 0;
-		
-		this.connections = this.itemPointer.link.connections.slice(0);
-		
-		for (let i = 0; i < this.connections.length; i++){
-			
-			let parentPointer = this.connections[i];
-			
-			if (parentPointer){
-				
-				let i = 0;
-			
-				let index = parentPointer.link.connections.forEach((pointer) => {
-				
-					if (!pointer || !pointer.link) {
-						
-						console.log("removed:", parentPointer.link, parentPointer.link.connections[i+1]);
-						
-						parentPointer.link.connections[i] = undefined;
-						return
-					};
-				
-					if(pointer.link === this.itemPointer.link){
-						parentPointer.link.connections[i] = this.pointer;
-					}
-				i++
-				});				
-			}
-		}
-		
-		this.flowResistance = 0.001
-		this.volume = 0;
-		
-		this.returnFlow = [];
-	}
-	
-	updateFlow(dt){
-		
-		this.pressure = this.volume / 25;
-		
-		this.inflow.forEach((flow)=>{
-			
-			if (flow){
-				
-				if (this.volume + flow.Q < 25){
-					
-					this.volume += flow.Q;
-					
-				} else {
-					
-					let a = 25 - this.volume;
-					this.volume = 25;
-					flow.Q -= a;
-					
-					this.returnFlow.push({
-						Q:flow.Q,
-						Source: flow.Source
-					});
-				};
-			};
-		});
-		
-		this.returnFlow.forEach((flow) => {
-			flow.Source.link.volume += flow.Q;
-		});
-		
-		this.returnFlow.length = 0;
-		
-		this.connections.forEach((pointer)=>{
-			
-			if (!pointer) return ;
-			
-			let item = pointer.link;
-				
-			if (this.pressure > item.pressure){
-				
-				if (this.volume > 0){
-					
-					if (item.inflow){ ////// attantion
-						item.inflow.push({
-							Q:(this.pressure - item.pressure)*10,
-							Source: this.pointer
-						})
-					
-						this.volume -= (this.pressure - item.pressure)*10;
-					}
-				}
-			}
-		});
-		
-		this.itemPointer.link.volume = this.volume;
-		this.itemPointer.link.pressure = this.pressure;
-		
-		this.inflow.length = 0;
 	}
 	
 }
 
 
 
-function getType(item){
+function buildPipeline(model){
 	
-	if (!item) return undefined;
-	if (item.link) item = item.link;
-	
-	if(item.type === "pipe"){
-		if (item.connections.length > 2 || item.isNode){
-			return "node";
-		} else {
-			return "pipe";
-		}
-	} else {
-		
-		return item.type
-	}
-	
-}
-
-function collectPipe(pipe) {
-	
-	if (getType(pipe) !== 'pipe') return null;
-	if (pipe.inserted) return null;
-	
-	var pointerStack = []
-	var pointerStackId = 0;
-	
-	var currentitem;
-	var prevItem;
-	
-	var reversed = false;
-	
-	pointerStack.push(pipe.pointer);
-	pipe.inserted = true;
-	
-	while(pointerStackId < pointerStack.length) {
-		
-		currentitem = pointerStack[pointerStackId].link;
-		
-		let nextItem = currentitem.connections.find((pointer) =>{
-			
-			let item = pointer.link;
-			
-			return !item.inserted && getType(item) === "pipe";
-		});
-		
-		if (nextItem){
-			
-			reversed = false;
-			pointerStack.push(nextItem);
-			nextItem.link.inserted = true;
-			
-		} else if (!reversed) {
-			
-			reversed = true
-			pointerStack.reverse();
-			pointerStackId--;
-			
-		}
-		
-		pointerStackId++;
-		if (pointerStackId>1000) throw "collectpipe loop overflow";
-	}
-	
-	return new CombinedPipe(pointerStack);
-}
-
-
-	
-
-function buildPipeline(pointer){
-	
-	if (!pointer){
-		console.log("error:", pointer);
-		return
-	}
-	
-	if (pointer.link.inserted) return null;
+	if (model.inserted) return null;
 	
 	var nodes = [];
-	var pointerStack = [];
-	var pointerStackId = 0;
+	var modelStack = [];
+	var modelStackId = 0;
 	var resultStack = [];
-	var currentitem;
-	var currentPointer;
+	var currentModel;
 	
-	pointerStack.push(pointer);
+	modelStack.push(model);
 	
-	
-	while(pointerStackId < pointerStack.length) {
+	while(modelStackId < modelStack.length) {
 		
-		currentitem = pointerStack[pointerStackId].link;
+		currentModel = modelStack[modelStackId];
 		
-		let a = getType(currentitem);
+		let a = getType(currentModel);
 		
-		if (a === "pipe" && !currentitem.inserted){
+		if (a === "pipemodel" && !currentModel.inserted){
 			
-			let result = collectPipe(currentitem);
+			let collectedPipe = collectPipe(currentModel);
 			
-			if (result){ 
-				resultStack.push(result);
-				result.inserted = true;
+			if (collectedPipe){
 				
-				let filter = result.connections.filter((pointer) => {	
-					if (pointer) return !pointer.link.inserted; else return false;
+				resultStack.push(collectedPipe);
+				
+				collectedPipe.inserted = true;
+				
+				collectedPipe.connections.forEach((connection) => {
+					
+					if (!connection) return ;
+					let model = connection.connectedModelPointer.link;
+					if (!model) return ;
+					
+					if (!model.inserted) modelStack.push(model);
+					
 				});
-				
-				if (filter) filter.forEach(pointer => pointerStack.push(pointer));
 			}
 			
-		} else if (a === "node" && !currentitem.inserted){
+		} else if (a === "node" && !currentModel.inserted){
 			
-			let node = new Node(currentitem)
+			let node = new PipeNodeModel(currentModel, true);
 			
 			resultStack.push(node);
 			
 			node.inserted = true;
 			
-			let filter = currentitem.connections.filter((pointer) => {	
-				if (pointer) return !pointer.link.inserted; else return false;
+			node.connections.forEach(connection => {
+				
+				if (!connection) return ;
+				let model = connection.connectedModelPointer.link;
+				if (!model) return ;
+				
+				if (!model.inserted) modelStack.push(model);
 			});
 			
-			if (filter) filter.forEach(pointer => pointerStack.push(pointer));
+		} else if ((a === "pumpmodel" || a === "tankmodel") && !currentModel.inserted){
 			
-		} else if ((a === "pump" || a === "tank") && !currentitem.inserted){
+			resultStack.push(currentModel);
 			
-			resultStack.push(currentitem);
+			currentModel.inserted = true;
 			
-			currentitem.inserted = true;
-			
-			let filter = currentitem.connections.filter((pointer) => {	
-				if (pointer) return !pointer.link.inserted; else return false;
+			currentModel.connections.forEach((connection) => {	
+				
+				if (!connection) return ;
+				let model = connection.connectedModelPointer.link;
+				if (!model) return ;
+				
+				if (!model.inserted) modelStack.push(model);
 			});
-			
-			if (filter) filter.forEach(pointer => pointerStack.push(pointer));
-			
 		}
 		
-		
-		pointerStackId++;
-		if (pointerStackId>1000) throw "buildPipeline loop overflow";
+		modelStackId++;
+		if (modelStackId>1000) throw "buildPipeline loop overflow 1000";
 		
 	}
 	
 	//console.clear();
+	
 	/*
+	
 	resultStack.forEach((pointer) => {
-		if (pointer.link.type === "combpipe") {
-			console.log("combpipe: " + pointer.link.keys, pointer.link);
+		if (pointer.type === "combpipe") {
+			console.log("combpipe: " + pointer.keys, pointer);
 			return
 		}
-		console.log(pointer.link.type + ' ' + pointer.link.key, pointer.link);
-	})
+		console.log(pointer.type + ' ' + pointer.key, pointer);
+	});
+	
+	console.log(modelStack);
+	*console.log(resultStack);/*
+	console.log('-------------------')
+	
 	*/
-	//console.log(resultStack);
 	
 	return new Pipeline(resultStack);
 	
 }
+
+
+function collectPipe(model) {
+	
+	if (getType(model) !== 'pipemodel' || model.inserted) return null;
+	
+	var modelStack = []
+	var modelStackId = 0;
+	
+	var currentModel;
+	var prevItem;
+	
+	var reversed = false;
+	
+	modelStack.push(model);
+	model.inserted = true;
+	
+	while(modelStackId < modelStack.length) {
+		
+		currentModel = modelStack[modelStackId];
+		
+		let nextItem = currentModel.connections.find((connection) =>{
+			
+			let model = connection.connectedModelPointer.link;
+			
+			return model && !model.inserted && getType(model) === "pipemodel";
+		});
+		
+		if (nextItem) nextItem = nextItem.connectedModelPointer.link
+		
+		if (nextItem){
+			
+			reversed = false;
+			modelStack.push(nextItem);
+			nextItem.inserted = true;
+			
+		} else if (!reversed) {
+			
+			reversed = true;
+			modelStack.reverse();
+			modelStackId--;
+			
+		}
+		
+		modelStackId++;
+		if (modelStackId>1000) throw "collectpipe loop overflow";
+	}
+	
+	//console.log(modelStack)
+	
+	return new PipeCollectionModel(modelStack, true);
+}
+
+
+function getType(item){
+	
+	if (!item) return undefined;
+	
+	if(item.subtype === "pipemodel"){
+		if (item.isNode){
+			return "node";
+		} else {
+			return "pipemodel";
+		}
+	} else {
+		
+		return item.subtype
+	}
+	
+}
+
+
 
 class Pipeline {
 	
@@ -524,12 +292,14 @@ class Pipeline {
 		
 		this.nodes = list.filter( (item) => {return item.type === "node"} );
 		
+		this.models = [];
+		
 	}
 	
 	
 	update(){
 		
-		let a = this.list.findIndex((item) => {return !item.exist})
+		let a = -1//= this.list.findIndex((item) => {return true})
 		
 		if (a !== -1){
 			
@@ -542,10 +312,6 @@ class Pipeline {
 		this.list.forEach(item => {item.updateFlow(0.1)});
 		
 	}
-	
-	
-	
-	
 	
 	
 }

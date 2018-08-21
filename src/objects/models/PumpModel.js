@@ -1,23 +1,21 @@
 import {game} from '../../App.js';
 
+import {BaseModel} from './BaseModel.js'
 
-
-export class PumpModel {
+export class PumpModel extends BaseModel{
 	
 	
-	constructor(setup){
+	constructor(setup, parent){
 		
-		this.type = "model";
+		super();
+
 		this.subtype = "pumpmodel";
-		this.modelType = "pipeline";
 		
-		setup.connections.forEach(connection => {
-			
-			connection.model = this;
-			
-		});
+		this.class = "pipeline";
 		
+		this.parent = parent.pointer;
 		this.connections = setup.connections;
+		this.location = setup.location;
 		
 	}
 	

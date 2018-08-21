@@ -24,11 +24,10 @@ export function onMouseMoveEvent(evt){
 		}
 		
 		return
-		
 	}
 		
 	game.selection.setInvisible();
-		
+	if (game.itemConstructor.activeConstructor) game.itemConstructor.checkConstructor(-1, -1);	
 }
 
 

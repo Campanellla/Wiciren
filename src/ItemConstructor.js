@@ -113,7 +113,7 @@ export class ItemConstructor {
 						this.activeItem.setState("active");
 						
 						game.map.insertItem(item, item.location.x, item.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
-						game.map.objectsList.push(item.pointer);
+						game.map.objectsList.push(item);
 						
 						item.rotate();
 						
@@ -123,8 +123,10 @@ export class ItemConstructor {
 						
 						this.setActiveConstructor();
 						
+						//item.updateLinks();
+						
 					};
-					/////////////////////////////
+					
 					game.updatePipelines = true;
 					
 				}
@@ -147,7 +149,7 @@ export class ItemConstructor {
 					
 					item.draw(true);
 					game.map.insertItem(item, object.location.x, object.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
-					game.map.objectsList.push(item.pointer);
+					game.map.objectsList.push(item);
 					
 				}
 				//////////
@@ -166,19 +168,25 @@ export class ItemConstructor {
 			item.destruct();
 			
 			game.updatePipelines = true;
+			
+			let index = game.map.objectsList.findIndex(a => {return a === item});
+			
+			if (index >= 0) game.map.objectsList.splice(index, 1);
+			
 		}
 		
 	}
 	
 	checkConstructor(blockx, blocky){
 		
-		if (this.helperMeshes.length > 0) {
+		if (this.helperMeshes) if (this.helperMeshes.length > 0) {
 			
 			this.helperMeshes.forEach(mesh => {
 				mesh.position.x = game.selection.position.x + mesh.itemOffset.x;
 				mesh.position.z = game.selection.position.z + mesh.itemOffset.z;
+				
+				mesh.isVisible = this.activeItem.mesh.isVisible;
 			});
-					
 		}
 		
 		if (this.activeItem) {

@@ -89,6 +89,7 @@ export default function init(){
 			
 			try{
 				
+				
 				game.updateMenu();
 				
 				timeText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
@@ -104,7 +105,7 @@ export default function init(){
 				game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
 			
 			} catch(e){
-				errorOneTime(e, 1000)
+				errorOneTime(e, 1500)
 			}
 			
 			updateObjects(updatetime);
@@ -124,7 +125,7 @@ export default function init(){
 			}catch(err){
 				console.log(err);
 			}
-		}, 2000);
+		}, 1000);
 
 			
 	} else {

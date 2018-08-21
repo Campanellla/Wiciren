@@ -12,16 +12,15 @@ export class Construction {
 		
 		this.exist = true;
 		this.inserted = false;
-		
 		this.visible = false;
 		
 		this.mesh;
 		
+		this.models = [];
+		this.connectionsMap;
 		this.connections = [];
 		
-		this.childItems = [];
-		
-		this.connectionsMap;
+		this.constructionSize;
 		
 		this.arrows = [];
 		
@@ -85,19 +84,6 @@ export class Construction {
 	
 	getConnectionsCoordinates(){
 		
-		let h = this.itemSize.h;
-		let w = this.itemSize.w;
-		let r = this.rotationIndex;
-		
-		if (r % 2){
-			
-			let a = h;
-			h = w;
-			w = a;
-			
-		}
-		
-		
 		let coordinates = [];
 		
 		const sides = ["bottom", "right", "top", "left"];
@@ -106,59 +92,35 @@ export class Construction {
 			
 			model.connections.forEach(connection => {
 				
-				let x = 0;
-				let z = 0;
-				let map = [];
-				let rotationIndex = 0;
+				connection.checkRotation();
 				
-				for (let ii = 0; ii < 4; ii++){
-					
-					let sign = 1;
-					let b = (r + ii) % 4;
-					
-					if ( !(b % 3) && (ii % 3) || (b % 3) && !(ii % 3) ) sign = -1;
-					
-					let result = connection.position[sides[b]];
-					if (result !== undefined) map[sides[ii]] = result * sign;
-				}
-				
-				console.log("map: ", map);
-				console.log("itemsize: ", h);
-				
-				if (typeof(map.right) === "number"){
-					
-					x += w - 1 + map.right;
-					if (map.right) rotationIndex = 2;
-					
-				} else {
-					
-					x += map.left || 0;
-					if (map.left < 0) rotationIndex = 0;
-				}
-				
-				if (typeof(map.top) === "number"){
-					
-					z += h - 1 + map.top;
-					if (map.top) rotationIndex = 1;
-					
-				} else {
-					
-					z += map.bottom || 0;
-					if (map.bottom < 0) rotationIndex = 3;
-				}
-				
-				coordinates.push({x:x, z:z, rotationIndex:rotationIndex, connection:connection});
-				
+				coordinates.push({	
+					x: connection.rconnLocation.x, 
+					z: connection.rconnLocation.z, 
+					rotationIndex: connection.rotationIndex, 
+					connection: connection
+				});
 			});
 		});
-		
-		console.log("coordinates", coordinates);
 		
 		return coordinates
 	}
 	
 	
 	updateLinks(){
+		
+		this.models.forEach(model => {
+			
+			model.connections.forEach(connection => {
+				
+				connection.updateLinks();
+				
+			});
+			
+		});
+		
+		
+		return ;
 		
 		this.inserted = false;
 		this.connections.length = 0;
@@ -177,13 +139,15 @@ export class Construction {
 			let item = game.map.getItemFromCoord(xx, zz);
 			
 			if (item !== null) {
+				
 				this.connections.push(item.pointer);
+				rotatedConnectionsMap[i].connection.itemPointer = item.pointer;
+				
 			} else if (this.connectionsMap[i].forced) {
+				
 				this.connections.push(null);
+				rotatedConnectionsMap[i].connection.itemPointer = game.nullpointer;
 			}
-			
-			rotatedConnectionsMap[i].connection.connectionItemPointer = this.connections[this.connections.length-1];
-			
 		}
 	}
 	
@@ -207,8 +171,6 @@ export class Construction {
 		this.mesh.position.z = this.location.z + offsetz;
 		this.mesh.rotation.y = rotationIndex * game.TAU;
 		
-		
-		
 	}
 	
 	
@@ -225,7 +187,7 @@ export class Construction {
 	destruct(){
 		
 		this.exist = false;
-		this.pointer.link = undefined;
+		this.pointer.link = null;
 		this.mesh.dispose();
 		
 		this.visible = false;

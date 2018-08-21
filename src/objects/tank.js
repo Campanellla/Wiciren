@@ -31,25 +31,36 @@ export class _tank extends Construction {
 		this.returnFlow = [];
 		this.inflow = [];
 		
-		this.models = [];
 		
-		this.connectionsMap = [{right: 1}]; //{left: -1},{top: 1},{bottom: -1}
+		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
+		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
+		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:1, z:0} , itemPointer: this.pointer}
+		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
-		let s = [];
+		this.connectionsMap = [right] //{left: -1},{top: 1},{bottom: -1}
 		
-		this.connectionsMap.forEach(position => {
+		let connections = [];
+		
+		this.connectionsMap.forEach(connection => {
 			
-			s.push(new game.class.Connection(position, this.pointer));
+			connections.push(new game.class.Connection(connection));
 			
 		});
 		
-		let setup = {
-			
-			connections:s
-			
-		}
+		this.models.push(new TankModel( { connections: connections, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
 		
-		this.models.push(new TankModel(setup));
+		this.models.forEach(model => {
+			
+			let currentModelPointer = model.pointer;
+			
+			model.connections.forEach(connection => {connection.modelPointer = currentModelPointer});
+			
+		});
+		
+		
+		
+		
+		
 	}
 	
 	
@@ -58,71 +69,15 @@ export class _tank extends Construction {
 	}
 	
 	
-	updateFlow(dt){
-		
-		this.pressure = this.volume / 1000;
-		
-		this.inflow.forEach((flow)=>{
-			
-			if (flow){
-				
-				if (this.volume + flow.Q < 1000){
-					
-					this.volume += flow.Q;
-					
-				} else {
-					
-					let a = 1000 - this.volume;
-					this.volume = 1000;
-					flow.Q -= a;
-					
-					this.returnFlow.push({
-						Q:flow.Q,
-						Source: flow.Source
-					});
-				};
-			};
-		});
-		
-		this.returnFlow.forEach((flow) => {
-			flow.Source.link.volume += flow.Q;
-		});
-		
-		this.returnFlow.length = 0;
-		
-		this.connections.forEach((pointer)=>{
-			
-			if (!pointer) return ;
-			
-			let item = pointer.link;
-			
-			if (this.pressure > item.pressure){
-				
-				if (this.volume > 0){
-					
-					item.inflow.push({
-						Q:(this.pressure - item.pressure)*20,
-						Source: this.pointer
-					})
-					
-					this.volume -= (this.pressure - item.pressure)*20;
-				}
-				
-			}
-		});
-		
-		this.inflow.length = 0;
-		
-	}
 	
-
 	save(){
 		var str = 
 			{
 				type: this.type,
 				location:this.location,
 				volume: this.volume,
-				rotationIndex :this.rotationIndex
+				rotationIndex :this.rotationIndex,
+				pressure: this.pressure
 			}
 		return str;
 	}

@@ -18,6 +18,8 @@ export class _pipe extends Construction {
 		
 		this.itemSize = this.getSize();
 		
+		this.constructionSize = {h:1, w:1};
+		
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
 		
@@ -34,25 +36,36 @@ export class _pipe extends Construction {
 		this.lastQ = 0;
 		this.Q = 0;
 		
-		this.models = [];
+		
+		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
+		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
+		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:1, z:0} , itemPointer: this.pointer}
+		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
 		switch(this.subtype){
-			
-			case "3-way": this.connectionsMap = [{left: -1}, 			{right: 1},	{bottom: -1}]; break;
-			case "4-way": this.connectionsMap = [{left: -1}, {top: 1},	{right: 1},	{bottom: -1}]; break;
-			case "angle": this.connectionsMap = [{left: -1}, 						{bottom: -1}]; break;
-			default     : this.connectionsMap = [{left: -1}, 			{right: 1}				]; break;
+			case "3-way": this.connectionsMap = [left, 		right,	bottom]; break;
+			case "4-way": this.connectionsMap = [left, top,	right,	bottom]; break;
+			case "angle": this.connectionsMap = [left, 				bottom]; break;
+			default     : this.connectionsMap = [left, 		right		  ]; break;
 		}
 		
 		let connections = [];
 		
-		this.connectionsMap.forEach(position => {
+		this.connectionsMap.forEach(conn => {
 			
-			connections.push(new game.class.Connection(position, this.pointer));
+			connections.push(new game.class.Connection(conn));
 			
 		});
 		
-		this.models.push(new PipeModel( { connections: connections } ));
+		this.models.push(new PipeModel( { connections: connections, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
+		
+		this.models.forEach(model => {
+			
+			let currentModelPointer = model.pointer;
+			
+			model.connections.forEach(connection => {connection.modelPointer = currentModelPointer});
+			
+		});
 		
 		
 	}

@@ -1,28 +1,23 @@
 import {game} from '../../App.js';
 
+import {BaseModel} from './BaseModel.js'
 
-export class PipeModel {
+
+export class PipeModel extends BaseModel{
 	
 	
-	constructor(setup){
+	constructor(setup, parent){
 		
-		this.type = "model";
+		super();
+		
 		this.subtype = "pipemodel";
-		this.modelType = "pipeline";
+		this.class = "pipeline";
 		
-		setup.connections.forEach(connection => {
-			
-			connection.model = this;
-			
-		});
-		
+		this.parent = parent.pointer;
 		this.connections = setup.connections;
-		
+		this.location = setup.location;
 		
 	}
-	
-	
-	
 	
 		
 }

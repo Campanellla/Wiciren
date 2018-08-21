@@ -3,6 +3,7 @@ import {game} from '../App.js';
 import {Construction} from './Base.js';
 
 import {TankModel} from './models/TankModel.js';
+import {EngineModel} from './models/EngineModel.js';
 
 
 export class _engine extends Construction {
@@ -22,33 +23,57 @@ export class _engine extends Construction {
 		this.rotationIndex = args.rotationIndex || 0;
 		
 		
+		this.pressure = args.pressure || 0;
+		this.volume = args.volume || 0;
+		
+		this.maxVolume = 250;
+		this.flowresistance = 0.2;
+		
+		this.returnFlow = [];
+		this.inflow = [];
+		
+		
 		this.power = 100;
 		
-		this.models = [];
+		let left =   {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
+		let top =    {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
+		let right =  {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0} , itemPointer: this.pointer}
+		let bottom = {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
-		this.connectionsMap = [{left: -1}];
+		this.connectionsMap = [left] //{left: -1},{top: 1},{bottom: -1}
 		
-		let s = [];
+		let connections = [];
 		
-		this.connectionsMap.forEach(position => {
+		this.connectionsMap.forEach(connection => {
 			
-			s.push(new game.class.Connection(position, this.pointer));
+			connections.push(new game.class.Connection(connection));
 			
 		});
 		
-		let setup = {
-			
-			connections:s
-			
-		}
+		this.models.push(new TankModel( { connections: connections, location: {x:0, z:0}, size: {h:1, w:2} }, this ));
 		
-		this.models.push(new TankModel(setup));
+		this.models.forEach(model => {
+			
+			let currentModelPointer = model.pointer;
+			
+			model.connections.forEach(connection => {connection.modelPointer = currentModelPointer});
+			
+		});
+		
+		
+		this.models.push(new EngineModel({}, this));
+		
+		
+		this.speed = 100;
+		
+		this.controlIndex = 0;
+		
 	}
 	
 	
 	update(dt){
 		
-		
+		this.models[1].update(0.02);
 		
 	}
 	
@@ -58,7 +83,11 @@ export class _engine extends Construction {
 			{
 				type: this.type,
 				location:this.location,
-				rotationIndex:this.rotationIndex
+				rotationIndex:this.rotationIndex,
+				volume: this.volume,
+				pressure: this.pressure,
+				speed: this.speed,
+				controlIndex: this.controlIndex
 			};
 		return str;
 	}

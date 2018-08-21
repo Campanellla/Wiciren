@@ -35,13 +35,11 @@ export class _pump extends Construction {
 		
 		this.connectionsMap = [{left:-1, forced:true}, {right: 1, forced:true}];
 		
-		this.models = [];
-		
 		let s = [];
 		
 		this.connectionsMap.forEach(position => {
 			
-			s.push(new game.class.Connection(position, this.pointer));
+			s.push(new game.class.Connection(position));
 			
 		});
 		
