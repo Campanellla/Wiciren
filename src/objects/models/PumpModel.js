@@ -14,8 +14,13 @@ export class PumpModel extends BaseModel{
 		this.class = "pipeline";
 		
 		this.parent = parent.pointer;
-		this.connections = setup.connections;
 		this.location = setup.location;
+		
+		if (setup.connectionsMap) {
+			this.connections = this.setUpConnections(setup.connectionsMap);
+		} else {
+			this.connections = setup.connections;
+		}
 		
 	}
 	

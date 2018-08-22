@@ -12,7 +12,7 @@ export class _device extends Construction {
 		
 		this.type = "device";
 		
-		this.itemSize = this.getSize();
+		this.itemSize = {h:2, w:2};
 		
 		if (!args) args = {};
 		
@@ -20,17 +20,9 @@ export class _device extends Construction {
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
-		this.connectionsMap = [];
+		let connectionsMap = [{location: {x:0, z:0}, size: {h:2, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}];
 		
-		let c = new game.class.Connection({location: {x:0, z:0}, size: {h:2, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer})
-		
-		
-		this.models.push(new DeviceModel({ 	connections: [c],
-											location: {x:0, z:0}, 
-											size: {h:2, w:2} 
-										}, this));
-		
-		this.models[0].connections[0].modelPointer = this.models[0].pointer;
+		this.models.push(new DeviceModel({ connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:2, w:2} }, this));
 		
 		
 		this.volume = 0;

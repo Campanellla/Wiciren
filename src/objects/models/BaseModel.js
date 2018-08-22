@@ -26,6 +26,20 @@ export class BaseModel {
 		
 	}
 	
+	setUpConnections(map){
+		
+		let connections = [];
+		
+		map.forEach( config => {
+			
+			let connection = new game.class.Connection(config);
+			connection.modelPointer = this.pointer;
+			connections.push(connection);
+		});
+		
+		return connections;
+	}
+	
 	
 	
 	

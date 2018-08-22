@@ -14,11 +14,11 @@ export class _engine extends Construction {
 		
 		this.type = "engine";
 		
-		this.itemSize = this.getSize();
+		this.itemSize = {h:1, w:2};
 		
-		if (!args) args = {};
-			
-		if (args.key) this.key = args.key; else this.key = -1;
+		args = args || {};
+		
+		this.key = args.key || -1;
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
@@ -40,45 +40,20 @@ export class _engine extends Construction {
 		let right =  {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0} , itemPointer: this.pointer}
 		let bottom = {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
-		this.connectionsMap = [left] //{left: -1},{top: 1},{bottom: -1}
+		let connectionsMap = [left] //{left: -1},{top: 1},{bottom: -1}
+		this.models.push(new TankModel( { connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:1, w:2} }, this ));
 		
-		let connections = [];
+		connectionsMap = [{location: {x:1, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0}, itemPointer: this.pointer}];
+		this.models.push(new EngineModel({ connectionsMap: connectionsMap, location: {x:1, z:0}, size: {h:1, w:2} }, this));
 		
-		this.connectionsMap.forEach(connection => {
-			
-			connections.push(new game.class.Connection(connection));
-			
-		});
-		
-		this.models.push(new TankModel( { connections: connections, location: {x:0, z:0}, size: {h:1, w:2} }, this ));
-		
-		this.models.forEach(model => {
-			
-			let currentModelPointer = model.pointer;
-			
-			model.connections.forEach(connection => {connection.modelPointer = currentModelPointer});
-			
-		});
-		
-		let c = new game.class.Connection({location: {x:1, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0}, itemPointer: this.pointer})
-		
-		
-		this.models.push(new EngineModel({ 	connections: [c],
-											location: {x:1, z:0}, 
-											size: {h:1, w:2} 
-										}, this));
-		
+		//// temp
 		
 		this.speed = 100;
-		
 		this.load = 0;
-		
 		this.controlIndex = 0;
 		
-		this.models[1].connections[0].modelPointer = this.models[1].pointer;
 		
 		console.log(this.models[1]);
-		
 		this.models[1].connections[0].updateLinks();
 		
 	}

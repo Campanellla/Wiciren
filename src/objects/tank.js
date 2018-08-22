@@ -25,40 +25,15 @@ export class _tank extends Construction {
 		this.pressure = args.pressure || 0;
 		this.volume = args.volume || 0;
 		
-		this.maxVolume = 250;
-		this.flowresistance = 0.2;
-		
-		this.returnFlow = [];
-		this.inflow = [];
-		
 		
 		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
 		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
 		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:1, z:0} , itemPointer: this.pointer}
 		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
-		this.connectionsMap = [right] //{left: -1},{top: 1},{bottom: -1}
+		this.connectionsMap = [right];
 		
-		let connections = [];
-		
-		this.connectionsMap.forEach(connection => {
-			
-			connections.push(new game.class.Connection(connection));
-			
-		});
-		
-		this.models.push(new TankModel( { connections: connections, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
-		
-		this.models.forEach(model => {
-			
-			let currentModelPointer = model.pointer;
-			
-			model.connections.forEach(connection => {connection.modelPointer = currentModelPointer});
-			
-		});
-		
-		
-		
+		this.models.push(new TankModel( { connectionsMap: this.connectionsMap, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
 		
 		
 	}

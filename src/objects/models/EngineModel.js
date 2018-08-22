@@ -12,17 +12,22 @@ export class EngineModel extends BaseModel {
 		this.subtype = "enginemodel";
 		this.class = "electric";
 		
-		this.connections = args.connections;
 		this.location = args.location;
 		this.parent = parent.pointer;
 		
+		if (args.connectionsMap) {
+			this.connections = this.setUpConnections(args.connectionsMap);
+		} else {
+			this.connections = args.connections;
+		}
+		
+		
+		
 		this.speed = parent.speed;
-		
 		this.controlIndex = parent.controlIndex;
-		
 		this.I = 0
-		
 		this.load = 0
+		this.run = true;
 		
 	}
 	
@@ -33,8 +38,8 @@ export class EngineModel extends BaseModel {
 		
 		let controlIndex = this.parent.link.controlIndex;
 		
-		let resistancea = 120;
-		let resistanceb = 250000;
+		let resistancea = 500;
+		let resistanceb = resistancea * 900;
 		
 		if (speed < 0) speed = 0;
 		
@@ -56,15 +61,17 @@ export class EngineModel extends BaseModel {
 		
 		let controlIndexDx = (cisetPoint - controlIndex) * dt * 25;
 		
-		if (Math.abs(controlIndexDx) > 250 * dt){
+		if (Math.abs(controlIndexDx) > Math.abs(controlIndexDx) * 20 * dt){
 			
-			if (controlIndexDx > 0) controlIndexDx = 250 * dt;
-			if (controlIndexDx < 0) controlIndexDx = -250 * dt;
+			if (controlIndexDx > 0) controlIndexDx = Math.abs(controlIndexDx) * 20 * dt;
+			if (controlIndexDx < 0) controlIndexDx = Math.abs(controlIndexDx) * -20 * dt;
 		}
 		
 		controlIndex += controlIndexDx;
 		
-		let fuelIndex = Math.round(controlIndex) * 12 * speed;
+		if (!this.run) controlIndex = 0;
+		
+		let fuelIndex = Math.round(controlIndex) * 100 * speed;
 		
 		let volumeChange = fuelIndex / 20000000 * dt;
 		
@@ -76,7 +83,7 @@ export class EngineModel extends BaseModel {
 		
 		if (fuelIndex < 0) fuelIndex = 0;
 		
-		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 15 + 1) - this.load) / 5000 * dt;
+		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 15 + 1) - this.load) / 20000 * dt;
 		
 		speed += balance;
 		

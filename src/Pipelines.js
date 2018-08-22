@@ -2,6 +2,7 @@ import {game} from './App.js';
 
 import {PipeNodeModel} from "./objects/models/PipeNodeModel.js";
 import {PipeCollectionModel} from "./objects/models/PipeCollectionModel.js";
+import {PipeModel} from "./objects/models/PipeModel.js";
 
 
 export default class Pipelines {
@@ -27,30 +28,27 @@ export default class Pipelines {
 			
 			if (!object) { console.log("%cobject not exist", "color:red"); return false; }
 			
-			object.models.forEach(model => {
+			for (let i = 0; i < object.models.length; i++){
 				
+				let model = object.models[i];
 				
-				
-			});
-			
-			
-			object.models.forEach(model => {
-				
-				if (model.class === "pipeline") {
+				if (model.class === "pipeline"){
 					
-					if (model.reset) {
-						let m = model.reset();
-						this.models.push(m);
-					} else {
-						this.models.push(model);
+					if (model.reset) if (model.reset()) {
+						
+						model = object.models[i];
 					}
+					
+					this.models.push(model);
 				}
-			});
+			}
 		});
 		
 		
 		///// update connections
 		this.models.forEach((model) => {
+			
+			if (!model) {console.log(this.models); return; }
 			
 			model.inserted = false;
 			
@@ -234,7 +232,7 @@ function collectPipe(model) {
 			
 			let model = connection.connectedModelPointer.link;
 			
-			return model && !model.inserted && getType(model) === "pipemodel";
+			return model && !model.inserted && !model.combined && getType(model) === "pipemodel";
 		});
 		
 		if (nextItem) nextItem = nextItem.connectedModelPointer.link
@@ -259,7 +257,7 @@ function collectPipe(model) {
 	
 	//console.log(modelStack)
 	
-	return new PipeCollectionModel(modelStack, true);
+	return new PipeModel(modelStack, true, true);
 }
 
 

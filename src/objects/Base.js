@@ -17,8 +17,6 @@ export class Construction {
 		this.mesh;
 		
 		this.models = [];
-		this.connectionsMap;
-		this.connections = [];
 		
 		this.constructionSize;
 		
