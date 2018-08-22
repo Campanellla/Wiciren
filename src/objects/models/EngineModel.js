@@ -33,12 +33,12 @@ export class EngineModel extends BaseModel {
 		
 		let controlIndex = this.parent.link.controlIndex;
 		
-		let resistancea = 10;
-		let resistanceb = 25000;
+		let resistancea = 120;
+		let resistanceb = 250000;
 		
 		if (speed < 0) speed = 0;
 		
-		this.I = (900 - speed) * dt * 1 + this.I;
+		this.I = (900 - speed) * dt * 2 + this.I;
 		
 		if (Math.abs(this.I) > 10){
 			
@@ -64,15 +64,19 @@ export class EngineModel extends BaseModel {
 		
 		controlIndex += controlIndexDx;
 		
-		let fuelIndex = Math.round(controlIndex) * speed;
+		let fuelIndex = Math.round(controlIndex) * 12 * speed;
 		
-		let volumeChange = fuelIndex / 100000 * dt;
+		let volumeChange = fuelIndex / 20000000 * dt;
 		
-		if (volume < volumeChange) fuelIndex = volume * 100000 / dt;
+		if (volume < volumeChange) fuelIndex = volume * 20000000 / dt;
+		
+		if (volume < 0) volumeChange = 0;
 		
 		volume -= volumeChange;
 		
-		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed + 1) - this.load) / 250 * dt;
+		if (fuelIndex < 0) fuelIndex = 0;
+		
+		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 15 + 1) - this.load) / 5000 * dt;
 		
 		speed += balance;
 		
