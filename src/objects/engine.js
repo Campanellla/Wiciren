@@ -35,16 +35,33 @@ export class _engine extends Construction {
 		
 		this.power = 100;
 		
-		let left =   {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
-		let top =    {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
-		let right =  {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0} , itemPointer: this.pointer}
-		let bottom = {location: {x:0, z:0}, size: {h:1, w:2}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
+		let conOptions = {	
+			location: {x:0, z:0}, 
+			conlocation: {x:-1, z:0}, 
+			size: this.itemSize, 
+			itemPointer: this.pointer
+		};
+		args = {
+			connectionsMap: [conOptions], 
+			location: {x:0, z:0}, 
+			size: this.itemSize,
+			parentPointer: this.pointer
+		};
+		this.models.push(new TankModel(args));
 		
-		let connectionsMap = [left] //{left: -1},{top: 1},{bottom: -1}
-		this.models.push(new TankModel( { connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:1, w:2} }, this ));
-		
-		connectionsMap = [{location: {x:1, z:0}, size: {h:1, w:2}, connLocation: {x:2, z:0}, itemPointer: this.pointer}];
-		this.models.push(new EngineModel({ connectionsMap: connectionsMap, location: {x:1, z:0}, size: {h:1, w:2} }, this));
+		conOptions = {	
+			location: {x:1, z:0}, 
+			conlocation: {x:2, z:0}, 
+			size: this.itemSize, 
+			itemPointer: this.pointer
+		};
+		args = {
+			connectionsMap: [conOptions], 
+			location: {x:1, z:0},
+			size: this.itemSize,
+			parentPointer: this.pointer
+		};
+		this.models.push(new EngineModel(args));
 		
 		//// temp
 		

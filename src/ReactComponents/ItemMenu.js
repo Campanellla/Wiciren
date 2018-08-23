@@ -27,10 +27,14 @@ export default class ItemMenu extends Component {
 			position:{	
 				left:100,
 				top:50
-			}
+			},
+			slider:50
 		};
 		
 		game.itemMenu = this;
+		
+		//this.handleChange = this.handleChange.bind(this);
+		//this.sliderValue = React.createRef();
 		
 	}
 	
@@ -76,29 +80,59 @@ export default class ItemMenu extends Component {
 	}
 	
 	
+	
+	
 	render(){
-		return(<div id = 'ItemMenu' 
-					hidden = {this.state.hidden} 
-					style = {{
-						left:this.state.position.left, 
-						top:this.state.position.top}}
-				>
-					<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
-						Item menu
-					</div>
-					<button id = 'ItemMenuCloseButton' onClick = {this.onClose}>X</button>
-					<div id = 'ItemMenuText'>{
-						this.state.text.split('\n').map((item, key) => {
-  							return <span key={key}>{item}<br/></span>
-						})
-					}</div>
-					<ItemConfig item = {this.state.item} />
-					
-					
-				</div> );
+		return (
+			<div id = 'ItemMenu' 
+				hidden = {this.state.hidden} 
+				style = {{
+					left:this.state.position.left, 
+					top:this.state.position.top
+				}} >
+						
+				<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
+					Item menu
+				</div>
+				<button id = 'ItemMenuCloseButton' onClick = {this.onClose}>
+					X
+				</button>
+				<div id = 'ItemMenuText'>
+					{
+						(() => {if (this.state.item && this.state.item.link && this.state.item.link.type === "device") {
+							
+						} else {
+							return this.state.text.split('\n')
+							.map((item, key) => {
+	  							return <span key={key}>{item}<br/></span>
+							})
+						}})()
+					}
+				</div>
+				
+				<div>
+				{	(function(state){
+						if (state.item && state.item.link && state.item.link.getMenu) return state.item.link.getMenu(this);
+					})(this.state)
+				}
+				
+				</div>
+				
+				<ItemConfig item = {this.state.item} />
+				
+			</div> 
+		);
 	}
 	
 }
+
+/*
+<div class="slidecontainer">
+				<input 	type="range" min="0" max="1000" defaultValue="0" class="slider" id="myRange" 
+				 		onChange={this.handleChange} ref={this.sliderValue}/>
+			</div>;
+
+*/
 
 class ItemConfig extends Component {
 	

@@ -24,6 +24,21 @@ export class Construction {
 		
 	}
 	
+	renewModel(model1, model2) {
+		
+		let index = this.models.findIndex(model => {return model1 === model})
+		
+		if (index >= 0) {
+			this.models[index] = model2;
+			return true;
+		} else {
+			return false;
+		}
+		
+	};
+	
+	
+	
 	/// arg bool -> true if need to draw instance only
 	draw(instance){
 		

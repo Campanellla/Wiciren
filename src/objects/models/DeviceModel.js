@@ -45,7 +45,7 @@ export class DeviceModel extends BaseModel {
 		
 		let a = this.connections[0].connectedItemPointer.link.speed / 900;
 		
-		this.connections[0].connectedModelPointer.link.load += this.parent.link.volume * 1000 * a * a;
+		this.connections[0].connectedModelPointer.link.load += this.parent.link.load * 1000 * a * a;
 		
 		this.parent.link.speed = this.connections[0].connectedItemPointer.link.speed;
 		this.parent.link.controlIndex = this.connections[0].connectedItemPointer.link.controlIndex;

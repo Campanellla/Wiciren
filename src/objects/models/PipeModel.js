@@ -37,19 +37,27 @@ export class PipeModel extends BaseModel{
 			
 			this.connections[0] = this.models[0].connections.find((connection) => {
 				
-				return getType(connection.connectedModelPointer.link) !== "pipemodel";
+				let type = getType(connection.connectedModelPointer.link);
+				
+				return type !== "pipemodel" && type !== null;
 			});
 			
 			if(this.count === 1) {
 				
 				this.connections[1] = this.models[this.models.length-1].connections.find((connection)=>{
-					return getType(connection.connectedModelPointer.link) !== "pipemodel" && connection !== this.connections[0];
+					
+					let type = getType(connection.connectedModelPointer.link);
+					
+					return type !== "pipemodel" && connection !== this.connections[0] && type !== null;
 				}); 
 				
 			} else {
 				
 				this.connections[1] = this.models[this.models.length-1].connections.find((connection)=>{
-					return getType(connection.connectedModelPointer.link) !== "pipemodel";
+					
+					let type = getType(connection.connectedModelPointer.link);
+					
+					return type !== "pipemodel" && type !== null;
 				}); 
 			};
 			
@@ -165,27 +173,11 @@ export class PipeModel extends BaseModel{
 		this.returnFlow.length = 0;
 		
 		
-		this.connections.forEach((connection)=>{
+		for (let i = 0; i < this.connections.length; i++){
 			
-			if (!connection) return ;
+			if (!this.connections[i] || !this.connections[i].connectedModelPointer.link) continue;
 			
-			let connectedModelPointer = connection.connectedModelPointer;
-			
-			if (!connectedModelPointer) { //console.log("error 133"); 
-				return ;}
-			if (!connectedModelPointer.link) { //console.log("error 134"); 
-				return ;}
-			
-			let connectedModel;
-			
-			if (connectedModelPointer.link.submodel) {
-				connectedModel = connectedModelPointer.link.submodel;
-			} else {
-				connectedModel = connectedModelPointer.link;
-			}
-			
-			if (!connectedModel) { //console.log("error 144"); 
-				return ;}
+			let connectedModel = this.connections[i].connectedModelPointer.link;
 			
 			if (this.pressure > connectedModel.pressure){
 				
@@ -199,16 +191,9 @@ export class PipeModel extends BaseModel{
 					this.volume -= (this.pressure - connectedModel.pressure) * 20;
 				}
 			}
-		});
+		};
 		
 		let b = this.volume / this.count;
-		
-		/*
-		this.list.forEach(pointer => {
-			pointer.volume = b;
-			pointer.pressure = this.pressure;
-		})
-		*/
 		
 		this.inflow.length = 0;
 		
@@ -232,7 +217,7 @@ export class PipeModel extends BaseModel{
 
 function getType(item){
 	
-	if (!item) return undefined;
+	if (!item) return null;
 	
 	if(item.subtype === "pipemodel"){
 		if (item.isNode){

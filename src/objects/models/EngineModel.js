@@ -5,7 +5,7 @@ import {BaseModel} from './BaseModel.js'
 
 export class EngineModel extends BaseModel {
 	
-	constructor(args, parent){
+	constructor(args){
 		
 		super();
 		
@@ -13,7 +13,7 @@ export class EngineModel extends BaseModel {
 		this.class = "electric";
 		
 		this.location = args.location;
-		this.parent = parent.pointer;
+		this.parent = args.parentPointer;
 		
 		if (args.connectionsMap) {
 			this.connections = this.setUpConnections(args.connectionsMap);
@@ -22,9 +22,8 @@ export class EngineModel extends BaseModel {
 		}
 		
 		
-		
-		this.speed = parent.speed;
-		this.controlIndex = parent.controlIndex;
+		this.speed = this.parent.link.speed;
+		this.controlIndex = this.parent.link.controlIndex;
 		this.I = 0
 		this.load = 0
 		this.run = true;
@@ -33,22 +32,24 @@ export class EngineModel extends BaseModel {
 	
 	update(dt){
 		
+		let ratedPower = 1000000//000;
+		
 		let speed = this.parent.link.speed;
 		let volume = this.parent.link.volume;
 		
 		let controlIndex = this.parent.link.controlIndex;
 		
-		let resistancea = 500;
-		let resistanceb = resistancea * 900;
+		let resistancea = ratedPower/10000;
+		let resistanceb = resistancea*900;
 		
 		if (speed < 0) speed = 0;
 		
 		this.I = (900 - speed) * dt * 2 + this.I;
 		
-		if (Math.abs(this.I) > 10){
+		if (Math.abs(this.I) > 50){
 			
-			if (this.I > 0) this.I = 10;
-			if (this.I < 0) this.I = -10;
+			if (this.I > 0) this.I = 50;
+			if (this.I < 0) this.I = -50;
 		}
 		
 		let I = this.I;
@@ -56,8 +57,8 @@ export class EngineModel extends BaseModel {
 		
 		let cisetPoint = I + P;
 		
-		if (cisetPoint > 100) cisetPoint = 100;
-		if (cisetPoint < 0) cisetPoint = 0;
+		if (cisetPoint > 110) cisetPoint = 110;
+		if (cisetPoint < -10) cisetPoint = -10;
 		
 		let controlIndexDx = (cisetPoint - controlIndex) * dt * 25;
 		
@@ -67,23 +68,26 @@ export class EngineModel extends BaseModel {
 			if (controlIndexDx < 0) controlIndexDx = Math.abs(controlIndexDx) * -20 * dt;
 		}
 		
-		controlIndex += controlIndexDx;
+		if (Math.abs(controlIndexDx) < 0.1) controlIndexDx = 0;
+		
+		controlIndex += controlIndexDx ;
+		
+		if (controlIndex < 0) controlIndex = 0;
+		if (controlIndex > 100) controlIndex = 100;
 		
 		if (!this.run) controlIndex = 0;
 		
-		let fuelIndex = Math.round(controlIndex) * 100 * speed;
-		
+		let fuelIndex = (Math.round(controlIndex) + (Math.random()-0.5)*3) * ratedPower/100/900 * speed;
 		let volumeChange = fuelIndex / 20000000 * dt;
 		
 		if (volume < volumeChange) fuelIndex = volume * 20000000 / dt;
-		
 		if (volume < 0) volumeChange = 0;
 		
 		volume -= volumeChange;
 		
 		if (fuelIndex < 0) fuelIndex = 0;
 		
-		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 15 + 1) - this.load) / 20000 * dt;
+		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 50 + 1) - this.load) / (ratedPower/1000 + Math.sqrt(ratedPower/2)*ratedPower/200000) * dt;
 		
 		speed += balance;
 		

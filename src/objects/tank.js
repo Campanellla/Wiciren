@@ -26,14 +26,19 @@ export class _tank extends Construction {
 		this.volume = args.volume || 0;
 		
 		
-		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}
-		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:1} , itemPointer: this.pointer}
-		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:1, z:0} , itemPointer: this.pointer}
-		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:-1}, itemPointer: this.pointer}	
+		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:-1, z:0}, itemPointer: this.pointer}
+		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:0, z:1} , itemPointer: this.pointer}
+		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:1, z:0} , itemPointer: this.pointer}
+		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:0, z:-1}, itemPointer: this.pointer}	
 		
-		this.connectionsMap = [right];
+		args = { 
+			connectionsMap: [right], 
+			location: {x:0, z:0}, 
+			size: this.itemSize,
+			parentPointer: this.pointer
+		}
 		
-		this.models.push(new TankModel( { connectionsMap: this.connectionsMap, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
+		this.models.push(new TankModel(args, this));
 		
 		
 	}

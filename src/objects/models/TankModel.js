@@ -14,7 +14,9 @@ export class TankModel extends BaseModel{
 		
 		this.class = "pipeline";
 		
-		this.parent = parent.pointer;
+		parent = parent || {};
+		
+		this.parent = setup.parentPointer || parent.pointer;
 		this.location = setup.location;
 		
 		
@@ -28,7 +30,7 @@ export class TankModel extends BaseModel{
 		this.pressure = 0 //args.pressure || 0;
 		this.volume = 0 //args.volume || 0;
 		
-		this.maxVolume = 250;
+		this.maxVolume = 25000;
 		this.flowresistance = 0.2;
 		
 		this.returnFlow = [];

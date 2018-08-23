@@ -5,12 +5,9 @@ import {BaseModel} from './BaseModel.js'
 
 export class PipeNodeModel extends BaseModel{
 
-	constructor(model,connectWithSubmodels){
+	constructor(model){
 		
 		super();
-		
-		this.connectWithSubmodels = connectWithSubmodels;
-		
 		
 		this.subtype = "nodemodel";
 		this.class = "pipeline";
@@ -18,18 +15,20 @@ export class PipeNodeModel extends BaseModel{
 		this.parent = model.parent;
 		this.connections = model.connections;
 		this.location = model.location;
-		this.subconnections = [];
 		
 		this.inserted = false;
 		this.isNode = true;
 		
 		model.inserted = true;
 		
-		let a = model.parent.link.models.findIndex(m => {return m === model})
-		this.modelIndex = a;
-		model.parent.link.models[a] = this;
+		let parent = this.parent.link;
+		
+		this.modelIndex = parent.models.findIndex(m => {return m === model});
+		parent.models[this.modelIndex] = this;
+		
 		model.pointer.link = this;
-		this.saved = model;
+		
+		this.origin = model;
 		
 		this.inflow = [];
 		this.pressure = 0;
@@ -47,11 +46,11 @@ export class PipeNodeModel extends BaseModel{
 	
 	reset(){
 		
-		this.parent.link.models[this.modelIndex] = this.saved;
-		this.pointer.link = this.saved;
-		this.saved.pointer.link = this.saved;
+		this.parent.link.models[this.modelIndex] = this.origin;
+		this.pointer.link = this.origin;
+		this.origin.pointer.link = this.origin;
 		
-		return this.saved;
+		return true;
 		
 	}
 	
@@ -95,24 +94,10 @@ export class PipeNodeModel extends BaseModel{
 		
 		for (let i = 0; i < this.connections.length; i++){
 			
-			let connectedModelPointer = this.connections[i].connectedModelPointer;
+			if (!this.connections[i] || !this.connections[i].connectedModelPointer.link) continue;
 			
-			if (!connectedModelPointer) { //console.log("error 133"); 
-				return ;}
-			if (!connectedModelPointer.link) { //console.log("error 134"); 
-				return ;}
+			let connectedModel = this.connections[i].connectedModelPointer.link;
 			
-			let connectedModel;
-			
-			if (connectedModelPointer.link.submodel) {
-				connectedModel = connectedModelPointer.link.submodel;
-			} else {
-				connectedModel = connectedModelPointer.link;
-			}
-			
-			if (!connectedModel) { //console.log("error 144"); 
-				return ;}
-				
 			if (this.pressure > connectedModel.pressure){
 				
 				if (this.volume > 0){

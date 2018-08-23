@@ -18,7 +18,7 @@ class Connection {
 		
 		this.location = args.location || {x:0, z:0};
 		this.size = args.size || {h:1, w:1};
-		this.connLocation = args.connLocation;
+		this.connLocation = args.connLocation || args.conlocation;
 		
 		this.itemPointer = args.itemPointer || game.nullpointer;
 		this.modelPointer = game.nullpointer;
@@ -124,7 +124,7 @@ class Connection {
 				
 				if (model.location.x + model.parent.link.location.x === xx && model.location.z + model.parent.link.location.z === zz){
 					
-					if (!this.modelPointer.link) console.log(this);
+					if (!this.modelPointer.link) {console.log(this); return;}
 					
 					if (this.modelPointer.link.class === model.class){
 						
