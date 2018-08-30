@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import {game} from '../App.js';
-import {save, load} from '../workspace.js'
 
 
 
@@ -49,7 +48,7 @@ class ConfigMenuWindow extends Component {
 class SaveButton extends Component {
 
 	clickSave(){
-		var a = save(game.map.objectsList);
+		var a = game.save(game.map.objectsList);
 		window.localStorage.setItem("save0", a);
 	}
 
@@ -65,7 +64,7 @@ class LoadButton extends Component {
 	clickLoad(){
 		var b = JSON.parse(window.localStorage.getItem("save0"));
 		console.time("loadTime")
-		load(b);
+		game.load(b);
 		console.timeEnd("loadTime")
 		
 	}

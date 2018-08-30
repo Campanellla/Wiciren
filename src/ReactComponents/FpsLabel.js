@@ -28,7 +28,6 @@ export class DrawCallsLabel extends Component {
 		super(props);
 		
 		this.state = {text:''};
-		this.props.link.drawCallsLabel = this;
 		
 	}
 	

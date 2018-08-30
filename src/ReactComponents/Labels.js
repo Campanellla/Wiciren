@@ -7,8 +7,6 @@ export class TimeText extends Component {
 		
 		super(props);
 		
-		this.props.link.timeText = this;
-		
 		this.state = {text:''};
 		
 	}

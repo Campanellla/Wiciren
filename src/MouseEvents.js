@@ -96,17 +96,17 @@ export function onDoubleClick(evt){
 	
 	var pickResult = picker(this);
 	
-	if (pickResult) if (pickResult.hit) {
+	if (pickResult && pickResult.hit) {
 		
 		let pickedMesh = pickResult.pickedMesh;
 		if (pickedMesh.type === 'ground' || pickedMesh.isObject){
 			
 			let foundItem = false;
 			
-			if (pickedMesh.isObject && pickedMesh.item) if (pickedMesh.item.link) {
+			if (pickedMesh.isObject && pickedMesh.item && pickedMesh.item.link) {
 				
 				foundItem = true;
-				game.drawMenu(pickResult.pickedMesh.item);
+				game.drawMenu(pickResult.pickedMesh.item.link);
 			}
 			
 			if (!foundItem){

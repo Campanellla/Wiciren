@@ -27,10 +27,8 @@ export default class ItemMenu extends Component {
 				top:50
 			}
 		};
-		game.itemMenu = this;
 		
 		this.controller = this.props.controller;
-		//console.log(this.controller)
 	}
 	
 	
@@ -55,7 +53,7 @@ export default class ItemMenu extends Component {
 		document.onmouseup = null;
 		document.onmousemove = null;
 		
-		game.unBlockSelection();
+		game.blockSelection(false);
 	}
 	
 	onMouseDown(e){
@@ -68,14 +66,15 @@ export default class ItemMenu extends Component {
 		document.onmouseup = this.closeDragElement.bind(this);
 		document.onmousemove = this.elementDrag.bind(this);
 		
-		game.blockSelection();
+		game.blockSelection(true);
 		
 	}
 	
 	
 	onClose(){
-		this.controller.removeFloatingMenu(this.props.item);
+		this.controller.removeWindow(this);
 	}
+	
 	
 	render(){
 		return (
@@ -96,10 +95,10 @@ export default class ItemMenu extends Component {
 				<div>
 					{	
 						(state => {
-							if (state.item && state.item.link && state.item.link.menu_interface) {
+							if (state.item && state.item.menu_interface) {
 								
-								let Interface = state.item.link.menu_interface;
-								return <Interface item = {state.item.link} />;
+								let Interface = state.item.menu_interface;
+								return <Interface item = {state.item} />;
 							}
 						})(this.state)
 					}

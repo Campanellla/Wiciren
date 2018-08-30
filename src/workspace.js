@@ -5,7 +5,6 @@ import * as BABYLON from 'babylonjs';
 import {game} from './App.js';
 
 import {ItemConstructor} from './ItemConstructor.js';
-import Interface from './Interface.js';
 import Pipelines from './Pipelines.js';
 import ItemMenu from './ReactComponents/ItemMenu.js';
 import Connection from './Connection.js';
@@ -15,25 +14,20 @@ export class GameWorkspace {
 	
 	constructor(){
 		
-		this.blockSelection = blockSelection;
-		this.unBlockSelection = unBlockSelection;
-		
 		this.timestamp1 = 0;
 		this.timestamp2 = 0;
 		
 		this.map = undefined;
 		
 		this.itemMenu = undefined;
+		this.itemMenuDrawn = false;
 		
 		this.updatePipelines = false;
 		this.pipelines = new Pipelines();
 		
-		
-		this.itemMenuDrawn = false;
-		
 		this.itemConstructor = new ItemConstructor();
 		
-		this.interface = new Interface();
+		this.interfaceComponent = React.createRef(); 
 		
 		this.config = {
 			
@@ -59,37 +53,35 @@ export class GameWorkspace {
 		
 		this.nullpointer = {link:null};
 		
-		document.save = save.bind(this);
-		document.load = load.bind(this);
+		document.save = this.save.bind(this);
+		document.load = this.load.bind(this);
 		
+		this.blockSelection = (bool) => {
+			document.onselectstart = function(){return bool}
+		};
 		
 		this.class = {
-			
 			Connection:Connection
-			
 		}
 		
 		
 	}
 	
-	drawMenu(link){
-		
-		this.interface.appendFloatingMenu(link);
-		
-		return ;
-		
-		if (!link) {console.log("error", link); return}
-	}
 	
-	updateMenu(){
+	drawMenu(item){
 		
-	}
-	
-	hideMenu(){
-		if (!this.itemMenu) return
+		if (!this.interfaceComponent.current || !this.interfaceComponent.current.windowContainerComponent.current){
+			console.log("%cerror component not defined","color:red");
+			return false;
+		}
+		if (!item) {
+			console.log("%cerror item not defined","color:red");
+			return false;
+		}
 		
-		this.itemMenu.setState({hidden:true});
-		this.itemMenuDrawn = false;
+		this.interfaceComponent.current.windowContainerComponent.current.appendWindow(item);
+		return true;
+		
 	}
 	
 	
@@ -98,74 +90,46 @@ export class GameWorkspace {
 		console.log(this);
 	}
 	
-}
-
-
-
-export function blockSelection(){
-	document.onselectstart = function(){return false}
-}
-
-export function unBlockSelection(){
-	document.onselectstart = function(){return true}
-}
-
-
-export function save(items){
 	
-	var objects = [];
+	save(items){
 	
-	//// save objects
-	
-	items.forEach((item)=>{
+		var objects = [];
 		
-		if (item){
-			
-			objects.push(item.save());
-			
+		items.forEach((item)=>{
+			if (item && item.save) objects.push(item.save());
+		});
+	
+		let saveObject = {
+			objects:objects, 
+			camera:{	
+				position: this.camera.position, 
+				rotation: this.camera.rotation
+			}
+		};
+	
+		var result;
+	
+		try{
+			result = JSON.stringify(saveObject);
+		} catch(e){
+			console.log(e, saveObject);
 		}
 		
-	});
-	
-	let saveObject = {
-						objects:objects, 
-						camera:{position: game.camera.position, rotation: game.camera.rotation}
-					};
-	
-	var a;
-	
-	try{
-		a = JSON.stringify(saveObject);
-	} catch(e){
-		
-		console.log(saveObject);
-		console.log(e);
-		
+		return result;
 	}
 	
 	
-	return a
-}
+	load(data){
 
-
-
-
-export function load(data){
-
-	game.map.clearObjects();
-	//game.pipelinechanged = true;
-
-	if(data){
+		game.map.clearObjects();
+		
+		if (!data) return false;
+		
 		if (data.objects){
-			
 			data.objects.forEach((object)=>{
-				
 				if (object !== "undefined"){
-					
 					game.itemConstructor.loadObject(object);
-					
 				}
-				
 			});
 		}
 		
@@ -178,10 +142,14 @@ export function load(data){
 			game.camera.rotation.x = data.camera.rotation.x;
 			game.camera.rotation.y = data.camera.rotation.y;
 			game.camera.rotation.z = data.camera.rotation.z;
-			
 		}
 	}
+	
+	
 }
+
+
+	
 
 
 export function setCanvasSize(canvas, w, h, r, m){

@@ -10,7 +10,7 @@ import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
 import {Selection} from './Selection.js';
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
 import {updateObjects, updatePipeline, updatePipeline1} from './updates.js';
-import {createMap, load, save, setCanvasSize, showAxis} from './workspace.js';
+import {createMap, setCanvasSize, showAxis} from './workspace.js';
 import {loadMeshes} from './meshesLoader.js';
 import {GameMap} from './Map.js'
 
@@ -88,24 +88,30 @@ export default function init(){
 				time.toFixed(1) + ' s,' +
 				' x: ' + game.camera.position.x.toFixed(1) + 
 				' z: ' + game.camera.position.z.toFixed(1) +
-				" frameTime: " + dcl.toFixed(3);
+				", frameTime: " + dcl.toFixed(3);
 			
-			dcl = (game.scninst.frameTimeCounter.current + dcl * 10)/11 ;
+			dcl = (game.scninst.frameTimeCounter.current + dcl * 9)/10 ;
 			
-			game.interface.timeText.setState({text:timeText});
-			game.interface.drawCallsLabel.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
-			game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
+			let _int = game.interfaceComponent.current;
+			
+			if (_int){
+				
+				if (_int.timeTextComponent.current) 
+					_int.timeTextComponent.current.setState({text:timeText});
+				if (_int.drawCallsLabelComponent.current) 
+					_int.drawCallsLabelComponent.current.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
+				if (_int.fpsLabelComponent.current) 
+					_int.fpsLabelComponent.current.setState({text:engine.getFps().toFixed() + " fps"});
+				
+			}
 			
 		}
 		
 		
 		function updateItems() {
 			try{
-				
 				updateObjects(1/60);
-				
 			} catch(e){
-				
 				errorOneTime(e, 1500)
 			}
 		}
@@ -117,7 +123,7 @@ export default function init(){
 				var a = window.localStorage.getItem("save0");
 			try{
 				var b = JSON.parse(a);
-				load(b);
+				game.load(b);
 			}catch(err){
 				console.log(err);
 			}
