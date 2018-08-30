@@ -1,8 +1,7 @@
 import {game} from './App.js';
 
-import {PipeNodeModel} from "./objects/models/PipeNodeModel.js";
-import {PipeCollectionModel} from "./objects/models/PipeCollectionModel.js";
-import {PipeModel} from "./objects/models/PipeModel.js";
+import {PipeNodeModel} from "./models/pipe/PipeNodeModel.js";
+import {PipeModel} from "./models/pipe/PipeModel.js";
 
 
 export default class Pipelines {
@@ -34,7 +33,7 @@ export default class Pipelines {
 				
 				if (model.class === "pipeline"){
 					
-					if (model.reset) if (model.reset()) {
+					if (model.reset && model.reset()) {
 						
 						model = object.models[i];
 					}
@@ -48,7 +47,7 @@ export default class Pipelines {
 		///// update connections
 		this.models.forEach((model) => {
 			
-			if (!model) {console.log(this.models); return; }
+			if (!model) {console.log("model not found"); return; }
 			
 			model.inserted = false;
 			
@@ -80,22 +79,13 @@ export default class Pipelines {
 			
 			let result = buildPipeline(model);
 			
-			if (result) {
-				
-				//result.list.forEach(model => {if (model.updateSubconnections) model.updateSubconnections();})
-				this.list.push(result);
-			}
+			if (result) this.list.push(result);
 			
 		});
 		
-		//this.models.forEach(e => console.log(e))
-		
-		
-		
 		
 		console.timeEnd("rebuild");
-		
-		console.log("rebuilt: ", this.list);
+		//console.log("rebuilt: ", this.list);
 		
 	}
 	
@@ -106,7 +96,6 @@ export default class Pipelines {
 	}
 	
 }
-
 
 
 function buildPipeline(model){
@@ -134,7 +123,6 @@ function buildPipeline(model){
 			if (collectedPipe){
 				
 				resultStack.push(collectedPipe);
-				
 				collectedPipe.inserted = true;
 				
 				collectedPipe.connections.forEach((connection) => {
@@ -151,9 +139,7 @@ function buildPipeline(model){
 		} else if (a === "node" && !currentModel.inserted){
 			
 			let node = new PipeNodeModel(currentModel, true);
-			
 			resultStack.push(node);
-			
 			node.inserted = true;
 			
 			node.connections.forEach(connection => {
@@ -168,7 +154,6 @@ function buildPipeline(model){
 		} else if ((a === "pumpmodel" || a === "tankmodel") && !currentModel.inserted){
 			
 			resultStack.push(currentModel);
-			
 			currentModel.inserted = true;
 			
 			currentModel.connections.forEach((connection) => {	
@@ -235,7 +220,7 @@ function collectPipe(model) {
 			return model && !model.inserted && !model.combined && getType(model) === "pipemodel";
 		});
 		
-		if (nextItem) nextItem = nextItem.connectedModelPointer.link
+		if (nextItem) nextItem = nextItem.connectedModelPointer.link;
 		
 		if (nextItem){
 			
@@ -252,10 +237,8 @@ function collectPipe(model) {
 		}
 		
 		modelStackId++;
-		if (modelStackId>1000) throw "collectpipe loop overflow";
+		if (modelStackId>1000) throw "collectpipe loop over 1000 units";
 	}
-	
-	//console.log(modelStack)
 	
 	return new PipeModel(modelStack, true, true);
 }
@@ -285,32 +268,17 @@ class Pipeline {
 	constructor(list){
 		
 		this.type = "pipeline";
-		
-		this.list = list; // not pointers inside;
-		
+		this.models = list;
 		this.nodes = list.filter( (item) => {return item.type === "node"} );
-		
-		this.models = [];
 		
 	}
 	
 	
 	update(){
 		
-		let a = -1//= this.list.findIndex((item) => {return true})
-		
-		if (a !== -1){
-			
-			console.log("found non existent item", a);
-			
-			this.list  = this.list.filter((item) => {return item.exist});
-			this.nodes = this.list.filter((item) => {return item.type === "node"});
-		}
-		
-		this.list.forEach(item => {item.updateFlow(0.1)});
+		this.models.forEach(model => {model.updateFlow(0.1)});
 		
 	}
-	
 	
 }
 

@@ -1,4 +1,4 @@
-import {game} from '../../App.js';
+import {game} from './../App.js';
 
 
 export class BaseModel {

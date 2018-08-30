@@ -4,11 +4,11 @@ import * as BABYLON from 'babylonjs';
 
 import {blockSelection, unBlockSelection} from './workspace.js';
 
-import {_pipe} from './objects/pipe.js';
-import {_pump} from './objects/pump.js';
-import {_tank} from './objects/tank.js';
-import {_engine} from './objects/engine.js';
-import {_device} from './objects/device.js';
+import {_pipe} from './objects/pipe/pipe.js';
+import {_pump} from './objects/pump/pump.js';
+import {_tank} from './objects/tank/tank.js';
+import {_engine} from './objects/engine/engine.js';
+import {_device} from './objects/device/device.js';
 
 
 export class ItemConstructor {

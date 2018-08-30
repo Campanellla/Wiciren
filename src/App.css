@@ -1,4 +1,11 @@
-#ItemMenuCloseButton{
+
+.slider{
+  
+  width: 98%;
+  
+}
+
+.ItemMenuCloseButton{
   position: absolute;
   top: 2px;
   right: 1px;
@@ -66,7 +73,7 @@ body{
   bottom: 0.1em;
 }
 
-#ItemMenu{
+.ItemMenu{
   
   font-size: small;
   
@@ -83,7 +90,7 @@ body{
   
 }
 
-#ItemMenuHeader {
+.ItemMenuHeader {
   width:100%;
   height: 20px;
   background-color:gray;

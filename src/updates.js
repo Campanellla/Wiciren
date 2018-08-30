@@ -17,7 +17,7 @@ export function updateObjects(dtime){
 		game.updatePipelines = false;
 		game.pipelines.rebuild();
 				
-	}
+	};
 	
 	game.pipelines.update();
 	

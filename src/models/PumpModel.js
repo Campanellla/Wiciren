@@ -1,11 +1,11 @@
-import {game} from '../../App.js';
+import {game} from '../App.js';
 
 import {BaseModel} from './BaseModel.js'
 
 export class PumpModel extends BaseModel{
 	
 	
-	constructor(setup, parent){
+	constructor(setup){
 		
 		super();
 
@@ -13,7 +13,7 @@ export class PumpModel extends BaseModel{
 		
 		this.class = "pipeline";
 		
-		this.parent = parent.pointer;
+		this.parent = setup.parentPointer;
 		this.location = setup.location;
 		
 		if (setup.connectionsMap) {
@@ -24,7 +24,12 @@ export class PumpModel extends BaseModel{
 		
 	}
 	
-	
+	updateFlow(dt){
+		
+		
+		
+		
+	}
 	
 	
 }

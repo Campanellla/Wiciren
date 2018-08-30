@@ -1,4 +1,3 @@
-// --- REACT --- //
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -6,25 +5,14 @@ import * as BABYLON from 'babylonjs';
 
 import {game} from './App.js';
 
-
 import {onMouseMoveEvent, onMouseClickEvent, onMouseClickReleaseEvent, onDoubleClick} from './MouseEvents.js';
-
 import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
-
 import {Selection} from './Selection.js';
-
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
-
 import {updateObjects, updatePipeline, updatePipeline1} from './updates.js';
-
 import {createMap, load, save, setCanvasSize, showAxis} from './workspace.js';
-
 import {loadMeshes} from './meshesLoader.js';
-
 import {GameMap} from './Map.js'
-
-
-
 
 
 
@@ -34,11 +22,10 @@ export default function init(){
 	
 	game.toggle = true;
 	
-	console.log("Device pixel ratio: " + window.devicePixelRatio)
+	console.log("Device pixel ratio: " + window.devicePixelRatio);
 	
 	var canvas = document.getElementById('canvas');
 	canvas.style.cursor = "pointer";
-	
 
 	
 	if (BABYLON.Engine.isSupported()) {
@@ -66,54 +53,63 @@ export default function init(){
 		
 		game.map.blocks[0].updateBlock();
 		
-		
+		// --- events --- //
 		assignEvents(game);
 
 		//--- tick functions ---//
-
 		var intervalscount = [];
 		
 		var time = 0.0;
 		
-		var updatetime = 0.02;
-		
-		
+		var startTime = new Date().getTime();
+		var lastTime = startTime;
 		
 		var dcl = 0;
-
-		function updateontimer() {
+		
+		var mapUpdateTimer = 1000/60;
+		var itemsUpdatetime = 1000/60;
+		var interfaceUpdateTimer = 1000/24;
+		
+		
+		intervalscount.push(setInterval(game.map.updateMap, mapUpdateTimer));
+		intervalscount.push(setInterval(updateItems, itemsUpdatetime));
+		intervalscount.push(setInterval(updateInterface, interfaceUpdateTimer))
+		
+		
+		function updateInterface(){
 			
-			time += updatetime;
+			var currentTime = new Date().getTime();
+			var DT = (currentTime - lastTime) / 1000;
+			lastTime = currentTime;
 			
-			let timeText = time.toFixed(1) + ' s,';
+			time += DT;
 			
-			try{
-				
-				
-				game.updateMenu();
-				
-				timeText += ' x: ' + game.camera.position.x.toFixed(1) + ' z: ' + game.camera.position.z.toFixed(1);
-				//timeText += ' DC: ' + game.scninst.drawCallsCounter.current + ' aa: ' + game.scninst.activeMeshesEvaluationTimeCounter.current.toFixed(3);
-				timeText += " bb: " + dcl.toFixed(3);
-				
-				game.interface.timeText.setState({text:timeText});
-				
-				game.interface.drawCallsLabel.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
-				
-				dcl = (game.scninst.frameTimeCounter.current + dcl * 10)/11 ;
+			let timeText = 	
+				time.toFixed(1) + ' s,' +
+				' x: ' + game.camera.position.x.toFixed(1) + 
+				' z: ' + game.camera.position.z.toFixed(1) +
+				" frameTime: " + dcl.toFixed(3);
 			
-				game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
+			dcl = (game.scninst.frameTimeCounter.current + dcl * 10)/11 ;
 			
-			} catch(e){
-				errorOneTime(e, 1500)
-			}
-			
-			updateObjects(updatetime);
+			game.interface.timeText.setState({text:timeText});
+			game.interface.drawCallsLabel.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
+			game.fpsLabel.setState({text:engine.getFps().toFixed() + " fps"});
 			
 		}
 		
-		intervalscount.push(setInterval(game.map.updateMap, 1000/60));
-		intervalscount.push(setInterval(updateontimer, updatetime * 1000));
+		
+		function updateItems() {
+			try{
+				
+				updateObjects(1/60);
+				
+			} catch(e){
+				
+				errorOneTime(e, 1500)
+			}
+		}
+		
 		
 		game.toggle = false;
 
@@ -139,6 +135,7 @@ export default function init(){
 	
 	
 }
+
 
 export function ErrorOneTime(){
 	
@@ -208,7 +205,6 @@ var createScene = function (engine, canvas){
 	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
 	light.intensity = 0.75;
 	
-	
 	var waterMaterial = new BABYLON.StandardMaterial('waterMaterial', game.scene);
 	
 	waterMaterial.diffuseColor = new BABYLON.Color3(0, 0, 1);
@@ -223,7 +219,6 @@ var createScene = function (engine, canvas){
 	
 	
 	/// --- MAKE GROUND --- ///
-
 	
 	game.BABYLON = BABYLON;
 	game.scene = scene;
@@ -231,11 +226,7 @@ var createScene = function (engine, canvas){
 	game.meshes = {};
 	
 	var scn = new BABYLON.Scene(engine);
-	
 	var selection = new Selection(scene);
-	
-	
-	
 	game.selection = selection;
 	
 	scene.onPointerMove = onMouseMoveEvent;
@@ -246,7 +237,6 @@ var createScene = function (engine, canvas){
 
 	showAxis(2.5, game.scene);
 	
-	
 	var inst = new BABYLON.SceneInstrumentation(scene);
 	inst.captureActiveMeshesEvaluationTime = true;
 	inst.captureFrameTime = true;
@@ -254,13 +244,9 @@ var createScene = function (engine, canvas){
 	
 	game.scninst = inst;
 	
-	
 	loadMeshes(scene);
 	
-	
-	
 	return scene;
-	
 };
 
 

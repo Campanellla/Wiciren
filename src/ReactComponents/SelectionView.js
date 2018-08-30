@@ -85,7 +85,9 @@ export default class SelectionView extends Component {
 	}
 	
 	render(){
+		
 		return (<div id = "selectionview"> {this.elements} </div>);
+		
 	}
 	
 }

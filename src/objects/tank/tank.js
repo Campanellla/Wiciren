@@ -1,8 +1,11 @@
-import {game} from '../App.js';
+import {game} from '../../App.js';
 
-import {Construction} from './Base.js';
+import {Construction} from './../Base.js';
 
-import {TankModel} from './models/TankModel.js';
+import {TankModel} from './../../models/TankModel.js';
+
+import {Tank_interface} from "./Tank_interface.js";
+
 
 export class _tank extends Construction {
 
@@ -40,11 +43,16 @@ export class _tank extends Construction {
 		
 		this.models.push(new TankModel(args, this));
 		
+		this.menu_interface = Tank_interface;
+		this.updateInterface = null;
+		
 		
 	}
 	
 	
 	update(){
+		
+		if (this.updateInterface) this.updateInterface();
 		
 	}
 	

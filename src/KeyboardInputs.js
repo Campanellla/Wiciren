@@ -88,9 +88,9 @@ export class FreeTopCameraKeyboardMoveInput{
 	detachControl(element) {
 		if (this._onKeyDown) {
 			
-			element.addEventListener("wheel", this._onWheel);
-			element.removeEventListener("keydown", this._onKeyDown);
-			element.removeEventListener("keyup", this._onKeyUp);
+			document.removeEventListener("wheel", this._onWheel);
+			document.removeEventListener("keydown", this._onKeyDown);
+			document.removeEventListener("keyup", this._onKeyUp);
 			
 			BABYLON.Tools.UnregisterTopRootEvents([
 				{ name: "blur", handler: this._onLostFocus }

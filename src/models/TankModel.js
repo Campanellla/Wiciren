@@ -1,4 +1,4 @@
-import {game} from '../../App.js';
+import {game} from '../App.js';
 
 import {BaseModel} from './BaseModel.js'
 
@@ -78,21 +78,10 @@ export class TankModel extends BaseModel{
 		
 		this.connections.forEach((connection)=>{
 			
-			let connectedModelPointer = connection.connectedModelPointer;
+			if (!connection || !connection.connectedModelPointer.link) return;
 			
-			if (!connectedModelPointer) { console.log("!connectedModelPointer"); return ;}
-			if (!connectedModelPointer.link) { console.log("!connectedModelPointer.link"); return ;}
-			
-			let connectedModel;
-			
-			if (connectedModelPointer.link.submodel) {
-				connectedModel = connectedModelPointer.link.submodel;
-			} else {
-				connectedModel = connectedModelPointer.link;
-			}
-			
-			if (!connectedModel)  { console.log("!connectedModel"); return ;}
-						
+			let connectedModel = connection.connectedModelPointer.link;
+					
 			if (this.pressure > connectedModel.pressure){
 				
 				if (this.volume > 0){
@@ -116,3 +105,10 @@ export class TankModel extends BaseModel{
 	
 	
 }
+
+
+
+
+
+
+

@@ -1,7 +1,7 @@
-import {game} from '../App.js';
+import {game} from '../../App.js';
 
-import {Construction} from './Base.js';
-import {PumpModel} from './models/PumpModel.js';
+import {Construction} from './../Base.js';
+import {PumpModel} from './../../models/PumpModel.js';
 
 
 export class _pump extends Construction {
@@ -12,44 +12,38 @@ export class _pump extends Construction {
 		
 		this.type = 'pump';
 		
-		this.itemSize = this.getSize();
+		this.itemSize = {h:1, w:1};
 		
 		if (!args) args = {};
 			
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
-		
 		this.rotationIndex = args.rotationIndex || 0;
+		
+		
 		this.pressure = args.pressure || 0;
 		this.volume = args.volume || 0;
-			
-		
 		this.returnFlow = [];
 		this.inflow = [];
-		
 		this.capacity = 5;
 		this.volume = 0;
 		this.pressure = 1;
 		this.lastQ = 0;
 		this.Q = 0;
 		
-		this.connectionsMap = [{left:-1, forced:true}, {right: 1, forced:true}];
 		
-		let s = [];
+		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:-1, z:0}, itemPointer: this.pointer}
+		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, conlocation: {x:1, z:0} , itemPointer: this.pointer}
 		
-		this.connectionsMap.forEach(position => {
-			
-			s.push(new game.class.Connection(position));
-			
-		});
-		
-		let setup = {
-			
-			connections:s
-			
+		args = { 
+			connectionsMap: [left, right], 
+			location: {x:0, z:0}, 
+			size: this.itemSize,
+			parentPointer: this.pointer
 		}
 		
-		this.models.push(new PumpModel(setup));
+		this.models.push(new PumpModel(args, this));
+		
 		
 	}
 	
@@ -140,12 +134,6 @@ export class _pump extends Construction {
 		return mesh;
 	}
 	
-	
-	getSize(){
-		
-		return {h:1, w:1};
-		
-	}	
 	
 }
 

@@ -1,10 +1,14 @@
-import {game} from '../App.js';
+import {game} from '../../App.js';
 
-import {Construction} from './Base.js';
+import {Construction} from './../Base.js';
 
-import {TankModel} from './models/TankModel.js';
-import {EngineModel} from './models/EngineModel.js';
+import {TankModel} from './../../models/TankModel.js';
+import {EngineModel} from './../../models/EngineModel.js';
 
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
+import {Engine_interface} from "./Engine_interface.js";
 
 export class _engine extends Construction {
 	
@@ -18,10 +22,9 @@ export class _engine extends Construction {
 		
 		args = args || {};
 		
-		this.key = args.key || -1;
+		if (args.key !== undefined) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
-		
 		
 		this.pressure = args.pressure || 0;
 		this.volume = args.volume || 0;
@@ -31,7 +34,6 @@ export class _engine extends Construction {
 		
 		this.returnFlow = [];
 		this.inflow = [];
-		
 		
 		this.power = 100;
 		
@@ -69,9 +71,20 @@ export class _engine extends Construction {
 		this.load = 0;
 		this.controlIndex = 0;
 		
+		this.setPoint = 900;
+		
 		
 		console.log(this.models[1]);
 		this.models[1].connections[0].updateLinks();
+		
+		this.menu_interface = Engine_interface;
+		this.updateInterface = null;
+		
+		this.frequency = 0;
+		
+		this.resistance = 1000000;
+		this.voltage = 450;
+		
 		
 	}
 	
@@ -80,7 +93,9 @@ export class _engine extends Construction {
 		
 		this.models[1].connections[0].updateLinks();
 		
-		this.models[1].update(0.02);
+		this.models[1].update(dt);
+		
+		if (this.updateInterface) this.updateInterface();
 		
 	}
 	

@@ -37,6 +37,8 @@ export default class InterfaceView extends Component {
 			a:this.state.a+1
 		});
 		
+		return a;
+		
 	}
 
 	prependItem(a) {

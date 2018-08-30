@@ -1,8 +1,9 @@
-import {game} from '../App.js';
+import {game} from '../../App.js';
 
-import {Construction} from './Base.js';
-import {PipeModel} from './models/PipeModel.js';
+import {Construction} from './../Base.js';
+import {PipeModel} from './../../models/pipe/PipeModel.js';
 
+import {Pipe_interface} from "./Pipe_interface.js";
 
 export class _pipe extends Construction {
 	
@@ -17,7 +18,7 @@ export class _pipe extends Construction {
 		/// load config
 		
 		this.subtype = args.subtype || "pipe";
-		this.key = args.key || -1;
+		if (args.key !== undefined) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
@@ -46,10 +47,15 @@ export class _pipe extends Construction {
 		
 		this.models.push(new PipeModel( { connectionsMap: this.connectionsMap, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
 		
+		
+		this.menu_interface = Pipe_interface;
+		this.updateInterface = null;
 	}
 	
 	
 	update(dt){
+		
+		if (this.updateInterface) this.updateInterface();
 		
 	}
 	

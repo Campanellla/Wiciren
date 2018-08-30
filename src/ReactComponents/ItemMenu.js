@@ -6,11 +6,10 @@ import {game} from '../App.js';
 
 export default class ItemMenu extends Component {
 	
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		
 		this.onMouseDown = this.onMouseDown.bind(this);
-		
 		this.onClose = this.onClose.bind(this)
 		
 		this.offsetx = 0;
@@ -21,22 +20,19 @@ export default class ItemMenu extends Component {
 		
 		this.state = 
 		{	
-			hidden:true,
-			text:'',
-			item:null,
+			hidden:false,
+			item:this.props.item,
 			position:{	
 				left:100,
 				top:50
-			},
-			slider:50
+			}
 		};
-		
 		game.itemMenu = this;
 		
-		//this.handleChange = this.handleChange.bind(this);
-		//this.sliderValue = React.createRef();
-		
+		this.controller = this.props.controller;
+		//console.log(this.controller)
 	}
+	
 	
 	elementDrag(e) {
 		
@@ -52,6 +48,7 @@ export default class ItemMenu extends Component {
 		
 		this.setState({position:{left:this.posx, top:this.posy}});
 	}
+	
 
 	closeDragElement() {
 		
@@ -75,50 +72,38 @@ export default class ItemMenu extends Component {
 		
 	}
 	
+	
 	onClose(){
-		this.setState({hidden:true});
+		this.controller.removeFloatingMenu(this.props.item);
 	}
-	
-	
-	
 	
 	render(){
 		return (
-			<div id = 'ItemMenu' 
+			<div className = 'ItemMenu' 
 				hidden = {this.state.hidden} 
 				style = {{
-					left:this.state.position.left, 
-					top:this.state.position.top
+					left: this.state.position.left, 
+					top:  this.state.position.top
 				}} >
 						
-				<div id = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
+				<div className = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
 					Item menu
 				</div>
-				<button id = 'ItemMenuCloseButton' onClick = {this.onClose}>
+				<button className = 'ItemMenuCloseButton' onClick = {this.onClose}>
 					X
 				</button>
-				<div id = 'ItemMenuText'>
-					{
-						(() => {if (this.state.item && this.state.item.link && this.state.item.link.type === "device") {
-							
-						} else {
-							return this.state.text.split('\n')
-							.map((item, key) => {
-	  							return <span key={key}>{item}<br/></span>
-							})
-						}})()
-					}
-				</div>
 				
 				<div>
-				{	(function(state){
-						if (state.item && state.item.link && state.item.link.getMenu) return state.item.link.getMenu(this);
-					})(this.state)
-				}
-				
+					{	
+						(state => {
+							if (state.item && state.item.link && state.item.link.menu_interface) {
+								
+								let Interface = state.item.link.menu_interface;
+								return <Interface item = {state.item.link} />;
+							}
+						})(this.state)
+					}
 				</div>
-				
-				<ItemConfig item = {this.state.item} />
 				
 			</div> 
 		);
@@ -126,47 +111,7 @@ export default class ItemMenu extends Component {
 	
 }
 
-/*
-<div class="slidecontainer">
-				<input 	type="range" min="0" max="1000" defaultValue="0" class="slider" id="myRange" 
-				 		onChange={this.handleChange} ref={this.sliderValue}/>
-			</div>;
 
-*/
-
-class ItemConfig extends Component {
-	
-	constructor(props){
-		
-		super(props);
-		this.textInput = React.createRef();
-	}
-	
-	onclick(){
-		
-		let num = Number(this.textInput.current.value);
-		
-		if(this.props.item) 
-			if(this.props.item.link) 
-				if (this.props.item.link.volume !== undefined && !isNaN(num)) {
-					this.props.item.link.volume = num;
-					game.updateMenu();
-				}
-	}
-	
-	render(){
-		
-		return(
-			<div>
-				<button onClick = {this.onclick.bind(this)}> set vol </button>	
-				<input type = "text" ref={this.textInput}/>
-			</div>
-			)
-		
-	}
-	
-	
-}
 
 
 

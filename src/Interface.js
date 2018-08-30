@@ -20,6 +20,10 @@ export default class Interface {
 		
 		this.timeText = null;
 		
+		this.key = 0;
+		
+		this.qqq = [];
+		
 	}
 	
 	
@@ -27,7 +31,6 @@ export default class Interface {
 		
 		this.view.appendItem(<TimeText link = {this}/>);
 		this.view.appendItem(<DrawCallsLabel link = {this}/>);
-		//this.view.appendItem(<div id= 'eventtext'></div>);
 		
 		this.view.appendItem(<FpsLabel/>);
 		this.view.appendItem(<SelectionView/>);
@@ -35,8 +38,40 @@ export default class Interface {
 		
 		this.view.appendItem(<div id = 'configmenuwindow' hidden/>);
 		
-		this.view.appendItem(<ItemMenu />);
+	}
+	
+	appendFloatingMenu(item){
+		
+		let key = this.view.state.items.findIndex(o => o.props.item === item);
+		if (key !== -1) return ;
+		
+		let ref = React.createRef();
+		
+		this.qqq.push(ref);
+		
+		let a = this.view.appendItem(<ItemMenu controller={this} item={item} key={this.key++} ref={ref}/>);
+		
+		console.log(this.qqq);
 		
 	}
 	
+	removeFloatingMenu(item){
+		
+		let key = this.view.state.items.findIndex(o => {
+			return o.props.item === item;
+		});
+		
+		if (key === -1) {
+			console.log("key not found");
+			return ;
+		}
+		
+		this.view.state.items.splice(key, 1);
+		this.view.setState({});
+	}
+	
+	
 }
+
+
+

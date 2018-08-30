@@ -1,6 +1,6 @@
 import {game} from '../../App.js';
 
-import {BaseModel} from './BaseModel.js'
+import {BaseModel} from './../BaseModel.js'
 
 
 export class PipeNodeModel extends BaseModel{
