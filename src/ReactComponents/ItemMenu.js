@@ -22,10 +22,8 @@ export default class ItemMenu extends Component {
 		{	
 			hidden:false,
 			item:this.props.item,
-			position:{	
-				left:100,
-				top:50
-			}
+			position:this.props.position,
+			index:this.props.index
 		};
 		
 		this.controller = this.props.controller;
@@ -78,13 +76,16 @@ export default class ItemMenu extends Component {
 	
 	render(){
 		return (
-			<div className = 'ItemMenu' 
+			<div 
+				className = 'ItemMenu' 
 				hidden = {this.state.hidden} 
 				style = {{
 					left: this.state.position.left, 
-					top:  this.state.position.top
-				}} >
-						
+					top:  this.state.position.top,
+					zIndex: this.state.index
+				}} 
+				onMouseDown = {this.controller.setTop.bind(this.controller, this)}
+			>
 				<div className = 'ItemMenuHeader' onMouseDown = {this.onMouseDown}>
 					Item menu
 				</div>
@@ -103,7 +104,6 @@ export default class ItemMenu extends Component {
 						})(this.state)
 					}
 				</div>
-				
 			</div> 
 		);
 	}

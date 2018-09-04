@@ -91,10 +91,18 @@ export default class Connection {
 	
 	updateLinks(){
 		
+		let info = false;
+		if (this.itemPointer.link.key === 2) info = true; ////////
+		
 		let OK = this.checkRotation();
 		
-		if ( OK && 0
-			) {console.log(this.itemPointer.link.rotationIndex, this.r, this.location, this.rlocation, this.connLocation, this.rconnLocation );}
+		if ( OK && info && false ) {
+			console.log("item: ", this.itemPointer.link, "\n",
+						"rInd: ", this.itemPointer.link.rotationIndex, "\n",
+						"r: ", this.r, "\n",
+						"loc: ", this.location, this.rlocation, "\n",
+						"cloc:", this.connLocation, this.rconnLocation)
+		}
 		
 		if (!OK) return ;
 		
@@ -109,15 +117,20 @@ export default class Connection {
 			
 			this.connectedItemPointer = item.pointer;
 			
-			item.models.forEach(model => {
+			item.models.forEach((model, key) => {
 				
-				if (!model.location) return;
+				if (!model.location || !model.parent || !model.parent.link) {
+					console.log(model);
+					return;
+				}
 				
-				if (model.location.x + model.parent.link.location.x === xx && model.location.z + model.parent.link.location.z === zz){
+				if (model.parent.link.location.x + model.location.x === xx && model.parent.link.location.z + model.location.z === zz || true){
 					
 					if (!this.modelPointer.link) {console.log(this); return;}
 					
 					if (this.modelPointer.link.class === model.class){
+						
+						//if (info) console.log(true)
 						
 						this.connectedModelPointer = model.pointer;
 					}

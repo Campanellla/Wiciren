@@ -67,7 +67,7 @@ export class PipeModel extends BaseModel{
 			
 			this.combined = false;
 			
-			this.parent = parent.pointer;
+			this.parent = setup.parentPointer || parent.pointer;
 			this.location = setup.location;
 			
 			if (setup.connectionsMap) {

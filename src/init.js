@@ -109,11 +109,11 @@ export default function init(){
 		
 		
 		function updateItems() {
-			try{
+			//try{
 				updateObjects(1/60);
-			} catch(e){
-				errorOneTime(e, 1500)
-			}
+			//} catch(e){
+			//	errorOneTime(e, 1500);
+			//}
 		}
 		
 		

@@ -47,7 +47,7 @@ export class _device extends Construction {
 	
 	update(dt){
 		
-		this.models[0].connections[0].updateLinks();
+		//this.models[0].connections[0].updateLinks();
 		
 		this.models[0].update(0.02);
 		

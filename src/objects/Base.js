@@ -4,7 +4,6 @@ import {game} from './../App.js';
 export class Construction {
 	
 	constructor(){
-		
 		this.pointer = {link:this};
 		
 		this.type;
@@ -13,17 +12,13 @@ export class Construction {
 		this.exist = true;
 		this.inserted = false;
 		this.visible = false;
-		
-		this.mesh;
-		
-		this.models = [];
-		
 		this.constructionSize;
 		
-		this.arrows = [];
-		
+		this.mesh;
+		this.models = [];
 	}
 	
+	/// maybe will not be used
 	renewModel(model1, model2) {
 		
 		let index = this.models.findIndex(model => {return model1 === model})
@@ -36,7 +31,6 @@ export class Construction {
 		}
 		
 	};
-	
 	
 	
 	/// arg bool -> true if need to draw instance only
@@ -188,12 +182,9 @@ export class Construction {
 	
 	
 	getMesh(origin, key, instance){
-		
 		if(!origin) return null;
-		
 		if (instance) return origin.createInstance('index: ' + key);
 		return new game.BABYLON.Mesh('index: ' + key, game.scene, null, origin);
-		
 	}
 	
 	

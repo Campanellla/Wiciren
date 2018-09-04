@@ -15,14 +15,14 @@ export default class WindowContainer extends Component {
 		}
 		
 		this.key = 0;
-		
+		this.newIndex = 1;
 	}
 	
 	
 	render(){
 		return (
 			<div id = 'WindowContainer'>
-				{this.state.windows.map(w => w.w)};
+				{this.state.windows.map(w => w.w)}
 			</div>
 		);
 	}
@@ -37,7 +37,12 @@ export default class WindowContainer extends Component {
 			ref:React.createRef()
 		};
 		w.w = <ItemMenu controller={this} 
-						item={item} 
+						item={item}
+						position={{
+							left:100 + this.state.windows.length*10, 
+							top:50 + this.state.windows.length*2
+						}}
+						index={++this.newIndex}
 						key={this.key++} 
 						ref={w.ref} />;
 		this.state.windows.push(w);
@@ -57,6 +62,15 @@ export default class WindowContainer extends Component {
 		
 		this.state.windows.splice(key, 1);
 		this.setState({});
+	}
+	
+	
+	setTop(_window){
+		
+		if (_window.state.index < this.newIndex) {
+			_window.setState({index:++this.newIndex});
+		}
+		
 	}
 	
 	

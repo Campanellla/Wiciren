@@ -21,20 +21,19 @@ export class EngineModel extends BaseModel {
 			this.connections = args.connections;
 		}
 		
-		this.speed = 100;
-		this.controlIndex = 0;
+		args.config = args.config || {};
 		
-		this.run = true;
+		this.speed = args.config.speed || 100;
+		this.controlIndex = args.config.controlIndex || 0;
+		this.run = args.config.run || true;
+		this.I = args.config.I || 0;
+		this.frequency = args.config.frequency || 0;
+		this.voltage = args.config.voltage || 450;
+		this.setPoint = args.config.setPoint || 900;
+		this.speedDroop = args.config.speedDroop ||0;
 		
-		this.I = 0;
-		
-		this.frequency = 0;
-		this.voltage = 450;
 		this.resistance = 1000000;
 		this.load = 0;
-		this.setPoint = 900;
-		this.speedDroop = 0;
-		
 		
 	}
 	
@@ -53,7 +52,7 @@ export class EngineModel extends BaseModel {
 		let altLoad = load * 1.15;
 		
 		
-		let volume = this.parent.link.volume;
+		let volume = this.parent.link.models[0].volume || 0;
 		
 		let I = this.I;
 		
@@ -127,12 +126,13 @@ export class EngineModel extends BaseModel {
 		this.current = current;
 		this.load = load;
 		this.speed = speed;
-		this.parent.link.volume = volume;
+		this.parent.link.models[0].volume = volume;
 		this.controlIndex = controlIndex;
 		
 		
 		
 	}
+	
 	
 	
 	

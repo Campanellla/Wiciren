@@ -72,6 +72,7 @@ export default class SelectionView extends Component {
 		super();
 		
 		this.elements = 	[	
+								<SelectAction object="pole" />,
 								<SelectAction object="pipe" />,
 								<SelectAction object="pipe3" />,
 								<SelectAction object="pipe4" />,

@@ -9,6 +9,8 @@ import Pipelines from './Pipelines.js';
 import ItemMenu from './ReactComponents/ItemMenu.js';
 import Connection from './Connection.js';
 
+import ElectricalGrids from './ElectricalGrids.js';
+
 
 export class GameWorkspace {
 	
@@ -24,6 +26,7 @@ export class GameWorkspace {
 		
 		this.updatePipelines = false;
 		this.pipelines = new Pipelines();
+		this.electricalGrids = new ElectricalGrids();
 		
 		this.itemConstructor = new ItemConstructor();
 		

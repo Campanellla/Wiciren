@@ -21,28 +21,22 @@ export default class Pipelines {
 		
 		console.time("rebuild");
 		
-		
 		/// collect all models
 		game.map.objectsList.forEach(object => {
 			
 			if (!object) { console.log("%cobject not exist", "color:red"); return false; }
 			
 			for (let i = 0; i < object.models.length; i++){
-				
 				let model = object.models[i];
-				
 				if (model.class === "pipeline"){
 					
 					if (model.reset && model.reset()) {
-						
 						model = object.models[i];
 					}
-					
 					this.models.push(model);
 				}
 			}
 		});
-		
 		
 		///// update connections
 		this.models.forEach((model) => {
@@ -50,10 +44,8 @@ export default class Pipelines {
 			if (!model) {console.log("model not found"); return; }
 			
 			model.inserted = false;
-			
 			model.connections.forEach(connection => connection.updateLinks());
 		})
-		
 		
 		/// remove assymetric connections for models
 		this.models.forEach((model) => {
@@ -276,7 +268,7 @@ class Pipeline {
 	
 	update(){
 		
-		this.models.forEach(model => {model.updateFlow(0.1)});
+		this.models.forEach(model => {model.updateFlow(1/60)});
 		
 	}
 	

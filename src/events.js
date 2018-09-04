@@ -48,9 +48,7 @@ export function assignEvents(game){
 			game.itemConstructor.rotationIndex = (game.itemConstructor.rotationIndex + 1) % 4;
 			game.selection.setRotation(game.itemConstructor.rotationIndex);
 			
-			game.itemConstructor.activeItem.rotationIndex = game.itemConstructor.rotationIndex;
-			
-			if (game.itemConstructor.activeItem) game.itemConstructor.helperMeshes = game.itemConstructor.activeItem.makeArrows();
+			///if (game.itemConstructor.activeItem) game.itemConstructor.helperMeshes = game.itemConstructor.activeItem.makeArrows();
 			
 		} else if (a.key === "q") {
 			game.itemConstructor.setInactiveConstructor();

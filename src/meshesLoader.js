@@ -155,5 +155,10 @@ export function loadMeshes(scene){
 		game.meshes.arrow = meshes[0];
 		game.meshes.arrow.setEnabled(false);
 	}); 
+	BABYLON.SceneLoader.ImportMesh("epole", "./", "epole.babylon", scene, function (newMeshes, particleSystems) {
+		var meshes = newMeshes;
+		game.meshes.epole = meshes[0];
+		game.meshes.epole.setEnabled(false);
+	}); 
 	
 }

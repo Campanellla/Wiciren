@@ -102,7 +102,7 @@ export class GameMap {
 		
 		this.objectsList.forEach((object)=>{
 			
-			object.link.destruct();
+			object.destruct();
 			
 		});
 		

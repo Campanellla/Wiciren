@@ -85,25 +85,18 @@ export class Selection {
 	}
 	
 	
-	setActiveItem(item){
-			
-		if (item){
-			
-			this.itemSize = item.itemSize;
-			
-			this.activeItem = item;
-			
-			this.activeMesh = item.mesh;
+	setActiveMesh(mesh, config){
 		
-			this.activeMesh.isVisible = this.squareMesh.isVisible;
+		if (mesh){
 			
+			this.itemSize = config.size;
+			this.activeMesh = mesh;
+			this.activeMesh.isVisible = this.squareMesh.isVisible;
 			this.squareMesh.isVisible = false;
 			this.activeMesh.position.x = this.squareMesh.position.x;
 			this.activeMesh.position.z = this.squareMesh.position.z;
 			
 		} else {
-			
-			this.activeItem = undefined;
 			
 			if (!(this.activeMesh === this.squareMesh)){
 			
@@ -120,6 +113,7 @@ export class Selection {
 				
 			}
 		}
+		
 	}
 	
 	

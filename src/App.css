@@ -84,9 +84,9 @@ body{
   
   background-color: white;
   
-  border-bottom: 1px;
-  border-bottom-style: solid;
-  
+  border: 1px;
+  border-style: solid;
+  border-color: gray;
   
 }
 

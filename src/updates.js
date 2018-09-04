@@ -16,7 +16,9 @@ export function updateObjects(dtime){
 		
 		game.updatePipelines = false;
 		game.pipelines.rebuild();
-				
+		
+		game.electricalGrids.rebuild();
+		
 	};
 	
 	game.pipelines.update();

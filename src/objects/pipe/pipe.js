@@ -5,38 +5,27 @@ import {PipeModel} from './../../models/pipe/PipeModel.js';
 
 import {Pipe_interface} from "./Pipe_interface.js";
 
+
+
 export class _pipe extends Construction {
 	
 	constructor(args){
-		
 		super();
-		
 		args = args || {};
+		args.models = args.models || [];
 		
 		this.type = "pipe";
+		this.itemSize = {h:1, w:1};
 		
-		/// load config
-		
-		this.subtype = args.subtype || "pipe";
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
+		this.subtype = args.subtype || "pipe";
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
-		
-		this.itemSize = {h:1, w:1};
-		this.constructionSize = {h:1, w:1}; ///
-		
-		
-		this.pressure = args.pressure || 0;
-		this.volume = args.volume || 0;
-		
-		
-		/// config connections 
-		
-		let left =   {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:-1, z:0}, itemPointer: this.pointer};
-		let top =    {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:1} , itemPointer: this.pointer};
-		let right =  {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:1, z:0} , itemPointer: this.pointer};
-		let bottom = {location: {x:0, z:0}, size: {h:1, w:1}, connLocation: {x:0, z:-1}, itemPointer: this.pointer};
+		let left =   {location: {x:0, z:0}, size: this.itemSize, connLocation: {x:-1, z:0}, itemPointer: this.pointer};
+		let top =    {location: {x:0, z:0}, size: this.itemSize, connLocation: {x:0, z:1} , itemPointer: this.pointer};
+		let right =  {location: {x:0, z:0}, size: this.itemSize, connLocation: {x:1, z:0} , itemPointer: this.pointer};
+		let bottom = {location: {x:0, z:0}, size: this.itemSize, connLocation: {x:0, z:-1}, itemPointer: this.pointer};
 		
 		switch(this.subtype){
 			case "3-way": this.connectionsMap = [left, 		right,	bottom]; break;
@@ -45,8 +34,15 @@ export class _pipe extends Construction {
 			default     : this.connectionsMap = [left, 		right		  ]; break;
 		};
 		
-		this.models.push(new PipeModel( { connectionsMap: this.connectionsMap, location: {x:0, z:0}, size: {h:1, w:1} }, this ));
+		this.models.push(new PipeModel({
+			connectionsMap: this.connectionsMap, 
+			location: {x:0, z:0}, 
+			size: {h:1, w:1},
+			parentPointer: this.pointer,
+			config: args.models[0]
+		}));
 		
+		this.draw();
 		
 		this.menu_interface = Pipe_interface;
 		this.updateInterface = null;
@@ -90,6 +86,23 @@ export class _pipe extends Construction {
 		return this.getMesh(a, this.keynum, instance);
 	}
 	
+	
+	getConfig(){
+		
+		return {
+			size: {h:1, w:1},
+			connections: [
+				{
+					type: "pipemodel",
+					location: {x:0, z:0},
+					conlocation: [
+						{x:-1, z:0},
+						{x: 1, z:0}
+					]
+				}
+			]
+		}
+	}
 	
 }
 

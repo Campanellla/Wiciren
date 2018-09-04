@@ -7,7 +7,7 @@ export function onMouseMoveEvent(evt){
 	
 	var pickResult = picker(this);
 	
-	if (pickResult) if (pickResult.hit) {
+	if (pickResult && pickResult.hit) {
 		
 		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.type === 'water' || pickResult.pickedMesh.isObject){
 			
@@ -42,7 +42,7 @@ export function onMouseClickEvent(evt) {
 	
 	var pickResult = picker(this);
 	
-	if (pickResult) if (pickResult.hit) {
+	if (pickResult && pickResult.hit) {
 		
 		if (pickResult.pickedMesh.type === 'ground' || pickResult.pickedMesh.isObject){
 			
@@ -78,7 +78,7 @@ export function onMouseClickEvent(evt) {
 			if (game.actionSelected === 'remove' || button === "right"){
 				
 				game.itemConstructor.deleteObject([x, z]);
-				game.hideMenu();
+				//game.hideMenu();
 				
 			}
 		}
@@ -119,14 +119,13 @@ export function onDoubleClick(evt){
 				if (itemFromPosition){
 					
 					foundItem = true;
-					game.drawMenu(itemFromPosition.pointer);
+					game.drawMenu(itemFromPosition);
 				}
 			}
-			
-			if (!foundItem) game.hideMenu();
 		}
 	}
 }
+
 
 function Picker(){
 	
@@ -147,9 +146,9 @@ function Picker(){
 			setTimeout(() => { timeout=false }, time);
 			
 		}
-		//console.log(counter1 + ' ' + counter2);
 		return result;
-}	}
+	}	
+}
 
 var picker = Picker();
 

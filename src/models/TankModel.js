@@ -26,9 +26,10 @@ export class TankModel extends BaseModel{
 			this.connections = setup.connections;
 		}
 		
+		setup.config = setup.config || {};
 		
-		this.pressure = 0 //args.pressure || 0;
-		this.volume = 0 //args.volume || 0;
+		this.pressure = setup.config.pressure || 0;
+		this.volume = setup.config.volume || 0;
 		
 		this.maxVolume = 25000;
 		this.flowresistance = 0.2;
@@ -42,9 +43,6 @@ export class TankModel extends BaseModel{
 	
 	
 	updateFlow(dt){
-		
-		
-		this.volume = this.parent.link.volume;
 		
 		this.pressure = this.volume / 1000;
 		
@@ -97,9 +95,6 @@ export class TankModel extends BaseModel{
 		});
 		
 		this.inflow.length = 0;
-		
-		this.parent.link.volume = this.volume;
-		this.parent.link.pressure = this.pressure;
 		
 	}
 	
