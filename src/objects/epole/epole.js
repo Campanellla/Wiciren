@@ -88,10 +88,10 @@ export class _epole extends Construction {
 					type: "epolemodel",
 					location: {x:0, z:0},
 					conlocation: [
-						{x:-1, z:0},
-						{x:1, z:0},
-						{x:0, z:1},
-						{x:0, z:-1}
+						{x:-1, z:0, r:0},
+						{x:1,  z:0, r:2},
+						{x:0,  z:1, r:1},
+						{x:0,  z:-1,r:3}
 					]
 				}
 			]

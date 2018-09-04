@@ -46,7 +46,7 @@ export class _tank extends Construction {
 		this.menu_interface = Tank_interface;
 		this.updateInterface = null;
 		
-		
+		this.draw();
 	}
 	
 	
@@ -88,6 +88,20 @@ export class _tank extends Construction {
 		return {h:1, w:1};
 	}
 	
+	
+	getConfig(subtype){
+		
+		return {
+			size: {h:1, w:1},
+			connections: [
+				{
+					type: "tankmodel",
+					location: {x:0, z:0},
+					conlocation: [{x:1, z:0, r:2}]
+				}
+			]
+		}
+	}
 	
 	
 }

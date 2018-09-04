@@ -21,6 +21,7 @@ export function updateObjects(dtime){
 		
 	};
 	
+	game.electricalGrids.update();
 	game.pipelines.update();
 	
 };

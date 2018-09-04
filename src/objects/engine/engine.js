@@ -60,7 +60,7 @@ export class _engine extends Construction {
 	
 	
 	update(dt){
-		this.models[1].update(dt);
+		//this.models[1].update(dt);
 		if (this.updateInterface) this.updateInterface();
 	}
 	
@@ -104,7 +104,7 @@ export class _engine extends Construction {
 	}
 	
 	
-	getConfig(){
+	getConfig(subtype){
 		
 		return {
 			size: {h:1, w:2},
@@ -112,11 +112,11 @@ export class _engine extends Construction {
 				{
 					type: "tankmodel",
 					location: {x:0, z:0},
-					conlocation: [{x:-1, z:0}]
+					conlocation: [{x:-1, z:0, r:0}]
 				}, {
 					type: "enginemodel",
 					location: {x:1, z:0},
-					conlocation: [{x:2, z:0}]
+					conlocation: [{x:2, z:0, r:2}]
 				}
 			]
 		}

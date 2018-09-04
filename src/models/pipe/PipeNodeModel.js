@@ -122,7 +122,12 @@ export class PipeNodeModel extends BaseModel{
 	}
 	
 	
-	
+	save(){
+		return {
+			pressure:this.pressure,
+			volume: this.volume
+		}
+	}
 	
 
 }

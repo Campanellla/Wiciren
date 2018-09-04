@@ -6,7 +6,6 @@ export class BaseModel {
 	
 	constructor(){
 		
-		
 		this.pointer = {link:this};
 		
 		this.type = "model";
@@ -27,16 +26,12 @@ export class BaseModel {
 	}
 	
 	setUpConnections(map){
-		
 		let connections = [];
-		
-		map.forEach( config => {
-			
+		map.forEach(config => {
 			let connection = new game.class.Connection(config);
 			connection.modelPointer = this.pointer;
 			connections.push(connection);
 		});
-		
 		return connections;
 	}
 	

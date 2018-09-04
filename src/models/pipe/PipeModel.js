@@ -80,16 +80,14 @@ export class PipeModel extends BaseModel{
 		}
 		
 		
-		
-		
-		
+		setup.config = setup.config || {};
 		
 		this.flowResistance = this.count / 1000;
-		this.volume = 0;
+		this.volume = setup.config.volume || 0;
 		
 		this.inflow = [];
 		
-		this.pressure = 0;
+		this.pressure =  setup.config.pressure || 0;
 		this.returnFlow = [];
 		
 		
@@ -208,6 +206,15 @@ export class PipeModel extends BaseModel{
 		
 	}
 	
+	save(){
+		
+		return {
+			pressure:this.pressure,
+			volume: this.volume / this.count
+		}
+		
+		
+	}
 	
 		
 }

@@ -58,14 +58,13 @@ export class _pipe extends Construction {
 	
 	save(){
 		
-		return 	{
-				type: 		this.type,
-				subtype: 	this.subtype,
-				location: 	this.location,
-				volume: 	this.volume,
-				pressure:	this.pressure,
-				rotationIndex: 	this.rotationIndex
-				};	
+		return {
+			type: this.type,
+			subtype: this.subtype,
+			location: this.location,
+			rotationIndex: this.rotationIndex,
+			models: [this.models[0].save()]
+		};	
 	}
 	
 	
@@ -87,20 +86,72 @@ export class _pipe extends Construction {
 	}
 	
 	
-	getConfig(){
+	getConfig(subtype){
 		
-		return {
-			size: {h:1, w:1},
-			connections: [
-				{
-					type: "pipemodel",
-					location: {x:0, z:0},
-					conlocation: [
-						{x:-1, z:0},
-						{x: 1, z:0}
+		switch(subtype){
+			
+			case "3-way": 
+				return {
+					size: {h:1, w:1},
+					connections: [
+						{
+							type: "pipemodel",
+							location: {x:0, z:0},
+							conlocation: [
+								{x:-1, z:0, r:0},
+								{x: 1, z:0, r:2},
+								{x: 0, z:-1, r:3}
+							]
+						}
 					]
-				}
-			]
+				}; break;
+				
+			case "4-way": 
+				return {
+					size: {h:1, w:1},
+					connections: [
+						{
+							type: "pipemodel",
+							location: {x:0, z:0},
+							conlocation: [
+								{x:-1, z:0, r:0},
+								{x: 1, z:0, r:2},
+								{x: 0, z:1, r:1},
+								{x: 0, z:-1, r:3}
+							]
+						}
+					]
+				}; break;
+				
+			case "angle": 
+				return {
+					size: {h:1, w:1},
+					connections: [
+						{
+							type: "pipemodel",
+							location: {x:0, z:0},
+							conlocation: [
+								{x:-1, z:0, r:0},
+								{x: 0, z:-1, r:3}
+							]
+						}
+					]
+				}; break;
+				
+			default     : 
+				return {
+					size: {h:1, w:1},
+					connections: [
+						{
+							type: "pipemodel",
+							location: {x:0, z:0},
+							conlocation: [
+								{x:-1, z:0, r:0},
+								{x: 1, z:0, r:2}
+							]
+						}
+					]
+				}; break;
 		}
 	}
 	

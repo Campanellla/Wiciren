@@ -139,7 +139,7 @@ export class Engine_interface extends Component {
 				<button onClick = {this.onclick2.bind(this)}>starter</button>
 				
 				<div className="slidecontainer">
-					<input 	type="range" min="0" max="1000" defaultValue={900 || this.props.item.setPoint} className="slider" id="myRange" 
+					<input 	type="range" min="890" max="910" defaultValue={900 || this.props.item.setPoint} className="slider" id="myRange" 
 					 		onChange={this.sliderChange.bind(this)} ref={this.sliderRef} step = "0.1"/>
 				</div>
 				

@@ -189,14 +189,12 @@ export class Construction {
 	
 	
 	destruct(){
-		
+		this.visible = false;
 		this.exist = false;
 		this.pointer.link = null;
 		this.mesh.dispose();
-		
-		this.visible = false;
-		
 	}
+	
 	
 	setState(state){
 		
@@ -228,7 +226,6 @@ export class Construction {
 				break;
 				
 			default : break;
-			
 			
 		}
 		

@@ -15,11 +15,12 @@ export class EngineModel extends BaseModel {
 		this.location = args.location;
 		this.parent = args.parentPointer;
 		
-		if (args.connectionsMap) {
-			this.connections = this.setUpConnections(args.connectionsMap);
-		} else {
-			this.connections = args.connections;
-		}
+		let rotationIndex = this.parent.link.rotationIndex;
+		
+		
+		
+		
+		this.connections = this.setUpConnections(args.connectionsMap);
 		
 		args.config = args.config || {};
 		
@@ -31,8 +32,9 @@ export class EngineModel extends BaseModel {
 		this.voltage = args.config.voltage || 450;
 		this.setPoint = args.config.setPoint || 900;
 		this.speedDroop = args.config.speedDroop ||0;
+		this.current = 0;
 		
-		this.resistance = 1000000;
+		this.conductivity = 0;
 		this.load = 0;
 		
 	}
@@ -44,11 +46,11 @@ export class EngineModel extends BaseModel {
 		let speed = this.speed;
 		let controlIndex = this.controlIndex;
 		
-		let consumerResistance = this.resistance;
-		let current = this.voltage / consumerResistance;
+		let consumerConductivity = this.conductivity;
+		let current = this.voltage * consumerConductivity;
 		let frequency = speed / 15;
 		
-		let load = 450 * current;
+		let load = this.load;
 		let altLoad = load * 1.15;
 		
 		

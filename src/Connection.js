@@ -7,15 +7,16 @@ export default class Connection {
 	
 	constructor(args){
 		
-		this.location = args.location || {x:0, z:0};
-		this.size = args.size || {h:1, w:1};
-		this.connLocation = args.connLocation || args.conlocation;
-		
 		this.itemPointer = args.itemPointer || game.nullpointer;
 		this.modelPointer = game.nullpointer;
 		
 		this.connectedItemPointer = game.nullpointer;
 		this.connectedModelPointer = game.nullpointer;
+		
+		
+		this.location = args.location || {x:0, z:0};
+		this.size = args.size || {h:1, w:1};
+		this.connLocation = args.connLocation || args.conlocation;
 		
 		this.rlocation = this.location;
 		this.rconnLocation = this.connLocation;
@@ -26,13 +27,16 @@ export default class Connection {
 	
 	checkRotation(){
 		
-		if (this.itemPointer.link === null) return false;
+		if (this.itemPointer.link === null) {
+			console.log("item pointer not exist")
+			return false;
+		}
 		
 		let itemRotation = this.itemPointer.link.rotationIndex;
 		let itemSize = this.itemPointer.link.itemSize;
 		
 		if (itemRotation === this.r) {
-			
+			console.log("rotation same")
 			return true;
 		}
 		
@@ -56,7 +60,7 @@ export default class Connection {
 				
 							offsetcz = this.connLocation.x && (this.connLocation.x - itemSize.w/2) * -1 + itemSize.w/2 - 1;
 							offsetcx = this.connLocation.z// && (this.connLocation.z - itemSize.h/2) + itemSize.w/2;
-							
+							this.rlocation = {x:this.location.z + offsetz, z:this.location.x + offsetx};
 							break;
 				
 				case(2): 	offsetz = itemSize.h-1;
@@ -64,27 +68,21 @@ export default class Connection {
 						 	
 							offsetcz = this.connLocation.z && (this.connLocation.z - itemSize.h/2) * -1 + itemSize.h/2 - 1;
 							offsetcx = this.connLocation.x && (this.connLocation.x - itemSize.w/2) * -1 + itemSize.w/2 - 1;
-							
+							this.rlocation = {x:this.location.x + offsetx, z:this.location.z + offsetz};
 						 	break;
 						 
 				case(3): 	offsetx = itemSize.h-1;
 							
 							offsetcz = this.connLocation.x// && (this.connLocation.x - itemSize.w/2) + itemSize.h/2;
 							offsetcx = this.connLocation.z && (this.connLocation.z - itemSize.h/2) * -1 + itemSize.h/2 - 1;
-							
+							this.rlocation = {x:this.location.z + offsetz, z:this.location.x + offsetx};
 							break;
 			};
 			
-			this.rlocation = {x:this.location.x + offsetx, z:this.location.z + offsetz};
 			this.rconnLocation = {x:offsetcx, z:offsetcz};
 			this.r = itemRotation;
 			
 		}
-		
-		if (this.rconnLocation.x < 0) this.rotationIndex = 0;
-		if (this.rconnLocation.x > 0) this.rotationIndex = 2;
-		if (this.rconnLocation.z < 0) this.rotationIndex = 3;
-		if (this.rconnLocation.z > 0) this.rotationIndex = 1;
 		
 		return true;
 	}
@@ -92,7 +90,7 @@ export default class Connection {
 	updateLinks(){
 		
 		let info = false;
-		if (this.itemPointer.link.key === 2) info = true; ////////
+		if (this.itemPointer.link.key === 2) info = false; ////////
 		
 		let OK = this.checkRotation();
 		

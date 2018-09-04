@@ -18,7 +18,7 @@ export class Device_interface extends Component {
 			
 			key: -1,
 			type: "",
-			resistance: 10000
+			conductivity: 0
 			
 		}
 		
@@ -33,7 +33,7 @@ export class Device_interface extends Component {
 			this.setState({
 				key: item.key || 0,
 				type: item.type || "",
-				resistance: item.resistance || 0
+				conductivity: item.models[0].conductivity || 0
 			});
 		}
 		
@@ -67,8 +67,8 @@ export class Device_interface extends Component {
 		let num = Number(this.sliderRef.current.value);
 		let item = this.props.item;
 		
-		if(item && item.resistance !== undefined && !isNaN(num)) {
-			item.resistance = 1/num;
+		if(item && item.models[0].conductivity !== undefined && !isNaN(num)) {
+			item.models[0].conductivity = num;
 		}
 	}
 
@@ -87,7 +87,7 @@ export class Device_interface extends Component {
 							"key: " + this.state.key,
 							"type: " + this.state.type,
 							"",
-							"resistance: " + this.state.resistance + " Om",
+							"conductivity: " + this.state.conductivity + " S",
 							""
 						].map((item, key) => {
   							return <span key={key}>{item}<br/></span>
@@ -96,7 +96,7 @@ export class Device_interface extends Component {
 				</div>
 				
 				<div className="slidecontainer">
-					<input 	type="range" min="0.0001" max="36" defaultValue={1/(this.state.resistance+0.000001)} className="slider" id="myRange" 
+					<input 	type="range" min="0" max="36" defaultValue={this.state.conductivity} className="slider" id="myRange" 
 					 		onChange={this.sliderChange.bind(this)} ref={this.sliderRef} step="0.001"/>
 				</div>
 			</div>

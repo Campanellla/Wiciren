@@ -29,7 +29,6 @@ export class _device extends Construction {
 		
 		this.models.push(new DeviceModel({ connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:2, w:2} }, this));
 		
-		
 		this.volume = 0;
 		this.speed = 0;
 		this.controlIndex = 0;
@@ -42,19 +41,19 @@ export class _device extends Construction {
 		this.updateInterface = null;
 		
 		this.resistance = 100000;
+		
+		this.draw();
 	}
 	
 	
 	update(dt){
 		
-		//this.models[0].connections[0].updateLinks();
-		
-		this.models[0].update(0.02);
+		//this.models[0].update(0.02);
 		
 		if (this.updateInterface) this.updateInterface();
 		
-		
 	}
+	
 	
 	save(){
 		var str = 
@@ -86,6 +85,21 @@ export class _device extends Construction {
 		
 		return {h:2, w:2};
 		
+	}
+	
+	
+	getConfig(subtype){
+		
+		return {
+			size: {h:2, w:2},
+			connections: [
+				{
+					type: "devicemodel",
+					location: {x:0, z:0},
+					conlocation: [{x:-1, z:0, r:0}]
+				}
+			]
+		}
 	}
 	
 }

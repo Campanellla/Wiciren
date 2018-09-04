@@ -135,6 +135,23 @@ export class _pump extends Construction {
 	}
 	
 	
+	getConfig(subtype){
+		
+		return {
+			size: {h:1, w:1},
+			connections: [
+				{
+					type: "pumpmodel",
+					location: {x:0, z:0},
+					conlocation: [
+						{x:-1, z:0, r:0},
+						{x:1, z:0, r:2}
+					]
+				}
+			]
+		}
+	}
+	
 }
 
 

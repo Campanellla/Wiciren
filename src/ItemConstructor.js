@@ -55,14 +55,34 @@ export class ItemConstructor {
 			if (_item && _item.item.prototype.getConfig) {
 				let subtype = _item.subtype;
 				let _prototype = _item.item.prototype;
-				this.config = _prototype.getConfig();
+				this.config = _prototype.getConfig(subtype);
 				this.activeMesh = _prototype.drawMesh(false, subtype);
 				this.activeMesh.isObject = true;
-			}
-			
-			game.selection.setActiveMesh(this.activeMesh, this.config);
-			game.selection.setRotation(this.rotationIndex);
-			
+				
+				game.selection.setActiveMesh(this.activeMesh, this.config);
+				game.selection.setRotation(this.rotationIndex);
+				
+				
+				this.config.connections.forEach(connection => {
+					if (!connection) return;
+					
+					connection.conlocation.forEach(location => {
+						
+						let mesh = new game.BABYLON.Mesh('index: 100', game.scene, null, game.meshes.arrow);
+						this.helperMeshes.push(mesh);
+						mesh.material = game.materials.ycolor;
+						mesh.isPickable = false;
+						
+						mesh.parent = this.activeMesh;
+						
+						mesh.rotation.y = location.r * game.TAU || 0;
+						mesh.position.x = location.x+0.5
+						mesh.position.y = 0.25;
+						mesh.position.z = location.z+0.5
+						
+					});
+				});
+			};
 		}
 	}
 	
@@ -73,6 +93,8 @@ export class ItemConstructor {
 		if(this.activeMesh) {
 			game.selection.setActiveMesh();
 			this.activeMesh.dispose();
+			this.helperMeshes.forEach(mesh => mesh.dispose());
+			this.helperMeshes.length = 0;
 		}
 	}
 	
@@ -105,14 +127,10 @@ export class ItemConstructor {
 	
 	
 	loadObject(object){
-		if (object && this.constructorItemList[object.type]){	
-			
-			//object.rotationIndex = object.rotationIndex || 0;
-			
+		if (object && this.constructorItemList[object.type]){
 			object.key = this.keynum++;
 			var item = new this.constructorItemList[object.type].item(object);
 			if (item){
-				item.draw(true);
 				game.map.insertItem(item, object.location.x, object.location.z, item.itemSize.w, item.itemSize.h, item.rotationIndex);
 				game.map.objectsList.push(item);
 			}
@@ -136,13 +154,9 @@ export class ItemConstructor {
 		
 		if (!this.activeMesh) return false;
 		
-		if (this.helperMeshes && this.helperMeshes.length > 0) {
-			
+		if (this.helperMeshes.length) {
 			this.helperMeshes.forEach(mesh => {
-				mesh.position.x = game.selection.position.x + mesh.itemOffset.x;
-				mesh.position.z = game.selection.position.z + mesh.itemOffset.z;
-				
-				mesh.isVisible = this.activeItem.mesh.isVisible;
+				mesh.isVisible = this.activeMesh.isVisible;
 			});
 		}
 		
@@ -156,14 +170,12 @@ export class ItemConstructor {
 			for(let z = 0; z < sizeOffset.z; z++){
 				if (game.map.getItemFromCoord(tilex + x, tiley + z)){
 					this.activeMesh.renderOverlay = true;
-					//this.isFreeSpace = false;
 					return false
 				}
 			}
 		}
 		
 		this.activeMesh.renderOverlay = false;
-		//this.isFreeSpace = true;
 		return true;
 	}
 	

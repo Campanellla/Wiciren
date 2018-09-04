@@ -26,7 +26,7 @@ export class DeviceModel extends BaseModel {
 		this.speed = parent.speed;
 		this.controlIndex = parent.controlIndex;
 		this.I = 0
-		this.resistance = 0;
+		this.conductivity = 0;
 		
 	}
 	
@@ -38,11 +38,6 @@ export class DeviceModel extends BaseModel {
 		if (!this.connections[0].connectedModelPointer.link) { 
 			return ;
 		}
-		
-		this.connections[0].connectedModelPointer.link.resistance = this.parent.link.resistance;
-		
-		this.parent.link.speed = this.connections[0].connectedModelPointer.link.speed;
-		this.parent.link.controlIndex = this.connections[0].connectedModelPointer.link.controlIndex;
 		
 	}
 	
