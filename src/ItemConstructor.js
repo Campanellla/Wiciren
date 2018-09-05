@@ -66,7 +66,30 @@ export class ItemConstructor {
 				this.config.connections.forEach(connection => {
 					if (!connection) return;
 					
-					connection.conlocation.forEach(location => {
+					if (connection.ranged){
+						
+						connection.conlocation.forEach(location => {
+							
+							let sourcePlane = new BABYLON.Plane(0, -1, 0, 0);
+							sourcePlane.normalize();
+							let mesh = BABYLON.MeshBuilder.CreatePlane("plane", 
+								{height:location.range*2+1, width:location.range*2+1, sourcePlane:sourcePlane}, game.scene);
+							
+							this.helperMeshes.push(mesh);
+							mesh.material = game.materials.ycolor;
+							mesh.isPickable = false;
+							
+							mesh.parent = this.activeMesh;
+							
+							mesh.position.x = 0.5
+							mesh.position.y = 0.25;
+							mesh.position.z = 0.5
+							
+							mesh.visibility = location.opacity || 1;
+							
+						})
+						
+					} else connection.conlocation.forEach(location => {
 						
 						let mesh = new game.BABYLON.Mesh('index: 100', game.scene, null, game.meshes.arrow);
 						this.helperMeshes.push(mesh);

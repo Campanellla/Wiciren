@@ -102,6 +102,10 @@ export default function init(){
 					_int.drawCallsLabelComponent.current.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
 				if (_int.fpsLabelComponent.current) 
 					_int.fpsLabelComponent.current.setState({text:engine.getFps().toFixed() + " fps"});
+				if (game.componentsNeedUpdate.length){
+					game.componentsNeedUpdate.forEach(c => c.update());
+				}
+				
 				
 			}
 			

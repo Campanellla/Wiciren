@@ -39,14 +39,10 @@ export default class InterfaceView extends Component {
 				
 				<WindowContainer ref={this.windowContainerComponent}/>
 				
-				
 				<div id = 'configmenuwindow' hidden/>
 			</div>
 		)
 	}
-	
-	
-	
 	
 }
 

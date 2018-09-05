@@ -8,15 +8,14 @@ export default class Connection {
 	constructor(args){
 		
 		this.itemPointer = args.itemPointer || game.nullpointer;
-		this.modelPointer = game.nullpointer;
+		this.modelPointer = args.modelPointer || game.nullpointer;
 		
-		this.connectedItemPointer = game.nullpointer;
-		this.connectedModelPointer = game.nullpointer;
-		
+		this.connectedItemPointer = args.connectedItemPointer || game.nullpointer;
+		this.connectedModelPointer = args.connectedModelPointer || game.nullpointer;
 		
 		this.location = args.location || {x:0, z:0};
 		this.size = args.size || {h:1, w:1};
-		this.connLocation = args.connLocation || args.conlocation;
+		this.connLocation = args.connLocation || args.conlocation || {};
 		
 		this.rlocation = this.location;
 		this.rconnLocation = this.connLocation;

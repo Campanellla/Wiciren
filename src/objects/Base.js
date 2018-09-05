@@ -51,49 +51,9 @@ export class Construction {
 		this.rotate(this.rotationIndex);
 	}
 	
-	
-	makeArrows(arg) {
-		
-		if (this.arrows.length > 0){
-			
-			this.arrows.forEach(mesh => mesh.dispose());
-			this.arrows.length = 0;
-		}
-		
-		if (arg === false) return ;
-		
-		let a = this.getConnectionsCoordinates();
-				
-		a.forEach((c) => {
-			
-			let mesh = this.getMesh(game.meshes.arrow, '');
-			
-			if (!mesh) return ;
-			
-			mesh.rotation.y = c.rotationIndex * game.TAU;
-			
-			mesh.material = game.materials.ycolor;
-			mesh.isPickable = false;
-			
-			this.arrows.push(mesh);
-			
-			mesh.position.x = this.location.x + c.x + 0.5;
-			mesh.position.y = this.location.y || 0.25;
-			mesh.position.z = this.location.z + c.z + 0.5;
-			
-			mesh.itemOffset = { x:c.x + 0.5, z:c.z + 0.5 };
-			
-		});
-		
-		return this.arrows;
-	}
-	
-	
 	getConnectionsCoordinates(){
 		
 		let coordinates = [];
-		
-		const sides = ["bottom", "right", "top", "left"];
 		
 		this.models.forEach(model => {
 			
@@ -115,47 +75,11 @@ export class Construction {
 	
 	
 	updateLinks(){
-		
 		this.models.forEach(model => {
-			
 			model.connections.forEach(connection => {
-				
 				connection.updateLinks();
-				
 			});
-			
 		});
-		
-		
-		return ;
-		
-		this.inserted = false;
-		this.connections.length = 0;
-		this.isNode = false;
-		
-		let x = this.location.x;
-		let z = this.location.z;
-		
-		let rotatedConnectionsMap = this.getConnectionsCoordinates();
-		
-		for (let i = 0;  i < rotatedConnectionsMap.length; i++){
-			
-			let xx = rotatedConnectionsMap[i].x + x;
-			let zz = rotatedConnectionsMap[i].z + z;
-			
-			let item = game.map.getItemFromCoord(xx, zz);
-			
-			if (item !== null) {
-				
-				this.connections.push(item.pointer);
-				rotatedConnectionsMap[i].connection.itemPointer = item.pointer;
-				
-			} else if (this.connectionsMap[i].forced) {
-				
-				this.connections.push(null);
-				rotatedConnectionsMap[i].connection.itemPointer = game.nullpointer;
-			}
-		}
 	}
 	
 	

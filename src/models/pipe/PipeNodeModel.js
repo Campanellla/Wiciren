@@ -31,10 +31,10 @@ export class PipeNodeModel extends BaseModel{
 		this.origin = model;
 		
 		this.inflow = [];
-		this.pressure = 0;
+		this.pressure = model.pressure || 0;
 		
 		this.flowResistance = 0.001
-		this.volume = 0;
+		this.volume = model.volume ||0;
 		
 		this.returnFlow = [];
 		

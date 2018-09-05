@@ -61,7 +61,7 @@ export class _engine extends Construction {
 	
 	update(dt){
 		//this.models[1].update(dt);
-		if (this.updateInterface) this.updateInterface();
+		//if (this.updateInterface) this.updateInterface();
 	}
 	
 	
@@ -74,7 +74,7 @@ export class _engine extends Construction {
 				{
 					subtype: this.models[0].subtype,
 					pressure: this.models[0].pressure,
-					volume: this.models[0].volume + 100
+					volume: this.models[0].volume
 				}, {
 					subtype: this.models[1].subtype,
 					speed: this.models[1].speed,
@@ -84,7 +84,8 @@ export class _engine extends Construction {
 					frequency: this.models[1].frequency,
 					voltage: this.models[1].voltage,
 					setPoint: this.models[1].setPoint,
-					speedDroop: this.models[1].speedDroop
+					speedDroop: this.models[1].speedDroop,
+					connectedToGrid: this.models[1].connectedToGrid
 				}
 			]
 		};

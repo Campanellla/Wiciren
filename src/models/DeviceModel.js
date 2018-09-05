@@ -32,13 +32,6 @@ export class DeviceModel extends BaseModel {
 	
 	update(dt){
 		
-		if (!this.connections[0]) {
-			return ;
-		}
-		if (!this.connections[0].connectedModelPointer.link) { 
-			return ;
-		}
-		
 	}
 	
 	

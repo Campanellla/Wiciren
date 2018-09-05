@@ -44,7 +44,12 @@ export default class ElectricalGrids {
 		this.models.forEach((model) => {
 			if (!model) {console.log("model not found"); return; }
 			model.inserted = false;
-			model.connections.forEach(connection => connection.updateLinks());
+			
+			if (model.updateLinks) {
+				model.updateLinks();
+			} else {
+				model.connections.forEach(connection => connection.updateLinks());
+			}
 			
 			if (model.subtype === "epolemodel") {
 				
@@ -180,7 +185,7 @@ class ElectricalGrid {
 		
 		this.sources.forEach(model => {
 			
-			if (model.connectedToGrid || true){
+			if (model.connectedToGrid){
 				connectedSources++;
 				
 				frequency += model.frequency;
@@ -211,19 +216,19 @@ class ElectricalGrid {
 		
 		totalLoad = voltage * voltage * totalConsumerConductivity * frequency * frequency /60 /60;
 		
-		console.log("sLoad:", totalSourceLoad.toFixed(1),
+		1 || console.log("sLoad:", totalSourceLoad.toFixed(1),
 			"Load:", totalLoad.toFixed(1),
 			"F:", frequency.toFixed(1),
 			"V:", voltage.toFixed(0),
 			"A:", current.toFixed(1),
-			//"connectedSources:", connectedSources,
+			"connectedSources:", connectedSources,
 			//"connectedConsumers:", connectedConsumers,
 			"1/R:", totalConsumerConductivity.toFixed(1)
 		);
 		
 		this.sources.forEach(model => {
 			
-			if (model.connectedToGrid || true){
+			if (model.connectedToGrid){
 				
 				let fdiff = model.frequency - frequency;
 				
@@ -237,6 +242,8 @@ class ElectricalGrid {
 				
 				model.load = totalLoad / connectedSources + fdiff * 10000000;
 				
+			} else {
+				model.load = 0;
 			}
 		});
 		

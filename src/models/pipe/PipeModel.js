@@ -67,6 +67,8 @@ export class PipeModel extends BaseModel{
 			
 			this.combined = false;
 			
+			this.count = 1;
+			
 			this.parent = setup.parentPointer || parent.pointer;
 			this.location = setup.location;
 			
@@ -99,8 +101,6 @@ export class PipeModel extends BaseModel{
 	
 	reset(){
 		
-		//console.log(this.combined, this);
-		
 		if (!this.combined) return false;
 		
 		this.models.forEach(model => {
@@ -125,22 +125,7 @@ export class PipeModel extends BaseModel{
 		
 		if (!this.count) return ;
 		
-		this.volume = 0
-		this.pressure = 0
-		
-		this.parent.forEach(pointer => {
-			
-			this.volume += pointer.link.volume;
-			this.pressure += pointer.link.pressure;
-			
-		});
-		
-		this.pressure = this.pressure / this.count;
-		
-		
 		let vmax = this.count * 25;
-		
-		this.pressure = this.volume / vmax;
 		
 		this.inflow.forEach((flow)=>{
 			
@@ -195,28 +180,16 @@ export class PipeModel extends BaseModel{
 		
 		this.inflow.length = 0;
 		
-		this.parent.forEach(pointer => {
-			
-			pointer.link.volume = this.volume / this.count;
-			pointer.link.pressure = this.pressure;
-			
-		});
-		
-		
-		
 	}
 	
 	save(){
-		
 		return {
 			pressure:this.pressure,
 			volume: this.volume / this.count
 		}
-		
-		
 	}
 	
-		
+	
 }
 
 
@@ -238,3 +211,8 @@ function getType(item){
 	}
 	
 }
+
+
+
+
+

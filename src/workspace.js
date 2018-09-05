@@ -11,7 +11,6 @@ import Connection from './Connection.js';
 
 import ElectricalGrids from './ElectricalGrids.js';
 
-
 export class GameWorkspace {
 	
 	constructor(){
@@ -31,6 +30,8 @@ export class GameWorkspace {
 		this.itemConstructor = new ItemConstructor();
 		
 		this.interfaceComponent = React.createRef(); 
+		
+		this.componentsNeedUpdate = [];
 		
 		this.config = {
 			
@@ -55,9 +56,6 @@ export class GameWorkspace {
 		this.map = undefined;
 		
 		this.nullpointer = {link:null};
-		
-		document.save = this.save.bind(this);
-		document.load = this.load.bind(this);
 		
 		this.blockSelection = (bool) => {
 			document.onselectstart = function(){return bool}
@@ -137,14 +135,10 @@ export class GameWorkspace {
 		}
 		
 		if (data.camera){
-			
-			game.camera.position.x = data.camera.position.x;
-			game.camera.position.y = data.camera.position.y;
-			game.camera.position.z = data.camera.position.z;
-			
-			game.camera.rotation.x = data.camera.rotation.x;
-			game.camera.rotation.y = data.camera.rotation.y;
-			game.camera.rotation.z = data.camera.rotation.z;
+			let d = data.camera;
+			let g = game.camera;
+			[g.position.x, g.position.y, g.position.z] = [d.position.x, d.position.y, d.position.z];
+			[g.rotation.x, g.rotation.y, g.rotation.z] = [d.rotation.x, d.rotation.y, d.rotation.z];
 		}
 	}
 	

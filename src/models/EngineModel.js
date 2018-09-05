@@ -15,11 +15,6 @@ export class EngineModel extends BaseModel {
 		this.location = args.location;
 		this.parent = args.parentPointer;
 		
-		let rotationIndex = this.parent.link.rotationIndex;
-		
-		
-		
-		
 		this.connections = this.setUpConnections(args.connectionsMap);
 		
 		args.config = args.config || {};
@@ -37,6 +32,8 @@ export class EngineModel extends BaseModel {
 		this.conductivity = 0;
 		this.load = 0;
 		
+		this.connectedToGrid = args.config.connectedToGrid || false;
+		
 	}
 	
 	update(dt){
@@ -53,14 +50,9 @@ export class EngineModel extends BaseModel {
 		let load = this.load;
 		let altLoad = load * 1.15;
 		
-		
 		let volume = this.parent.link.models[0].volume || 0;
 		
 		let I = this.I;
-		
-		
-		//console.log(this.parent.link.key, this.speed);
-		
 		
 		let resistancea = ratedPower/7000;
 		let resistanceb = resistancea*1000;
@@ -118,7 +110,7 @@ export class EngineModel extends BaseModel {
 		
 		let balance = (fuelIndex - resistancea * speed - resistanceb / (speed / 50 + 1) - altLoad) / (ratedPower/10000 + Math.sqrt(ratedPower/2)*ratedPower/1000000) * dt;
 		
-		speed += balance;
+		speed += balance/2;
 		
 		if (speed < 0) speed = 0;
 		

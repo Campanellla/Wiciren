@@ -99,7 +99,7 @@ export default class ItemMenu extends Component {
 							if (state.item && state.item.menu_interface) {
 								
 								let Interface = state.item.menu_interface;
-								return <Interface item = {state.item} />;
+								return <Interface item = {state.item}/>;
 							}
 						})(this.state)
 					}

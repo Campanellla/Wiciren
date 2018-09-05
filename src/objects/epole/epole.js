@@ -59,7 +59,6 @@ export class _epole extends Construction {
 	
 	update(dt){
 		
-		if (this.updateInterface) this.updateInterface();
 	}
 	
 	
@@ -86,12 +85,11 @@ export class _epole extends Construction {
 			connections: [
 				{
 					type: "epolemodel",
+					ranged: true,
 					location: {x:0, z:0},
 					conlocation: [
-						{x:-1, z:0, r:0},
-						{x:1,  z:0, r:2},
-						{x:0,  z:1, r:1},
-						{x:0,  z:-1,r:3}
+						{range: 5, opacity: 0.25},
+						{range: 2, opacity: 0.5}
 					]
 				}
 			]

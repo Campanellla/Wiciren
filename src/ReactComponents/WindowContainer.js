@@ -22,7 +22,7 @@ export default class WindowContainer extends Component {
 	render(){
 		return (
 			<div id = 'WindowContainer'>
-				{this.state.windows.map(w => w.w)}
+				{this.state.windows.map(_window => _window.container)}
 			</div>
 		);
 	}
@@ -30,30 +30,33 @@ export default class WindowContainer extends Component {
 	
 	appendWindow(item){
 		
-		let key = this.state.windows.findIndex(w => w.w.props.item === item);
+		let key = this.state.windows.findIndex(_window => _window.container.props.item === item);
 		if (key !== -1) return ;
-		let w = {
-			w:null, 
-			ref:React.createRef()
+		let _window = {
+			container :null, 
+			ref: React.createRef()
 		};
-		w.w = <ItemMenu controller={this} 
-						item={item}
-						position={{
-							left:100 + this.state.windows.length*10, 
-							top:50 + this.state.windows.length*2
-						}}
-						index={++this.newIndex}
-						key={this.key++} 
-						ref={w.ref} />;
-		this.state.windows.push(w);
+		_window.container = <ItemMenu 
+			controller={this}
+			item={item}
+			position={{
+				left:100 + this.state.windows.length*10, 
+				top:50 + this.state.windows.length*2
+			}}
+			index={++this.newIndex}
+			key={this.key++}
+			ref={_window.ref} 
+		/>;
+						
+		this.state.windows.push(_window);
 		this.setState({});
 		
 	}
 	
 	
-	removeWindow(_window){
+	removeWindow(currentWindow){
 		
-		let key = this.state.windows.findIndex(w => w.ref.current === _window);
+		let key = this.state.windows.findIndex(_window => _window.ref.current === currentWindow);
 		
 		if (key === -1) {
 			console.log("key not found");
