@@ -14,61 +14,33 @@ export class Selection {
 		this.ref = {link:this};
 		this.scene = scene;
 		
-		this.squareMesh = new BABYLON.Mesh("ground1", scene);
+		let sourcePlane = new BABYLON.Plane(0, -1, 0, 0);
+		sourcePlane.normalize();
+		this.squareMesh = BABYLON.MeshBuilder.CreatePlane("plane", 
+			{height:1, width:1, sourcePlane:sourcePlane}, game.scene);
+		
+		BABYLON.Matrix.TranslationToRef(0.5, 0.5, 0, this.squareMesh.getPivotMatrix());
 		
 		var material = new BABYLON.StandardMaterial("mat", scene);
 		material.emissiveColor = new BABYLON.Color3(1, 1, 1);
 		material.alpha = 0.25;
 		this.squareMesh.material = material;
 		
-		this.squareMeshVertexData = new BABYLON.VertexData();
-		this.squareMeshVertexData.positions = 
-			[	
-				0, 0, 0,	
-				0, 0, 1,	
-				1, 0, 1, 	
-				1, 0, 0 
-			];
-					
-		this.squareMeshVertexData.indices = 
-			[ 	
-				0, 3, 1, 	
-				3, 2, 1 
-			];
-		
-		this.squareMeshVertexData.uvs = 
-			[ 
-				0, 0, 		
-				0, 1, 		
-				1, 1, 		
-				1, 0 
-			];	
-		
-		this.squareMeshVertexData.normals = [];
-		BABYLON.VertexData.ComputeNormals(	this.squareMeshVertexData.positions,
-											this.squareMeshVertexData.indices,
-											this.squareMeshVertexData.normals 	);
-		this.squareMeshVertexData.applyToMesh(this.squareMesh);
-		
 		this.squareMesh.type = 'selection';
 		this.squareMesh.isPickable = false;
-		
 		this.squareMesh.parentClass = this.ref;
 		
 		this.itemConstructorMesh = undefined;
-		
 		this.activeMesh = this.squareMesh;
 		
 		this.offsetx = 0;
 		this.offsetz = 0;
-		
 		this.itemSize = {w:1, h:1};
-		
 		this.position = {x:0, y:0, z:0};
-		
 		this.activeItem;
 		
 	}
+	
 	
 	setPosition(position){
 		
@@ -156,4 +128,39 @@ export class Selection {
 	}
 	
 }
+
+//this.squareMesh = new BABYLON.Mesh("ground1", scene);
+
+/*
+		this.squareMeshVertexData = new BABYLON.VertexData();
+		this.squareMeshVertexData.positions = 
+			[	
+				0, 0, 0,	
+				0, 0, 1,	
+				1, 0, 1, 	
+				1, 0, 0 
+			];
+					
+		this.squareMeshVertexData.indices = 
+			[ 	
+				0, 3, 1, 	
+				3, 2, 1 
+			];
+		
+		this.squareMeshVertexData.uvs = 
+			[ 
+				0, 0, 		
+				0, 1, 		
+				1, 1, 		
+				1, 0 
+			];	
+		
+		this.squareMeshVertexData.normals = [];
+		BABYLON.VertexData.ComputeNormals(	
+			this.squareMeshVertexData.positions,
+			this.squareMeshVertexData.indices,
+			this.squareMeshVertexData.normals 	
+		);
+		this.squareMeshVertexData.applyToMesh(this.squareMesh);
+		*/
 

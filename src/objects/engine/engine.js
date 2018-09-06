@@ -18,17 +18,20 @@ export class _engine extends Construction {
 		this.itemSize = {h:1, w:2};
 		
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
+		
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
-		let connectionArgs = {	
-			location: {x:0, z:0}, 
-			conlocation: {x:-1, z:0}, 
-			size: this.itemSize, 
-			itemPointer: this.pointer
-		};
+		let connectionsArgs = [
+			{	
+				location: {x:0, z:0}, 
+				conlocation: {x:-1, z:0}, 
+				size: this.itemSize, 
+				itemPointer: this.pointer
+			}
+		];
 		let modelargs = {
-			connectionsMap: [connectionArgs], 
+			connectionsMap: connectionsArgs, 
 			location: {x:0, z:0}, 
 			size: this.itemSize,
 			parentPointer: this.pointer,
@@ -36,14 +39,16 @@ export class _engine extends Construction {
 		};
 		this.models.push(new TankModel(modelargs));
 		
-		connectionArgs = {	
-			location: {x:1, z:0}, 
-			conlocation: {x:2, z:0}, 
-			size: this.itemSize, 
-			itemPointer: this.pointer
-		};
+		connectionsArgs = [
+			{	
+				location: {x:1, z:0}, 
+				conlocation: {x:2, z:0}, 
+				size: this.itemSize, 
+				itemPointer: this.pointer
+			}
+		];
 		modelargs = {
-			connectionsMap: [connectionArgs], 
+			connectionsMap: connectionsArgs, 
 			location: {x:1, z:0},
 			size: this.itemSize,
 			parentPointer: this.pointer,
@@ -93,20 +98,11 @@ export class _engine extends Construction {
 	
 	
 	drawMesh(instance, subtype){
-		
-		subtype = subtype || this.subtype;
-		
-		let mesh;
-		let a = game.meshes.engine;
-		
-		mesh = this.getMesh(a, this.keynum, instance);
-		
-		return mesh;
+		return this.getMesh(game.meshes.engine, this.keynum, instance);
 	}
 	
 	
 	getConfig(subtype){
-		
 		return {
 			size: {h:1, w:2},
 			connections: [
@@ -122,6 +118,7 @@ export class _engine extends Construction {
 			]
 		}
 	}
+	
 	
 	
 }

@@ -3,40 +3,32 @@ import {game} from '../App.js';
 import {BaseModel} from './BaseModel.js'
 
 
+
+
+
+
 export class TankModel extends BaseModel{
 	
-	
-	constructor(setup, parent){
-		
+	constructor(args){
 		super();
-		
 		this.subtype = "tankmodel";
-		
 		this.class = "pipeline";
 		
-		parent = parent || {};
+		this.parent = args.parentPointer;
+		this.location = args.location;
 		
-		this.parent = setup.parentPointer || parent.pointer;
-		this.location = setup.location;
+		this.connections = this.setUpConnections(args.connectionsMap);
 		
+		let config = args.config || {};
 		
-		if (setup.connectionsMap) {
-			this.connections = this.setUpConnections(setup.connectionsMap);
-		} else {
-			this.connections = setup.connections;
-		}
-		
-		setup.config = setup.config || {};
-		
-		this.pressure = setup.config.pressure || 0;
-		this.volume = setup.config.volume || 0;
+		this.pressure = config.pressure || 0;
+		this.volume = config.volume || 0;
 		
 		this.maxVolume = 25000;
 		this.flowresistance = 0.2;
 		
 		this.returnFlow = [];
 		this.inflow = [];
-		
 		
 	}
 	

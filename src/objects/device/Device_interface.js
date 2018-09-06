@@ -7,63 +7,67 @@ import {game} from '../../App.js';
 
 export class Device_interface extends Component {
 	
-	
 	constructor(props){
 		
 		super(props);
-		
 		this.sliderRef = React.createRef();
 		
-		this.state = {
-			
-			key: -1,
-			type: "",
-			conductivity: 0
-			
+		let item = this.props.item;
+		if (!item) item = {};
+		if (!item.models || !item.models[0]){
+			item.models = [{}];
 		}
+		
+		this.state = {
+			key: item.key || -1,
+			type: item.type || "",
+			conductivity: item.models[0].conductivity || 0
+		}
+		
+		this.updateInterface = this.updateInterface.bind(this);
 		
 	}
 	
 	updateInterface(){
-		
-		if(this.props.item){
-			
-			let item = this.props.item;
-			
+		let item = this.props.item;
+		if(item){
 			this.setState({
 				key: item.key || 0,
 				type: item.type || "",
 				conductivity: item.models[0].conductivity || 0
 			});
 		}
-		
 	}
 	
 	componentWillReceiveProps(props){
 		
 		if (this.props.item === props.item) return;
-		
 		if (this.props.item) this.props.item.updateInterface = null;
-		
-		if (props.item) props.item.updateInterface = this.updateInterface.bind(this);
+		if (props.item) props.item.updateInterface = this.updateInterface;
 		
 	}
 	
 	
 	componentDidMount(){
-		
-		if(this.props.item) this.props.item.updateInterface = this.updateInterface.bind(this);
+		if(this.props.item){
+			this.props.item.updateInterface = this.updateInterface;
+			game.componentsNeedUpdate.push({component:this, update:this.updateInterface});
+		}
 	}
 	
 	
 	componentWillUnmount(){
-		
+		let key = game.componentsNeedUpdate.findIndex(c => c.component === this);
+		if (key !== -1) {
+			game.componentsNeedUpdate.splice(key, 1);
+		} else {
+			console.log(this, "not found myself in game.componentsNeedUpdate");
+		}
 		if(this.props.item) this.props.item.updateInterface = null;
 	}
 	
 	
 	sliderChange(){
-		
 		let num = Number(this.sliderRef.current.value);
 		let item = this.props.item;
 		
@@ -72,8 +76,6 @@ export class Device_interface extends Component {
 		}
 	}
 
-	
-	
 	
 	render(){
 		

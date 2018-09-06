@@ -3,36 +3,37 @@ import {game} from '../App.js';
 import {BaseModel} from './BaseModel.js'
 
 
+
+
+
+
 export class EngineModel extends BaseModel {
 	
 	constructor(args){
-		
 		super();
-		
 		this.subtype = "enginemodel";
 		this.class = "electric";
 		
-		this.location = args.location;
 		this.parent = args.parentPointer;
+		this.location = args.location;
 		
 		this.connections = this.setUpConnections(args.connectionsMap);
 		
-		args.config = args.config || {};
+		let config = args.config || {};
 		
-		this.speed = args.config.speed || 100;
-		this.controlIndex = args.config.controlIndex || 0;
-		this.run = args.config.run || true;
-		this.I = args.config.I || 0;
-		this.frequency = args.config.frequency || 0;
-		this.voltage = args.config.voltage || 450;
-		this.setPoint = args.config.setPoint || 900;
-		this.speedDroop = args.config.speedDroop ||0;
+		this.speed = config.speed || 100;
+		this.controlIndex = config.controlIndex || 0;
+		this.run = config.run || true;
+		this.I = config.I || 0;
+		this.frequency = config.frequency || 0;
+		this.voltage = config.voltage || 450;
+		this.setPoint = config.setPoint || 900;
+		this.speedDroop = config.speedDroop ||0;
+		this.connectedToGrid = config.connectedToGrid || false;
+		
 		this.current = 0;
-		
 		this.conductivity = 0;
 		this.load = 0;
-		
-		this.connectedToGrid = args.config.connectedToGrid || false;
 		
 	}
 	

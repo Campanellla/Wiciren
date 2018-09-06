@@ -5,6 +5,8 @@ import {game} from './App.js';
 
 export function updateObjects(dtime){
 	
+	dtime = 1/60;
+	
 	game.pipelist = [];
 	
 	game.map.objectsList.forEach(function(object){
@@ -25,9 +27,6 @@ export function updateObjects(dtime){
 	game.pipelines.update();
 	
 };
-
-
-
 
 
 

@@ -18,11 +18,11 @@ export class _epole extends Construction {
 		this.itemSize = {h:1, w:1};
 		
 		if (args.key !== undefined) this.key = args.key; else this.key = -1;
-		this.subtype = args.subtype || "epole";
+		
 		this.location = args.location || {};
 		this.rotationIndex = args.rotationIndex || 0;
 		
-		let connectionArgs = [
+		let connectionsArgs = [
 			{
 				location: {x:0, z:0}, 
 				conlocation: {x:-1, z:0}, 
@@ -45,13 +45,13 @@ export class _epole extends Construction {
 				itemPointer: this.pointer
 			}
 		];
-		
-		this.models.push(new EpoleModel( { 
-			connectionsMap: connectionArgs, 
+		let modelargs = {
+			connectionsMap: connectionsArgs, 
 			location: {x:0, z:0}, 
 			size: this.itemSize,
 			parentPointer: this.pointer
-		}));
+		};
+		this.models.push(new EpoleModel(modelargs));
 		
 		this.draw();
 	}
@@ -72,14 +72,11 @@ export class _epole extends Construction {
 	
 	
 	drawMesh(instance, subtype){
-		subtype = subtype || this.subtype;
-		let a = game.meshes.epole;
-		return this.getMesh(a, this.keynum, instance);
+		return this.getMesh(game.meshes.epole, this.keynum, instance);
 	}
 	
 	
 	getConfig(){
-		
 		return {
 			size: {h:1, w:1},
 			connections: [
@@ -95,6 +92,7 @@ export class _epole extends Construction {
 			]
 		}
 	}
+	
 	
 }
 

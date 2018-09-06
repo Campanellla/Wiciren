@@ -9,7 +9,7 @@ import {onMouseMoveEvent, onMouseClickEvent, onMouseClickReleaseEvent, onDoubleC
 import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
 import {Selection} from './Selection.js';
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
-import {updateObjects, updatePipeline, updatePipeline1} from './updates.js';
+import {updateObjects, updateItems} from './updates.js';
 import {createMap, setCanvasSize, showAxis} from './workspace.js';
 import {loadMeshes} from './meshesLoader.js';
 import {GameMap} from './Map.js'
@@ -18,131 +18,111 @@ import {GameMap} from './Map.js'
 
 ///// --- INIT --- ///// 
 
-export default function init(){
+export default function init() {
 	
-	game.toggle = true;
-	
-	console.log("Device pixel ratio: " + window.devicePixelRatio);
-	
-	var canvas = document.getElementById('canvas');
-	canvas.style.cursor = "pointer";
+	let canvas = document.getElementById('canvas');
+	canvas.style.cursor = "auto";
 
+	if (!BABYLON.Engine.isSupported()) {
+		console.log('%cBABYLON ENGINE IS NOT SUPPORTED', "color:red");
+		return;
+	}
 	
-	if (BABYLON.Engine.isSupported()) {
-		
-		// init engine and scene
-		var engine = initBABYLON(canvas);
-		
-		game.engine = engine;
-		game.canvas = canvas;
-		
-		canvas.focus();
-		
-		/// --- create and draw ground --- ///
-		game.map = new GameMap(100, 10, game.scene);
-		
-		/// --- make small lake --- ///
-		game.map.blocks[0].tiles[1][1].surface = "water";
-		game.map.blocks[0].tiles[1][1].height = -0.1;
-		game.map.blocks[0].tiles[2][1].surface = "water";
-		game.map.blocks[0].tiles[2][1].height = -0.1;
-		game.map.blocks[0].tiles[1][2].surface = "water";
-		game.map.blocks[0].tiles[1][2].height = -0.1;
-		game.map.blocks[0].tiles[2][2].surface = "water";
-		game.map.blocks[0].tiles[2][2].height = -0.1;
-		
-		game.map.blocks[0].updateBlock();
-		
-		// --- events --- //
-		assignEvents(game);
+	// init engine and scene
+	
+	game.engine = initBABYLON(canvas);
+	game.canvas = canvas;
+	let engine = game.engine;
+	canvas.focus();
+	
+	/// --- create and draw ground --- ///
+	game.map = new GameMap(100, 10, game.scene);
+	
+	/// --- and make small lake --- ///
+	game.map.blocks[0].tiles[1][1].surface = "water";
+	game.map.blocks[0].tiles[1][1].height = -0.1;
+	game.map.blocks[0].tiles[2][1].surface = "water";
+	game.map.blocks[0].tiles[2][1].height = -0.1;
+	game.map.blocks[0].tiles[1][2].surface = "water";
+	game.map.blocks[0].tiles[1][2].height = -0.1;
+	game.map.blocks[0].tiles[2][2].surface = "water";
+	game.map.blocks[0].tiles[2][2].height = -0.1;
+	
+	game.map.blocks[0].updateBlock();
+	
+	// --- events --- //
+	assignEvents(game);
 
-		//--- tick functions ---//
-		var intervalscount = [];
+	//--- tick functions ---//
+	
+	let intervals = {
+		updateMap:undefined,
+		updateItems:undefined,
+		updateInterface:undefined
+	}
+	
+	let time = 0.0;
+	let frameTime = 0;
+	
+	let startTime = new Date().getTime();
+	let lastTime = startTime;
+	
+	let mapUpdateTimer = 1000/60;
+	let itemsUpdatetime = 1000/60;
+	let interfaceUpdateTimer = 1000/24;
+	
+	intervals.updateMap = setInterval(game.map.updateMap, mapUpdateTimer);
+	intervals.updateItems = setInterval(updateObjects, itemsUpdatetime);
+	intervals.updateInterface = setInterval(updateInterface, interfaceUpdateTimer);
+	
+	
+	function updateInterface(){
 		
-		var time = 0.0;
+		var currentTime = new Date().getTime();
+		var DT = (currentTime - lastTime) / 1000;
+		lastTime = currentTime;
+		time += DT;
 		
-		var startTime = new Date().getTime();
-		var lastTime = startTime;
+		let timeText = 	
+			time.toFixed(1) + ' s,' +
+			' x: ' + game.camera.position.x.toFixed(1) + 
+			' z: ' + game.camera.position.z.toFixed(1) +
+			", frameTime: " + frameTime.toFixed(3);
 		
-		var dcl = 0;
+		frameTime = (game.scninst.frameTimeCounter.current + frameTime * 9)/10 ;
 		
-		var mapUpdateTimer = 1000/60;
-		var itemsUpdatetime = 1000/60;
-		var interfaceUpdateTimer = 1000/24;
+		let _int = game.interfaceComponent.current;
 		
-		
-		intervalscount.push(setInterval(game.map.updateMap, mapUpdateTimer));
-		intervalscount.push(setInterval(updateItems, itemsUpdatetime));
-		intervalscount.push(setInterval(updateInterface, interfaceUpdateTimer))
-		
-		
-		function updateInterface(){
-			
-			var currentTime = new Date().getTime();
-			var DT = (currentTime - lastTime) / 1000;
-			lastTime = currentTime;
-			
-			time += DT;
-			
-			let timeText = 	
-				time.toFixed(1) + ' s,' +
-				' x: ' + game.camera.position.x.toFixed(1) + 
-				' z: ' + game.camera.position.z.toFixed(1) +
-				", frameTime: " + dcl.toFixed(3);
-			
-			dcl = (game.scninst.frameTimeCounter.current + dcl * 9)/10 ;
-			
-			let _int = game.interfaceComponent.current;
-			
-			if (_int){
-				
-				if (_int.timeTextComponent.current) 
-					_int.timeTextComponent.current.setState({text:timeText});
-				if (_int.drawCallsLabelComponent.current) 
-					_int.drawCallsLabelComponent.current.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
-				if (_int.fpsLabelComponent.current) 
-					_int.fpsLabelComponent.current.setState({text:engine.getFps().toFixed() + " fps"});
-				if (game.componentsNeedUpdate.length){
-					game.componentsNeedUpdate.forEach(c => c.update());
-				}
-				
-				
+		if (_int){
+			if (_int.timeTextComponent.current) 
+				_int.timeTextComponent.current.setState({text:timeText});
+			if (_int.drawCallsLabelComponent.current) 
+				_int.drawCallsLabelComponent.current.setState({text:game.scninst.drawCallsCounter.current+ ' dc'});
+			if (_int.fpsLabelComponent.current) 
+				_int.fpsLabelComponent.current.setState({text:engine.getFps().toFixed() + " fps"});
+			if (game.componentsNeedUpdate.length){
+				game.componentsNeedUpdate.forEach(c => c.update());
 			}
-			
 		}
 		
-		
-		function updateItems() {
-			//try{
-				updateObjects(1/60);
-			//} catch(e){
-			//	errorOneTime(e, 1500);
-			//}
-		}
-		
-		
-		game.toggle = false;
-
-		setTimeout( function(){
-				var a = window.localStorage.getItem("save0");
+	}
+	
+	
+	setTimeout(
+		()=>{
+			var a = window.localStorage.getItem("save0");
 			try{
 				var b = JSON.parse(a);
-				game.load(b);
+				game.loadSession(b);
 			}catch(err){
 				console.log(err);
 			}
-		}, 1000);
-
-			
-	} else {
-		
-		console.log('BABYLON ENGINE IS NOT SUPPORTED');
-		
-	};
+		}, 1000
+	);
 	
 	
-	document.temp = game.map.getItemFromCoord.bind(game.map);
-	
+	/// --- LOG --- ///
+	console.log("Device pixel ratio: " + window.devicePixelRatio);
 	
 }
 
@@ -150,18 +130,14 @@ export default function init(){
 export function ErrorOneTime(){
 	
 	var time = 500;
-	
 	var timeout = false;
 	
 	return function(text, timer){
-		
 		if (!timeout){
-			
 			console.log('%c'+text, 'color:red');
 			timeout = true;
 			setTimeout(() => {timeout = false}, timer || time);
 		}
-		
 	}
 	
 }
@@ -245,7 +221,7 @@ var createScene = function (engine, canvas){
 	
 	canvas.addEventListener("dblclick", onDoubleClick.bind(scene));
 
-	showAxis(2.5, game.scene);
+	showAxis(1, game.scene);
 	
 	var inst = new BABYLON.SceneInstrumentation(scene);
 	inst.captureActiveMeshesEvaluationTime = true;
@@ -274,9 +250,7 @@ function initBABYLON(canvas){
 	setCanvasSize(canvas, size.x, size.y);
 	
 	engine.runRenderLoop(function (){
-		if(!game.toggle){
-			scene.render();
-		}
+		scene.render();
 	});
 	
 	setCanvasSize(canvas, size.x, size.y, true, ratio);

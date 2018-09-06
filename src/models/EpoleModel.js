@@ -3,32 +3,26 @@ import {game} from '../App.js';
 import {BaseModel} from './BaseModel.js'
 
 
+
+
+
+
 export class EpoleModel extends BaseModel{
 	
-	constructor(setup){
-		
+	constructor(args){
 		super();
-		
 		this.subtype = "epolemodel";
 		this.class = "electric";
 		
-		this.parent = setup.parentPointer;
-		this.location = setup.location;
+		this.parent = args.parentPointer;
+		this.location = args.location;
+		
+		this.connections = [];
 		
 		this.connectionType = "range";
 		
 		this.connectionRange1 = 2;
 		this.connectionRange2 = 5;
-		
-		this.connections = [];
-		
-		/*
-		if (setup.connectionsMap) {
-			this.connections = this.setUpConnections(setup.connectionsMap);
-		} else {
-			this.connections = setup.connections;
-		}
-		*/
 		
 	}
 	

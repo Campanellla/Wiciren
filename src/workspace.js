@@ -15,25 +15,28 @@ export class GameWorkspace {
 	
 	constructor(){
 		
-		this.timestamp1 = 0;
-		this.timestamp2 = 0;
-		
 		this.map = undefined;
-		
 		this.constructionsList = [];
 		
 		this.pipelines = new Pipelines();
 		this.electricalGrids = new ElectricalGrids();
 		
-		this.updatePipelines = false;
-		
-		
 		this.itemConstructor = new ItemConstructor();
 		
 		this.interfaceComponent = React.createRef(); 
-		
 		this.componentsNeedUpdate = [];
 		
+		/// marker to be transfered to pipelines class
+		this.updatePipelines = false;
+		
+		/// babylon  objects
+		this.engine = undefined;
+		this.canvas = undefined;
+		this.map = undefined;
+		
+		this.materials = {};
+		
+		/// configuration should be here
 		this.config = {
 			
 			wheelSensubility:0.04,
@@ -45,29 +48,52 @@ export class GameWorkspace {
 			canvasMultiplier:1.5
 			
 		};
-
-		this.materials = {};
 		
-		this.TAU = Math.PI / 2;
-		this.PI2 = Math.PI * 2;
-		this.PI  = Math.PI;
-		
-		this.engine = undefined;
-		this.canvas = undefined;
-		this.map = undefined;
-		
-		this.nullpointer = {link:null};
-		
-		this.blockSelection = (bool) => {
-			document.onselectstart = function(){return bool}
-		};
 		
 		this.class = {
 			Connection:Connection
 		}
 		
+		/// --- properties --- ///
+		
+		this.timestamp1 = 0;
+		this.timestamp2 = 0;
+		
+		Object.defineProperty(this, 'TAU', {
+			value: Math.PI / 2,
+			writable : false,
+			enumerable : true,
+			configurable : false
+		});
+		
+		Object.defineProperty(this, 'PI2', {
+			value:  Math.PI * 2,
+			writable : false,
+			enumerable : true,
+			configurable : false
+		});
+		
+		Object.defineProperty(this, 'PI', {
+			value: Math.PI,
+			writable : false,
+			enumerable : true,
+			configurable : false
+		});
+		
+		Object.defineProperty(this, 'nullpointer', {
+			value: {link:null},
+			writable : false,
+			enumerable : true,
+			configurable : false
+		});
 		
 	}
+	
+	/// true to block selection of text(used while moving the windows) 
+	blockSelection(bool){
+		if (bool) document.onselectstart = () => true; //function(){return bool}
+		if (!bool) document.onselectstart = undefined;
+	};
 	
 	
 	drawMenu(item){
@@ -86,14 +112,14 @@ export class GameWorkspace {
 		
 	}
 	
-	
+	/* unknown
 	cmax(e){
 		e.preventDefault();
 		console.log(this);
 	}
+	*/
 	
-	
-	save(items){
+	saveSessionToLocal(items){
 	
 		var objects = [];
 		
@@ -121,7 +147,7 @@ export class GameWorkspace {
 	}
 	
 	
-	load(data){
+	loadSession(data){
 
 		game.map.clearObjects();
 		

@@ -38,7 +38,11 @@ class ConfigMenuWindow extends Component {
 
 	render (){
 		return (
-			<div > <SaveButton /><LoadButton /><OperatingButton /> </div>
+			<div > 
+				<SaveButton />
+				<LoadButton />
+				<OperatingButton /> 
+			</div>
 		)
 	}
 
@@ -48,7 +52,7 @@ class ConfigMenuWindow extends Component {
 class SaveButton extends Component {
 
 	clickSave(){
-		var a = game.save(game.map.objectsList);
+		var a = game.saveSessionToLocal(game.map.objectsList);
 		window.localStorage.setItem("save0", a);
 	}
 
@@ -64,7 +68,7 @@ class LoadButton extends Component {
 	clickLoad(){
 		var b = JSON.parse(window.localStorage.getItem("save0"));
 		console.time("loadTime")
-		game.load(b);
+		game.loadSession(b);
 		console.timeEnd("loadTime")
 		
 	}
@@ -80,11 +84,14 @@ class LoadButton extends Component {
 
 function drawConfigMenu(){
 	if (this.state.revealed) {
-		document.getElementById('configmenuwindow').hidden = true;
+		//document.getElementById('configmenuwindow').hidden = true;
 		this.setState({revealed:false});
 	} else {
-		document.getElementById('configmenuwindow').hidden = false;
-		ReactDOM.render(<ConfigMenuWindow />, document.getElementById('configmenuwindow'));
+		//document.getElementById('configmenuwindow').hidden = false;
+		//ReactDOM.render(<ConfigMenuWindow />, document.getElementById('configmenuwindow'));
+		
+		game.drawMenu({menu_interface:ConfigMenuWindow});
+		
 		this.setState({revealed:true});
 
 	}
