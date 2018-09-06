@@ -16,7 +16,8 @@ export class Pipe_interface extends Component {
 			
 			key:-1,
 			type:"",
-			volume: 0
+			volume: 0,
+			pressure: 0
 			
 		}
 		
@@ -32,7 +33,8 @@ export class Pipe_interface extends Component {
 				
 				key: item.key,
 				type: item.type || "",
-				volume: item.models[0].volume || 0
+				volume: item.models[0].volume || 0,
+				pressure: item.models[0].pressure || 0,
 				
 			});
 		}
@@ -77,7 +79,8 @@ export class Pipe_interface extends Component {
 						[
 							"key: " + this.state.key,
 							"type: " + this.state.type,
-							"volume: " + this.state.volume.toFixed(1)
+							"volume: " + this.state.volume.toFixed(1),
+							"pressure: " + this.state.pressure.toFixed(1)
 						].map((item, key) => {
   							return <span key={key}>{item}<br/></span>
 						})

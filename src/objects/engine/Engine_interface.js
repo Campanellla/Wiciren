@@ -17,6 +17,7 @@ export class Engine_interface extends Component {
 		if (!item.models || !item.models[0] || !item.models[1]){
 			item.models = [{},{}];
 		}
+		
 		this.state = {
 			key: item.key || -1,
 			type: item.type || "",

@@ -95,7 +95,7 @@ export class TankModel extends BaseModel{
 		});
 		
 		this.inflow.length = 0;
-		
+		this.pressure = this.volume / 1000;
 	}
 	
 	

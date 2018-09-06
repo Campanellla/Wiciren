@@ -58,10 +58,7 @@ export class PipeNodeModel extends BaseModel{
 	
 	updateFlow(dt){
 		
-		this.volume = this.parent.link.volume;
-		this.pressure = this.parent.link.pressure;
-		
-		this.pressure = this.volume / 25;
+		//this.pressure = this.volume / 25;
 		
 		this.inflow.forEach((flow)=>{
 			
@@ -91,6 +88,8 @@ export class PipeNodeModel extends BaseModel{
 		
 		this.returnFlow.length = 0;
 		
+		let pressureCombined = 0;
+		let pressureCombinedIndex = 0;
 		
 		for (let i = 0; i < this.connections.length; i++){
 			
@@ -112,13 +111,16 @@ export class PipeNodeModel extends BaseModel{
 					}
 				}
 			}
+			
+		pressureCombined += connectedModel.pressure;
+		pressureCombinedIndex++;
 		
 		}
 		
-		this.parent.link.volume = this.volume;
-		this.parent.link.pressure = this.pressure;
+		//console.log(pressureCombined / pressureCombinedIndex)
 		
 		this.inflow.length = 0;
+		if (pressureCombinedIndex) this.pressure = pressureCombined / pressureCombinedIndex;
 	}
 	
 	

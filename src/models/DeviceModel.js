@@ -22,11 +22,10 @@ export class DeviceModel extends BaseModel {
 		} else {
 			this.connections = args.connections;
 		}
+
+		args.config = args.config || {};
 		
-		this.speed = parent.speed;
-		this.controlIndex = parent.controlIndex;
-		this.I = 0
-		this.conductivity = 0;
+		this.conductivity = args.config.conductivity || 0;
 		
 	}
 	

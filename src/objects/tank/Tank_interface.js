@@ -15,10 +15,12 @@ export class Tank_interface extends Component {
 			
 			key:-1,
 			type:"",
-			volume: 0
+			volume: 0,
+			pressure:0
 			
 		}
 		
+		this.onClickAdd = this.onClickAdd.bind(this);
 	}
 	
 	
@@ -32,7 +34,8 @@ export class Tank_interface extends Component {
 				
 				key: item.key,
 				type: item.type || "",
-				volume: item.models[0].volume || 0
+				volume: item.models[0].volume || 0,
+				pressure: item.models[0].pressure || 0
 				
 			});
 		}
@@ -66,6 +69,12 @@ export class Tank_interface extends Component {
 		
 	}
 	
+	onClickAdd(){
+		
+		this.props.item.models[0].volume += 100;
+		
+	}
+	
 	
 	render(){
 		
@@ -77,12 +86,15 @@ export class Tank_interface extends Component {
 						[
 							"key: " + this.state.key,
 							"type: " + this.state.type,
-							"volume: " + this.state.volume.toFixed(1)
+							"volume: " + this.state.volume.toFixed(1),
+							"pressure: " + this.state.pressure.toFixed(1)
 						].map((item, key) => {
   							return <span key={key}>{item}<br/></span>
 						})
 					}
 				</div>
+				
+				<button onClick = {this.onClickAdd}>add 100</button>
 				
 			</div>
 		)

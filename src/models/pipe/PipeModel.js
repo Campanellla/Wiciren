@@ -93,8 +93,6 @@ export class PipeModel extends BaseModel{
 		this.returnFlow = [];
 		
 		
-		
-		
 	}
 	
 	
@@ -126,6 +124,7 @@ export class PipeModel extends BaseModel{
 		if (!this.count) return ;
 		
 		let vmax = this.count * 25;
+		//this.pressure = this.volume / vmax;
 		
 		this.inflow.forEach((flow)=>{
 			
@@ -155,6 +154,8 @@ export class PipeModel extends BaseModel{
 		
 		this.returnFlow.length = 0;
 		
+		let pressureCombined = 0;
+		let pressureCombinedIndex = 0;
 		
 		for (let i = 0; i < this.connections.length; i++){
 			
@@ -172,13 +173,19 @@ export class PipeModel extends BaseModel{
 					})
 					
 					this.volume -= (this.pressure - connectedModel.pressure) * 20;
+					
+					//console.log((this.pressure - connectedModel.pressure) * 20)
 				}
 			}
+			
+			pressureCombined += connectedModel.pressure;
+			pressureCombinedIndex++;
 		};
 		
 		let b = this.volume / this.count;
 		
 		this.inflow.length = 0;
+		if (pressureCombinedIndex) this.pressure = pressureCombined / pressureCombinedIndex;
 		
 	}
 	

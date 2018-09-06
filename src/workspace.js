@@ -20,12 +20,13 @@ export class GameWorkspace {
 		
 		this.map = undefined;
 		
-		this.itemMenu = undefined;
-		this.itemMenuDrawn = false;
+		this.constructionsList = [];
 		
-		this.updatePipelines = false;
 		this.pipelines = new Pipelines();
 		this.electricalGrids = new ElectricalGrids();
+		
+		this.updatePipelines = false;
+		
 		
 		this.itemConstructor = new ItemConstructor();
 		

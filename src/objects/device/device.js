@@ -14,12 +14,12 @@ export class _device extends Construction {
 	constructor(args){
 		
 		super();
+		args = args || {};
+		args.models = args.models || [];
 		
 		this.type = "device";
 		
 		this.itemSize = {h:2, w:2};
-		
-		if (!args) args = {};
 		
 		if (args.key) this.key = args.key; else this.key = -1;
 		this.location = args.location || {};
@@ -27,7 +27,7 @@ export class _device extends Construction {
 		
 		let connectionsMap = [{location: {x:0, z:0}, size: {h:2, w:2}, connLocation: {x:-1, z:0}, itemPointer: this.pointer}];
 		
-		this.models.push(new DeviceModel({ connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:2, w:2} }, this));
+		this.models.push(new DeviceModel({ connectionsMap: connectionsMap, location: {x:0, z:0}, size: {h:2, w:2}, config: args.models[0] }, this));
 		
 		this.volume = 0;
 		this.speed = 0;
@@ -56,16 +56,17 @@ export class _device extends Construction {
 	
 	
 	save(){
-		var str = 
-			{
-				type: this.type,
-				location:this.location,
-				rotationIndex:this.rotationIndex,
-				load: this.load,
-				speed: this.speed,
-				controlIndex: this.controlIndex
-			};
-		return str;
+		return {
+			type: this.type,
+			location: this.location,
+			rotationIndex: this.rotationIndex,
+			models:[
+				{
+					subtype: this.models[0].subtype,
+					conductivity: this.models[0].conductivity
+				}
+			]
+		};
 	}
 	
 	
