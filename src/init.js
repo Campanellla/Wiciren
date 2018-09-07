@@ -9,7 +9,7 @@ import {onMouseMoveEvent, onMouseClickEvent, onMouseClickReleaseEvent, onDoubleC
 import {FreeTopCameraKeyboardMoveInput} from './KeyboardInputs.js';
 import {Selection} from './Selection.js';
 import {assignEvents, SelectAction, SelectToggle} from './events.js';
-import {updateObjects, updateItems} from './updates.js';
+import {updateObjects} from './updates.js';
 import {createMap, setCanvasSize, showAxis} from './workspace.js';
 import {loadMeshes} from './meshesLoader.js';
 import {GameMap} from './Map.js'
@@ -120,6 +120,8 @@ export default function init() {
 		}, 1000
 	);
 	
+	
+	window.getitem = game.map.getItemFromCoord.bind(game.map);
 	
 	/// --- LOG --- ///
 	console.log("Device pixel ratio: " + window.devicePixelRatio);

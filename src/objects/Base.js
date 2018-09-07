@@ -116,7 +116,7 @@ export class Construction {
 		this.visible = false;
 		this.exist = false;
 		this.pointer.link = null;
-		this.mesh.dispose();
+		if (this.mesh) this.mesh.dispose();
 	}
 	
 	

@@ -159,7 +159,7 @@ export class GameWorkspace {
 					game.itemConstructor.loadObject(object);
 				}
 			});
-		}
+		};
 		
 		if (data.camera){
 			let d = data.camera;

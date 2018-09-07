@@ -72,15 +72,17 @@ export class GameMap {
 				var block = this.findBlock(x,z);
 		
 				if (block){
+					let tile = block.tiles[x-block.offset.x][z-block.offset.z];
+					let found = tile.object;
 					
-					if (block.tiles[x-block.offset.x][z-block.offset.z].object) {
-						
+					if (found && found.link) {
 						// log that we found objects here
-
+						console.log("i found in ", 'x:', x, 'z:', z, found);
+						tiles.push(tile);
+						
 					} else {
 						
-						tiles.push(block.tiles[x-block.offset.x + w][z-block.offset.z + h]);
-						
+						tiles.push(tile);
 		}	}	}	}
 		
 		tiles.forEach((tile) => {tile.object = item.pointer});
@@ -102,11 +104,11 @@ export class GameMap {
 		
 		this.objectsList.forEach((object)=>{
 			
-			object.destruct();
+			if (object.pointer.link) object.destruct();
 			
 		});
 		
-		this.objectsList = [];
+		this.objectsList.length = 0;
 		
 	}
 	

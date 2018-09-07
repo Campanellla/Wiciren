@@ -39,6 +39,8 @@ export class EngineModel extends BaseModel {
 	
 	update(dt){
 		
+		if (!this.parent.link) return;
+		
 		let ratedPower = 10000000//00;
 		let setPoint = this.setPoint;
 		let speed = this.speed;

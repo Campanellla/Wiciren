@@ -29,6 +29,16 @@ export default class ItemMenu extends Component {
 		this.controller = this.props.controller;
 	}
 	
+	componentDidMount(){
+		if (this.props.activeState) this.props.activeState(true);
+	}
+	
+	
+	componentWillUnmount(){
+		if (this.props.activeState) this.props.activeState(false);
+	}
+	
+	
 	
 	elementDrag(e) {
 		
@@ -99,7 +109,7 @@ export default class ItemMenu extends Component {
 							if (state.item && state.item.menu_interface) {
 								
 								let Interface = state.item.menu_interface;
-								return <Interface item = {state.item}/>;
+								return <Interface item = {state.item} workspace = {game}/>
 							}
 						})(this.state)
 					}

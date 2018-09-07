@@ -3,12 +3,10 @@ import {game} from './App.js';
 
 
 
-export function updateObjects(dtime){
+export function updateObjects(){
 	
-	dtime = 1/60;
-	
+	let dtime = 1/60;
 	game.pipelist = [];
-	
 	game.map.objectsList.forEach(function(object){
 		if (!object) return;
 		object.update(dtime);

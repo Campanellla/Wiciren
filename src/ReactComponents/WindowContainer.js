@@ -28,10 +28,10 @@ export default class WindowContainer extends Component {
 	}
 	
 	
-	appendWindow(item){
+	appendWindow(item, activeState){
 		
 		let key = this.state.windows.findIndex(_window => _window.container.props.item === item);
-		if (key !== -1) return ;
+		if (key !== -1) return false;
 		let _window = {
 			container :null, 
 			ref: React.createRef()
@@ -46,10 +46,13 @@ export default class WindowContainer extends Component {
 			index={++this.newIndex}
 			key={this.key++}
 			ref={_window.ref} 
+			activeState={activeState}
 		/>;
 						
 		this.state.windows.push(_window);
 		this.setState({});
+		
+		return _window.ref;
 		
 	}
 	

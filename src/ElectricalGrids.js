@@ -39,7 +39,6 @@ export default class ElectricalGrids {
 			}
 		});
 		
-		
 		///// update connections
 		this.models.forEach((model) => {
 			if (!model) {console.log("model not found"); return; }

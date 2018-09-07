@@ -4,10 +4,10 @@ import './App.css';
 import init from './init.js';
 
 import {GameWorkspace} from './workspace.js';
-import InterfaceView from "./ReactComponents/Interface.js"
+import InterfaceView from "./ReactComponents/InterfaceView.js"
 
 /// --- workspace --- ///
-export var game = new GameWorkspace();
+export const game = new GameWorkspace();
 
 
 class App extends Component {
@@ -29,7 +29,7 @@ class App extends Component {
 					CANVAS element not supported! 
 				</canvas>
 
-				<InterfaceView ref={game.interfaceComponent}/>
+				<InterfaceView ref={game.interfaceComponent} workspace={game}/>
 
 			</div>
 

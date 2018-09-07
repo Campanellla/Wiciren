@@ -12,11 +12,10 @@ export class Engine_interface extends Component {
 		super(props);
 		this.sliderRef = React.createRef();
 		
-		let item = this.props.item;
-		if (!item) item = {};
+		let item = this.props.item || {};
 		if (!item.models || !item.models[0] || !item.models[1]){
 			item.models = [{},{}];
-		}
+		};
 		
 		this.state = {
 			key: item.key || -1,
@@ -30,7 +29,7 @@ export class Engine_interface extends Component {
 			current: item.models[1].current || 0,
 			run: (item.models[1].run && "stop") || "run",
 			connected: (item.models[1].connectedToGrid && "disconnect") || "connect"
-		}
+		};
 		
 		this.updateInterface = this.updateInterface.bind(this);
 		this.onClickRun = this.onClickRun.bind(this);

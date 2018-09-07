@@ -1,60 +1,71 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
-import {game} from '../App.js';
+
+import {FpsLabel, DrawCallsLabel} from './InterfaceComponents/FpsLabel.js';
+import {TimeText} from './InterfaceComponents/Labels.js';
+
+import SelectionView from './SelectionView.js';
+import WindowContainer from './WindowContainer.js';
+
+import {ButtonsMenu} from './InterfaceComponents/ButtonsMenu.js';
 
 
 export default class InterfaceView extends Component {
 	
 	constructor(props){
 		super(props);
+		this.game = this.props.workspace;
 		
-		this.props.link.view = this;
+		this.timeTextComponent = React.createRef();
+		this.drawCallsLabelComponent = React.createRef();
+		this.fpsLabelComponent = React.createRef();
 		
-		this.items = [];
-		this.state = {
-			items:this.items,
-			a:0
-		};
-		this.appendItem = this.appendItem.bind(this);
-		this.prependItem = this.prependItem.bind(this);
+		this.selectionViewComponent = React.createRef();
+		this.windowContainerComponent = React.createRef();
 		
-		this.key = 0;
-		
-	}
-	
-	componentDidMount(){
-		
-		game.interface.mount();
+		this.buttonsMenuComponent = React.createRef();
 		
 	}
 	
 	
-	appendItem(a) {
-		
-		this.items.push(a);
-		this.setState({
-			a:this.state.a+1
-		});
-		
-		return a;
-		
-	}
-
-	prependItem(a) {
-		
-		this.items.unshift(a);
-		this.setState({
-			a:this.state.a+1
-		});
-		
-	}
-	
-	render() {
+	render(){
 		return (
-			<div id = 'InterfaceView'>
-				{this.state.items.map((item) => {return item }) }
+			<div>
+				<TimeText ref={this.timeTextComponent}/>
+				<DrawCallsLabel ref = {this.drawCallsLabelComponent}/>
+				<FpsLabel ref={this.fpsLabelComponent}/>
+				
+				<SelectionView ref={this.selectionViewComponent}/>
+				<WindowContainer ref={this.windowContainerComponent}/>
+				
+				<ButtonsMenu 
+					ref={this.buttonsMenuComponent} 
+					windowContainer={this.windowContainerComponent} 
+					className="configmenubutton"
+					workspace={this.game}
+				/>
 			</div>
-			);
+		)
 	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
