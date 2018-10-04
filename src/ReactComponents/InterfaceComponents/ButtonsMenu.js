@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 
 import {MenuButton} from './ButtonsMenu/MenuButton.js';
 
+import {ConfigMenuWindow} from './ButtonsMenu/ConfigMenuWindow.js';
+
+
+
 
 export class ButtonsMenu extends Component {
 	
@@ -18,12 +22,11 @@ export class ButtonsMenu extends Component {
 				<MenuButton 
 					windowContainer = {this.windowContainer}
 					workspace = {this.game}
-					
+					menuInterface = {ConfigMenuWindow}
 				/>
 			</div>
 		)
 	}
-	
 	
 	
 	

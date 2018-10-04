@@ -111,7 +111,9 @@ export class ItemConstructor {
 	
 	
 	setInactiveConstructor(){
+		
 		if(!this.activeConstructor) return;
+		game.interfaceComponent.current.selectionViewComponent.current.activeElement.setState({active:false});
 		this.activeConstructor = false;
 		if(this.activeMesh) {
 			game.selection.setActiveMesh();
@@ -119,6 +121,7 @@ export class ItemConstructor {
 			this.helperMeshes.forEach(mesh => mesh.dispose());
 			this.helperMeshes.length = 0;
 		}
+		
 	}
 	
 	

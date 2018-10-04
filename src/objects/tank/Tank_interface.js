@@ -20,6 +20,8 @@ export class Tank_interface extends Component {
 			
 		}
 		
+		this.updateInterface = this.updateInterface.bind(this);
+		
 		this.onClickAdd = this.onClickAdd.bind(this);
 	}
 	
@@ -49,7 +51,7 @@ export class Tank_interface extends Component {
 		
 		if (this.props.item) this.props.item.updateInterface = null;
 		
-		if (props.item) props.item.updateInterface = this.updateInterface.bind(this);
+		if (props.item) props.item.updateInterface = this.updateInterface;
 	}
 	
 	
@@ -57,11 +59,20 @@ export class Tank_interface extends Component {
 	componentDidMount(){
 		
 		if(this.props.item){
-			this.props.item.updateInterface = this.updateInterface.bind(this);
+			this.props.item.updateInterface = this.updateInterface;
+			game.componentsNeedUpdate.push({component:this, update:this.updateInterface});
 		}
 	}
 	
 	componentWillUnmount(){
+		
+		let key = game.componentsNeedUpdate.findIndex(c => c.component === this);
+		
+		if (key !== -1) {
+			game.componentsNeedUpdate.splice(key, 1);
+		} else {
+			console.log(this, "not found myself in game.componentsNeedUpdate");
+		}
 		
 		if(this.props.item){
 			this.props.item.updateInterface = null;

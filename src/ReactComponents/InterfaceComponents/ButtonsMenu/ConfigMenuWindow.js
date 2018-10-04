@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 export class ConfigMenuWindow extends Component {
 	
 	constructor(props){
-		
 		super(props);
 		this.game = this.props.workspace;
 		
@@ -30,20 +29,22 @@ export class ConfigMenuWindow extends Component {
 	
 	
 	clickLoad(){
-		let time = new Date(); /// get time
+		let time = new Date();
 		var b = JSON.parse(window.localStorage.getItem("save0"));
 		this.game.loadSession(b);
-		time = new Date() - time; /// get time
+		time = new Date() - time;
 		console.log("Reloaded session in:", time, "ms");
 	}
 	
 	
 	render (){
 		return (
-			<div > 
-				<button onClick={this.clickSave}>Save</button>
-				<button onClick={this.clickLoad}>Load</button>
-				<button onClick={this.opbutton} >LOG </button>
+			<div className="configmenuwindowcontainer">
+				<div className = "configmenuwindow"> 
+					<button onClick={this.clickSave}>Save</button>
+					<button onClick={this.clickLoad}>Load</button>
+					<button onClick={this.opbutton} >LOG </button>
+				</div>
 			</div>
 		)
 	}

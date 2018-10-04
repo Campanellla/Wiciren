@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {ConfigMenuWindow} from './ConfigMenuWindow.js';
+
 
 
 export class MenuButton extends Component {
@@ -12,7 +12,7 @@ export class MenuButton extends Component {
 		this.windowContainer = this.props.windowContainer;
 		
 		this.state = {active: false};
-		this.window = {menu_interface:ConfigMenuWindow};
+		this.window = {menu_interface: this.props.menuInterface};
 		
 		this.onclick = this.onclick.bind(this);
 		this.isActive = this.isActive.bind(this);
@@ -44,9 +44,9 @@ export class MenuButton extends Component {
 			<button 
 				onClick={this.onclick} 
 				style={{
-						borderStyle:(this.state.active)? "inset" : "outset",
-						background:(this.state.active)? "lightskyblue" : "white"
-					}}
+					borderStyle:(this.state.active) ? "inset" : "outset",
+					background: (this.state.active) ? "lightskyblue" : "white"
+				}}
 			>
 				ConfigMenu
 			</button>

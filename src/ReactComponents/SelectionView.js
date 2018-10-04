@@ -10,85 +10,88 @@ class SelectAction extends Component {
 
 	constructor(props){
 		super(props);
-		this.state = {object: this.props.object, styleState: {'background': 'white'} };
-	}
-
-	render(){
-		return (
-			<button onClick={(e) => this.onClick(e)} style={this.state.styleState}>{this.props.object}</button>
-		)
-	}
-
-	onClick(e){
+		this.state = {
+			object: this.props.object,
+			active: false
+		};
+		this.controller = this.props.controller;
 		
-		if (game.actionSelectedItem === this){
-			this.setState({styleState: {'background': 'white'}});
-			game.actionSelectedItem = undefined;
-			game.actionSelected = undefined;
+		this.onSelect = this.onSelect.bind(this);
+	}
+	
+	
+	onSelect(){
+		
+		if (this.controller.activeElement === this){
 			
+			this.setState({active:false});
+			this.controller.activeElement = undefined;
+			game.actionSelected = undefined;
 			game.itemConstructor.setInactiveConstructor();
 			
-			return 
+			return ;
 		}
+		
 		game.itemConstructor.setInactiveConstructor();
-		if (game.actionSelectedItem) game.actionSelectedItem.setState({styleState: {'background': 'white'}});
+		if (this.controller.activeElement) this.controller.activeElement.setState({active:false});
 		game.actionSelected = this.props.object;
-		this.setState({styleState: {'background': 'beige'}});
-		game.actionSelectedItem = this;
+		this.controller.activeElement = this;
 		if (this.state.object !== "remove") game.itemConstructor.setActiveConstructor(this.props.object);
+		this.setState({active:true});
 		
 	}
-
-}
-
-
-class SelectToggle extends Component {
-
-	constructor(props){
-		super(props);
-		this.state = {object: this.props.object};
-	}
-
+	
 	render(){
 		return (
-			<button onClick={(e) => this.onClick(e)}>{this.state.object}</button>
+			<button 
+				onClick={this.onSelect}
+				style={(this.state.active) ? {background: 'beige'} : {background: 'white'}}
+			>
+				{this.props.object}
+			</button>
 		)
 	}
 
-	onClick(e){
-		if (game.toggle){
-			game.toggle = false;
-		} else {
-			game.toggle = true;
-		}
-	}
-
 }
+
 
 export default class SelectionView extends Component {
 	
 	constructor(){
-		
 		super();
+		this.elements = [ 
+			"pole", 
+			"pipe", 
+			"pipe3", 
+			"pipe4", 
+			"pipeA", 
+			"pump", 
+			"tank", 
+			"engine",
+			"device",
+			"remove"
+		];
 		
-		this.elements = 	[	
-								<SelectAction object="pole" />,
-								<SelectAction object="pipe" />,
-								<SelectAction object="pipe3" />,
-								<SelectAction object="pipe4" />,
-								<SelectAction object="pipeA" />,
-								<SelectAction object="pump" />,
-								<SelectAction object="tank" />,
-								<SelectAction object="engine" />,
-								<SelectAction object="device" />,
-								<SelectAction object="remove" />
-							];
+		this.activeElement;
 	}
 	
 	render(){
-		
-		return (<div id = "selectionview"> {this.elements} </div>);
-		
+		return (
+			<div id = "selectionview"> 
+				{this.elements.map((prop, key) => <SelectAction object={prop} key={key} controller={this}/>)}
+			</div>
+		);
 	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
