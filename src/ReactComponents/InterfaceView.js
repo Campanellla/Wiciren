@@ -10,6 +10,8 @@ import { ButtonsMenu } from './InterfaceComponents/ButtonsMenu.js'
 
 import Loader from './Loader.js'
 
+import ButtonMenuList from './ButtonMenuList'
+
 export default class InterfaceView extends Component {
 	constructor(props) {
 		super(props)
@@ -31,7 +33,7 @@ export default class InterfaceView extends Component {
 		return (
 			<div>
 				<Loader ref={this.LoaderComponent} />
-
+				<ButtonMenuList />
 				<TimeText ref={this.timeTextComponent} />
 				<DrawCallsLabel ref={this.drawCallsLabelComponent} />
 				<FpsLabel ref={this.fpsLabelComponent} />

@@ -12,7 +12,7 @@ export class Construction {
 		this.visible = false
 		this.constructionSize = null
 
-		this.mesh
+		this.mesh = null
 		this.models = []
 	}
 
@@ -91,6 +91,8 @@ export class Construction {
 			case 3:
 				offsetx = this.itemSize.h
 				break
+			default:
+			/* do nothing */
 		}
 
 		this.mesh.position.x = this.location.x + offsetx

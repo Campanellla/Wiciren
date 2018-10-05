@@ -1,7 +1,12 @@
+html {
+	font-size: 1rem;
+}
+
 body {
 	margin: 0;
 	padding: 0;
 	font-family: sans-serif;
+	overflow: hidden;
 }
 
 .slider {
@@ -21,11 +26,6 @@ body {
 	right: 1px;
 
 	border: none;
-}
-
-canvas {
-	position: fixed;
-	outline: none;
 }
 
 #timetext {
@@ -59,10 +59,6 @@ canvas {
 #ii {
 	top: 2em;
 	position: absolute;
-}
-
-body {
-	overflow: hidden;
 }
 
 #selectionview {

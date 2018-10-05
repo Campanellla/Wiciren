@@ -13,9 +13,6 @@ export default class Loader {
 		this.state = {
 			meshes: false,
 		}
-
-		console.log(game)
-
 		this.component = {}
 	}
 
@@ -32,16 +29,13 @@ export default class Loader {
 	}
 
 	loadedMesh(current) {
-		this.meshes.loading
 		this.meshes.loaded++
 		this.meshes.current = current
-		console.log(current)
 		this.check()
 	}
 
 	check() {
 		if (this.meshes.loading === this.meshes.loaded) {
-			console.log('LOADED')
 			if (this.onLoad) {
 				if (this.component.current) {
 					this.component.current.setState({

@@ -142,6 +142,17 @@ const resources = {
 				},
 			],
 		},
+		{
+			fileName: 'box.babylon',
+			folder: './',
+			item: 'box',
+			lod: [
+				{
+					item: null,
+					depth: 250,
+				},
+			],
+		},
 	],
 }
 

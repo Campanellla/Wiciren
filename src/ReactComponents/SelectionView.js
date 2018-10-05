@@ -1,97 +1,80 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react'
 
-import {game} from '../App.js';
-
-
-
+import { game } from '../App.js'
 
 class SelectAction extends Component {
-
-	constructor(props){
-		super(props);
+	constructor(props) {
+		super(props)
 		this.state = {
 			object: this.props.object,
-			active: false
-		};
-		this.controller = this.props.controller;
-		
-		this.onSelect = this.onSelect.bind(this);
-	}
-	
-	
-	onSelect(){
-		
-		if (this.controller.activeElement === this){
-			
-			this.setState({active:false});
-			this.controller.activeElement = undefined;
-			game.actionSelected = undefined;
-			game.itemConstructor.setInactiveConstructor();
-			
-			return ;
+			active: false,
 		}
-		
-		game.itemConstructor.setInactiveConstructor();
-		if (this.controller.activeElement) this.controller.activeElement.setState({active:false});
-		game.actionSelected = this.props.object;
-		this.controller.activeElement = this;
-		if (this.state.object !== "remove") game.itemConstructor.setActiveConstructor(this.props.object);
-		this.setState({active:true});
-		
+		this.controller = this.props.controller
+
+		this.onSelect = this.onSelect.bind(this)
 	}
-	
-	render(){
+
+	onSelect() {
+		if (this.controller.activeElement === this) {
+			this.setState({ active: false })
+			this.controller.activeElement = undefined
+			game.actionSelected = undefined
+			game.itemConstructor.setInactiveConstructor()
+
+			return
+		}
+
+		game.itemConstructor.setInactiveConstructor()
+		if (this.controller.activeElement)
+			this.controller.activeElement.setState({ active: false })
+		game.actionSelected = this.props.object
+		this.controller.activeElement = this
+		if (this.state.object !== 'remove')
+			game.itemConstructor.setActiveConstructor(this.props.object)
+		this.setState({ active: true })
+	}
+
+	render() {
 		return (
-			<button 
+			<button
 				onClick={this.onSelect}
-				style={(this.state.active) ? {background: 'beige'} : {background: 'white'}}
+				style={
+					this.state.active ? { background: 'beige' } : { background: 'white' }
+				}
 			>
 				{this.props.object}
 			</button>
 		)
 	}
-
 }
-
 
 export default class SelectionView extends Component {
-	
-	constructor(){
-		super();
-		this.elements = [ 
-			"pole", 
-			"pipe", 
-			"pipe3", 
-			"pipe4", 
-			"pipeA", 
-			"pump", 
-			"tank", 
-			"engine",
-			"device",
-			"remove"
-		];
-		
-		this.activeElement;
+	constructor() {
+		super()
+		this.elements = [
+			'box',
+			'pole',
+			'pipe',
+			'pipe3',
+			'pipe4',
+			'pipeA',
+			'pump',
+			'tank',
+			'engine',
+			'device',
+			'remove',
+		]
+
+		this.activeElement = null
 	}
-	
-	render(){
+
+	render() {
 		return (
-			<div id = "selectionview"> 
-				{this.elements.map((prop, key) => <SelectAction object={prop} key={key} controller={this}/>)}
+			<div id="selectionview">
+				{this.elements.map((prop, key) => (
+					<SelectAction object={prop} key={key} controller={this} />
+				))}
 			</div>
-		);
+		)
 	}
-	
 }
-
-
-
-
-
-
-
-
-
-
-

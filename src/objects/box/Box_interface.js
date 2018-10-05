@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { game } from '../../App.js'
 
-export class Device_interface extends Component {
+export class Box_interface extends Component {
 	constructor(props) {
 		super(props)
 		this.sliderRef = React.createRef()
@@ -16,7 +16,7 @@ export class Device_interface extends Component {
 		this.state = {
 			key: item.key || -1,
 			type: item.type || '',
-			conductivity: item.models[0].conductivity || 0,
+			storageSize: item.models[0].storageSize || 0,
 		}
 
 		this.updateInterface = this.updateInterface.bind(this)
@@ -28,7 +28,7 @@ export class Device_interface extends Component {
 			this.setState({
 				key: item.key || 0,
 				type: item.type || '',
-				conductivity: item.models[0].conductivity || 0,
+				storageSize: item.models[0].storageSize || 0,
 			})
 		}
 	}
@@ -59,15 +59,6 @@ export class Device_interface extends Component {
 		if (this.props.item) this.props.item.updateInterface = null
 	}
 
-	sliderChange() {
-		let num = Number(this.sliderRef.current.value)
-		let item = this.props.item
-
-		if (item && item.models[0].conductivity !== undefined && !isNaN(num)) {
-			item.models[0].conductivity = num
-		}
-	}
-
 	render() {
 		return (
 			<div>
@@ -76,7 +67,7 @@ export class Device_interface extends Component {
 						'key: ' + this.state.key,
 						'type: ' + this.state.type,
 						'',
-						'conductivity: ' + this.state.conductivity + ' S',
+						'size: ' + this.state.storageSize,
 						'',
 					].map((item, key) => {
 						return (
@@ -86,20 +77,6 @@ export class Device_interface extends Component {
 							</span>
 						)
 					})}
-				</div>
-
-				<div className="slidecontainer">
-					<input
-						type="range"
-						min="0"
-						max="36"
-						defaultValue={this.state.conductivity}
-						className="slider"
-						id="myRange"
-						onChange={this.sliderChange.bind(this)}
-						ref={this.sliderRef}
-						step="0.001"
-					/>
 				</div>
 			</div>
 		)

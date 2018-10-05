@@ -5,14 +5,14 @@ export class BaseModel {
 		this.pointer = { link: this }
 
 		this.type = 'model'
-		this.subtype
-		this.class
+		this.subtype = null
+		this.class = null
 
-		this.parent
-		this.connections
-		this.location
+		this.parent = null
+		this.connections = null
+		this.location = null
 
-		this.submodel
+		this.submodel = null
 
 		this.inserted = false
 		this.isNode = false

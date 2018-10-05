@@ -1,22 +1,20 @@
 import React, { Component } from 'react'
-import './App.css'
+import styled from 'styled-components'
 
-import init from './init.js'
-
-import { GameWorkspace } from './workspace.js'
+import workspace from 'workspace.js'
 import InterfaceView from './ReactComponents/InterfaceView.js'
 
 /// --- workspace --- ///
-export const game = new GameWorkspace()
+export const game = workspace
 
 class App extends Component {
 	componentDidMount() {
-		init()
+		workspace.init()
 	}
 
 	render() {
 		return (
-			<div className="App">
+			<AppContainer>
 				<canvas
 					id="canvas"
 					width={window.innerWidth * game.config.canvasMultiplier}
@@ -26,9 +24,19 @@ class App extends Component {
 				</canvas>
 
 				<InterfaceView ref={game.interfaceComponent} workspace={game} />
-			</div>
+			</AppContainer>
 		)
 	}
 }
 
 export default App
+
+const AppContainer = styled.div`
+	height: 100%;
+	width: 100%;
+
+	> canvas {
+		position: fixed;
+		outline: none;
+	}
+`

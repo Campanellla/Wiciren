@@ -19,7 +19,7 @@ function loadMesh({ scene, fileName, folder, item, asItem, lod }) {
 
 			game.meshes[asItem] = mainMesh
 
-			if (lod && meshes.length > 0) {
+			if (lod && meshes.length > 1) {
 				lod.forEach(currentLod => {
 					if (currentLod.item) {
 						let currentMesh = meshes.find(mesh => mesh.id === currentLod.item)
