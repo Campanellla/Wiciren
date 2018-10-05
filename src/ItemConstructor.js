@@ -111,9 +111,16 @@ export class ItemConstructor {
 
 	setInactiveConstructor() {
 		if (!this.activeConstructor) return
-		game.interfaceComponent.current.selectionViewComponent.current.activeElement.setState(
-			{ active: false },
+		if (
+			game.interfaceComponent.current &&
+			game.interfaceComponent.current.selectionViewComponent &&
+			game.interfaceComponent.current.selectionViewComponent.current &&
+			game.interfaceComponent.current.selectionViewComponent.current
+				.activeElement
 		)
+			game.interfaceComponent.current.selectionViewComponent.current.activeElement.setState(
+				{ active: false },
+			)
 		this.activeConstructor = false
 		if (this.activeMesh) {
 			game.selection.setActiveMesh()
@@ -150,7 +157,7 @@ export class ItemConstructor {
 				item.rotate()
 
 				//this.setInactiveConstructor()
-				console.log(item)
+				//console.log(item)
 
 				game.updatePipelines = true
 			}

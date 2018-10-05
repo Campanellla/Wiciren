@@ -60,15 +60,19 @@ function createScene(engine, canvas) {
 
 	var groundMaterial = new BABYLON.StandardMaterial('mat2', scene)
 
-	groundMaterial.diffuseTexture = new BABYLON.Texture('textures/ground.jpg')
-	groundMaterial.bumpTexture = new BABYLON.Texture('./textures/groundbump.jpg')
+	groundMaterial.diffuseTexture = new BABYLON.Texture(
+		'/assets/textures/ground.jpg',
+	)
+	groundMaterial.bumpTexture = new BABYLON.Texture(
+		'/assets/textures/groundbump.jpg',
+	)
 
-	groundMaterial.bumpTexture.uScale = 5 //00//500.0;
-	groundMaterial.bumpTexture.vScale = 5 //00//500.0;
+	groundMaterial.bumpTexture.uScale = 5
+	groundMaterial.bumpTexture.vScale = 5
 	groundMaterial.bumpTexture.level = 1
 
-	groundMaterial.diffuseTexture.uScale = 10 //00.0;
-	groundMaterial.diffuseTexture.vScale = 10 //00.0;
+	groundMaterial.diffuseTexture.uScale = 10
+	groundMaterial.diffuseTexture.vScale = 10
 
 	groundMaterial.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1)
 

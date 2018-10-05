@@ -2,7 +2,7 @@ const resources = {
 	meshes: [
 		{
 			fileName: 'pipe.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'pipe',
 			lod: [
 				{
@@ -21,7 +21,7 @@ const resources = {
 		},
 		{
 			fileName: 'pipe.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'pipe4',
 			lod: [
 				{
@@ -40,7 +40,7 @@ const resources = {
 		},
 		{
 			fileName: 'pipe.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'pipe3',
 			lod: [
 				{
@@ -59,7 +59,7 @@ const resources = {
 		},
 		{
 			fileName: 'pipe.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'pipeA',
 			lod: [
 				{
@@ -78,7 +78,7 @@ const resources = {
 		},
 		{
 			fileName: 'pump.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'pump',
 			lod: [
 				{
@@ -89,7 +89,7 @@ const resources = {
 		},
 		{
 			fileName: 'tank.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'tank',
 			lod: [
 				{
@@ -100,7 +100,7 @@ const resources = {
 		},
 		{
 			fileName: 'engine.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'engine',
 			lod: [
 				{
@@ -111,7 +111,7 @@ const resources = {
 		},
 		{
 			fileName: 'device.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'device',
 			lod: [
 				{
@@ -122,7 +122,7 @@ const resources = {
 		},
 		{
 			fileName: 'arrow.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'arrow',
 			lod: [
 				{
@@ -133,7 +133,7 @@ const resources = {
 		},
 		{
 			fileName: 'epole.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'epole',
 			lod: [
 				{
@@ -144,7 +144,7 @@ const resources = {
 		},
 		{
 			fileName: 'box.babylon',
-			folder: './',
+			folder: 'assets/meshes/',
 			item: 'box',
 			lod: [
 				{
