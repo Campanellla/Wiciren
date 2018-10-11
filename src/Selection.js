@@ -1,5 +1,5 @@
 import { game } from './App.js'
-
+import { TAU } from 'utils.js'
 import * as BABYLON from 'babylonjs'
 
 /// item selection square and mesh for constructor
@@ -82,7 +82,7 @@ export class Selection {
 	setRotation(rotationIndex) {
 		if (rotationIndex === undefined) return
 
-		this.activeMesh.rotation.y = rotationIndex * game.TAU
+		this.activeMesh.rotation.y = rotationIndex * TAU
 
 		this.offsetx = 0
 		this.offsetz = 0

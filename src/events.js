@@ -1,8 +1,6 @@
-//import { game } from './App.js'
-
 import { setCanvasSize } from './utils.js'
 
-export function assignEvents(game) {
+export default function assignEvents(game) {
 	game.canvas.oncontextmenu = onContextMenu
 
 	function onContextMenu(e) {

@@ -2,14 +2,9 @@ import { game } from './App.js'
 
 import * as BABYLON from 'babylonjs'
 
-import { _pipe } from './objects/pipe/pipe.js'
-import { _pump } from './objects/pump/pump.js'
-import { _tank } from './objects/tank/tank.js'
-import { _engine } from './objects/engine/engine.js'
-import { _device } from './objects/device/device.js'
+import { TAU } from 'utils.js'
 
-import { _epole } from './objects/epole/epole.js'
-import { _box } from './objects/box/box.js'
+import resources from 'Resources'
 
 export class ItemConstructor {
 	constructor() {
@@ -22,20 +17,7 @@ export class ItemConstructor {
 		//this.isFreeSpace = false;
 		this.activeMesh = null
 		this.config = null
-		this.constructorItemList = {
-			pump: { item: _pump, subtype: '' },
-			tank: { item: _tank, subtype: '' },
-			engine: { item: _engine, subtype: '' },
-			device: { item: _device, subtype: '' },
-
-			pipe: { item: _pipe, subtype: 'pipe' },
-			pipe3: { item: _pipe, subtype: '3-way' },
-			pipe4: { item: _pipe, subtype: '4-way' },
-			pipeA: { item: _pipe, subtype: 'angle' },
-
-			pole: { item: _epole, subtype: '' },
-			box: { item: _box, subtype: '' },
-		}
+		this.constructorItemList = resources.constructions
 	}
 
 	setActiveConstructor(item) {
@@ -87,7 +69,7 @@ export class ItemConstructor {
 						})
 					} else
 						connection.conlocation.forEach(location => {
-							let mesh = new game.BABYLON.Mesh(
+							let mesh = new BABYLON.Mesh(
 								'index: 100',
 								game.scene,
 								null,
@@ -99,7 +81,7 @@ export class ItemConstructor {
 
 							mesh.parent = this.activeMesh
 
-							mesh.rotation.y = location.r * game.TAU || 0
+							mesh.rotation.y = location.r * TAU || 0
 							mesh.position.x = location.x + 0.5
 							mesh.position.y = 0.25
 							mesh.position.z = location.z + 0.5
@@ -145,6 +127,7 @@ export class ItemConstructor {
 				let item = new this.constructorItemList[this.activeConstructor].item(
 					args,
 				)
+
 				game.map.insertItem(
 					item,
 					item.location.x,

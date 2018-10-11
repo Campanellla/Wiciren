@@ -60,15 +60,18 @@ export class GameMap {
 
 		for (var w = 0; w < width; w++) {
 			for (var h = 0; h < height; h++) {
-				var block = this.findBlock(x, z)
+				let _x = x + w
+				let _z = z + h
+
+				var block = this.findBlock(_x, _z)
 
 				if (block) {
-					let tile = block.tiles[x - block.offset.x][z - block.offset.z]
+					let tile = block.tiles[_x - block.offset.x][_z - block.offset.z]
 					let found = tile.object
 
 					if (found && found.link) {
 						// log that we found objects here
-						console.log('i found in ', 'x:', x, 'z:', z, found)
+						console.log('i found in ', 'x:', _x, 'z:', _z, found)
 						tiles.push(tile)
 					} else {
 						tiles.push(tile)

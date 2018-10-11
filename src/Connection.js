@@ -1,12 +1,14 @@
 import { game } from './App.js'
 
+import { nullpointer } from 'utils.js'
+
 export default class Connection {
 	constructor(args) {
-		this.itemPointer = args.itemPointer || game.nullpointer
-		this.modelPointer = args.modelPointer || game.nullpointer
+		this.itemPointer = args.itemPointer || nullpointer
+		this.modelPointer = args.modelPointer || nullpointer
 
-		this.connectedItemPointer = args.connectedItemPointer || game.nullpointer
-		this.connectedModelPointer = args.connectedModelPointer || game.nullpointer
+		this.connectedItemPointer = args.connectedItemPointer || nullpointer
+		this.connectedModelPointer = args.connectedModelPointer || nullpointer
 
 		this.location = args.location || { x: 0, z: 0 }
 		this.size = args.size || { h: 1, w: 1 }
@@ -160,12 +162,14 @@ export default class Connection {
 
 			//console.log(this.connectedModelPointer);
 		} else {
-			this.connectedItemPointer = game.nullpointer
-			this.connectedModelPointer = game.nullpointer
+			this.connectedItemPointer = nullpointer
+			this.connectedModelPointer = nullpointer
 		}
 	}
 
 	checkLinks() {
+		if (!this.connectedModelPointer) console.log(this)
+
 		let connModel = this.connectedModelPointer.link
 		let model = this.modelPointer.link
 
@@ -178,8 +182,8 @@ export default class Connection {
 		})
 
 		if (!found) {
-			this.connectedModelPointer = game.nullpointer
-			this.connectedItemPointer = game.nullpointer
+			this.connectedModelPointer = nullpointer
+			this.connectedItemPointer = nullpointer
 		}
 	}
 }
