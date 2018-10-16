@@ -1,14 +1,14 @@
 import * as BABYLON from 'babylonjs'
-import { showAxis, setCanvasSize } from 'utils.js'
+import { showAxis, setCanvasSize } from 'src/Utils'
 
 import {
 	onMouseMoveEvent,
 	onMouseClickEvent,
 	onMouseClickReleaseEvent,
 	onDoubleClick,
-} from 'MouseEvents.js'
+} from 'src/Events/MouseEvents.js'
 
-import { FreeTopCameraKeyboardMoveInput } from 'KeyboardInputs.js'
+import { FreeTopCameraKeyboardMoveInput } from 'src/Events/KeyboardInputs.js'
 
 export default function initBABYLON(canvas, ratio) {
 	let engine = new BABYLON.Engine(canvas, true)

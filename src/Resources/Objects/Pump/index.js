@@ -1,7 +1,7 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from './../Base.js'
-import PumpModel from './../../Models/PumpModel.js'
+import Construction from '../Construction'
+import PumpModel from '../../Models/PumpModel'
 
 export default class Pump extends Construction {
 	constructor(args) {

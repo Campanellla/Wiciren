@@ -1,5 +1,5 @@
-import game from 'Workspace'
-import { GameMap } from 'Map.js'
+import game from 'src/Workspace'
+import { GameMap } from 'src/Map.js'
 
 export default function sessionInit() {
 	/// --- create and draw ground --- ///

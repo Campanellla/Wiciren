@@ -1,12 +1,12 @@
 import * as BABYLON from 'babylonjs'
 
-import assignEvents from 'events.js'
+import assignEvents from 'src/Events/events.js'
 
 import initBABYLON from './engine'
 import sessionInit from './session'
 import Intervals from './intervals'
 
-import { Selection } from 'Selection.js'
+import { Selection } from 'src/Selection.js'
 
 ///// --- INIT --- /////
 
@@ -80,5 +80,4 @@ export default function init({ appComponent, UI }) {
 		let a = saveStr.match(/save\d{1,3}$/i)
 		if (a) saves.push(a[0])
 	}
-	console.log(saves)
 }

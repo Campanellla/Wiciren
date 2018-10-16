@@ -1,7 +1,6 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from '../Base.js'
-
+import Construction from '../Construction'
 import EpoleModel from '../../Models/EpoleModel.js'
 
 export default class Epole extends Construction {

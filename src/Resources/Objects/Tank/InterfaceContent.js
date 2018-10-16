@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-//import {game} from '../../App.js';
-
-export class Pipe_interface extends Component {
+export default class Tank_interface extends Component {
 	constructor(props) {
 		super(props)
 
@@ -12,6 +10,9 @@ export class Pipe_interface extends Component {
 			volume: 0,
 			pressure: 0,
 		}
+
+		this.updateInterface = this.updateInterface.bind(this)
+		this.onClickAdd = this.onClickAdd.bind(this)
 	}
 
 	updateInterface() {
@@ -27,24 +28,8 @@ export class Pipe_interface extends Component {
 		}
 	}
 
-	componentWillReceiveProps(props) {
-		if (this.props.item === props.item) return
-
-		if (this.props.item) this.props.item.updateInterface = null
-
-		if (props.item) props.item.updateInterface = this.updateInterface.bind(this)
-	}
-
-	componentDidMount() {
-		if (this.props.item) {
-			this.props.item.updateInterface = this.updateInterface.bind(this)
-		}
-	}
-
-	componentWillUnmount() {
-		if (this.props.item) {
-			this.props.item.updateInterface = null
-		}
+	onClickAdd() {
+		this.props.item.models[0].volume += 100
 	}
 
 	render() {
@@ -65,6 +50,8 @@ export class Pipe_interface extends Component {
 						)
 					})}
 				</div>
+
+				<button onClick={this.onClickAdd}>add 100</button>
 			</div>
 		)
 	}

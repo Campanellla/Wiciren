@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs'
 import { onMouseMoveEvent } from './MouseEvents.js'
-import { game } from './App.js'
+import game from 'src/Workspace'
 
 export class FreeTopCameraKeyboardMoveInput {
 	constructor() {

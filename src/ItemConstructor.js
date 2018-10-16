@@ -2,9 +2,9 @@ import { game } from './App.js'
 
 import * as BABYLON from 'babylonjs'
 
-import { TAU } from 'utils.js'
+import { TAU } from 'src/Utils'
 
-import resources from 'Resources'
+import resources from 'src/Resources'
 
 export class ItemConstructor {
 	constructor() {

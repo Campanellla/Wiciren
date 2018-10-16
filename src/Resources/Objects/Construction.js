@@ -1,11 +1,10 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 import * as BABYLON from 'babylonjs'
-import { TAU } from 'utils.js'
+import { TAU } from 'src/Utils'
 
-export class Construction {
+export default class Construction {
 	constructor() {
 		this.pointer = { link: this }
-
 		this.type = null
 		this.subtype = null
 

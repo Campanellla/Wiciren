@@ -3,9 +3,9 @@
 import { ItemConstructor } from '../ItemConstructor.js'
 import Connection from '../Connection.js'
 
-import Loader from 'Loader'
+import Loader from 'src/Loader'
 import Initializer from './Initializer'
-import resources from 'Resources'
+import resources from 'src/Resources'
 
 import { makeTests } from './tests'
 
@@ -21,7 +21,6 @@ class GameWorkspace {
 		this.constructionsList = []
 
 		let modelStructs = resources.modelStructures
-
 		this.pipelines = new modelStructs.Pipelines()
 		this.electricalGrids = new modelStructs.ElectricalGrids()
 
@@ -33,7 +32,7 @@ class GameWorkspace {
 		/// marker to be transfered to pipelines class
 		this.updatePipelines = false
 
-		/// babylon  objects
+		/// babylon objects
 		this.engine = undefined
 		this.canvas = undefined
 
@@ -68,22 +67,16 @@ class GameWorkspace {
 		if (!bool) document.onselectstart = undefined
 	}
 
-	drawMenu(item) {
-		if (
-			!this.interfaceComponent.current ||
-			!this.interfaceComponent.current.windowContainerComponent.current
-		) {
+	drawMenu(content) {
+		if (!this.UI || !this.UI.windowManager) {
 			console.log('%cerror component not defined', 'color:red')
 			return false
 		}
-		if (!item) {
-			console.log('%cerror item not defined', 'color:red')
+		if (!content) {
+			console.log('%cerror content not defined', 'color:red')
 			return false
 		}
-
-		this.interfaceComponent.current.windowContainerComponent.current.appendWindow(
-			item,
-		)
+		this.UI.windowManager.appendWindow(content)
 		return true
 	}
 

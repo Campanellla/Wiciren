@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-import workspace from 'Workspace'
+import workspace from 'src/Workspace'
 import ConfigMenu from './ConfigMenu'
 
 import SavesList from './SavedMenu'
@@ -101,14 +101,9 @@ const StyledInventoryItem = styled.div`
 
 function drawSavesMenu() {
 	if (this.state.saves) {
-		//document.getElementById('configmenuwindow').hidden = true;
 		this.setState({ saves: false })
 	} else {
-		//document.getElementById('configmenuwindow').hidden = false;
-		//ReactDOM.render(<ConfigMenuWindow />, document.getElementById('configmenuwindow'));
-
-		workspace.drawMenu({ menu_interface: SavesList })
-
+		workspace.UI.windowManager.drawMenu(SavesList)
 		this.setState({ saves: true })
 	}
 }

@@ -1,4 +1,4 @@
-import { game } from './App.js'
+import game from 'src/Workspace'
 
 export function onMouseMoveEvent(evt) {
 	var pickResult = picker(this)
@@ -97,7 +97,8 @@ export function onDoubleClick(evt) {
 
 			if (pickedMesh.isObject && pickedMesh.item && pickedMesh.item.link) {
 				foundItem = true
-				game.drawMenu(pickResult.pickedMesh.item.link)
+				if (game.UI.windowManager)
+					game.UI.windowManager.drawItemMenu(pickResult.pickedMesh.item.link)
 			}
 
 			if (!foundItem) {
@@ -108,7 +109,8 @@ export function onDoubleClick(evt) {
 
 				if (itemFromPosition) {
 					foundItem = true
-					game.drawMenu(itemFromPosition)
+					if (game.UI.windowManager)
+						game.UI.windowManager.drawItemMenu(itemFromPosition)
 				}
 			}
 		}

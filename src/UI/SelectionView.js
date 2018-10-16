@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import { game } from '../App.js'
 
+import resources from 'src/Resources'
+
 class SelectAction extends Component {
 	constructor(props) {
 		super(props)
@@ -52,20 +54,10 @@ class SelectAction extends Component {
 export default class SelectionView extends Component {
 	constructor() {
 		super()
-		this.elements = [
-			'box',
-			'pole',
-			'pipe',
-			'pipe3',
-			'pipe4',
-			'pipeA',
-			'pump',
-			'tank',
-			'engine',
-			'device',
-			'remove',
-		]
-
+		this.elements = []
+		for (let construction in resources.constructions) {
+			this.elements.push(construction)
+		}
 		this.activeElement = null
 	}
 

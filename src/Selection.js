@@ -1,5 +1,5 @@
 import { game } from './App.js'
-import { TAU } from 'utils.js'
+import { TAU } from 'src/Utils'
 import * as BABYLON from 'babylonjs'
 
 /// item selection square and mesh for constructor

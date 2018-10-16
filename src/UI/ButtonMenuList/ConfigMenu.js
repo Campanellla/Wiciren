@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import SavesList from './SavedMenu'
-import workspace from 'Workspace'
+import workspace from 'src/Workspace'
 
 export default class ConfigMenu extends Component {
 	constructor(props) {
@@ -73,14 +73,9 @@ class LoadButton extends Component {
 
 function drawConfigMenu() {
 	if (this.state.revealed) {
-		//document.getElementById('configmenuwindow').hidden = true;
 		this.setState({ revealed: false })
 	} else {
-		//document.getElementById('configmenuwindow').hidden = false;
-		//ReactDOM.render(<ConfigMenuWindow />, document.getElementById('configmenuwindow'));
-
-		workspace.drawMenu({ menu_interface: ConfigMenuWindow })
-
+		workspace.UI.windowManager.drawMenu(ConfigMenuWindow)
 		this.setState({ revealed: true })
 	}
 }
@@ -91,14 +86,9 @@ function opbutton() {
 
 function drawSavesMenu() {
 	if (this.state.saves) {
-		//document.getElementById('configmenuwindow').hidden = true;
 		this.setState({ saves: false })
 	} else {
-		//document.getElementById('configmenuwindow').hidden = false;
-		//ReactDOM.render(<ConfigMenuWindow />, document.getElementById('configmenuwindow'));
-
-		workspace.drawMenu({ menu_interface: SavesList })
-
+		workspace.UI.windowManager.drawMenu(SavesList)
 		this.setState({ saves: true })
 	}
 }

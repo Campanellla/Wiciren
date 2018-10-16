@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import game from 'Workspace'
-
-export class Device_interface extends Component {
+export default class Device_interface extends Component {
 	constructor(props) {
 		super(props)
 
@@ -33,32 +31,7 @@ export class Device_interface extends Component {
 		}
 	}
 
-	componentDidMount() {
-		if (this.item) {
-			3
-			this.item.updateInterface = this.updateInterface.bind(this)
-		}
-	}
-
-	componentWillUnmount() {
-		if (this.item && this.item.link) {
-			this.item.updateInterface = null
-		}
-	}
-
-	handleChange() {
-		let num = Number(this.value.current.value)
-
-		if (
-			this.item &&
-			this.item.link &&
-			this.item.link.load !== undefined &&
-			!isNaN(num)
-		) {
-			this.item.link.load = num
-			game.updateMenu()
-		}
-	}
+	handleChange() {}
 
 	onclick() {
 		this.item.link.models[0].connections[0].connectedModelPointer.link.run = !this

@@ -1,29 +1,12 @@
 import * as BABYLON from 'babylonjs'
 
-export function setCanvasSize(canvas, w, h, r, m) {
-	if (r) {
-		if (m) {
-			var pixelRatio = m
-		} else {
-			pixelRatio = window.devicePixelRatio
-		}
-
-		canvas.style.width = w / pixelRatio + 'px'
-		canvas.style.height = h / pixelRatio + 'px'
-	} else {
-		canvas.style.width = w + 'px'
-		canvas.style.height = h + 'px'
-	}
-}
-
 /* 
 draw axis x/y/z
-
 args: size in units, scene
 return:null
 */
 
-export function showAxis(size, scene) {
+export default function showAxis(size, scene) {
 	var makeTextPlane = function(text, color, size) {
 		var dynamicTexture = new BABYLON.DynamicTexture(
 			'DynamicTexture',
@@ -97,22 +80,3 @@ export function showAxis(size, scene) {
 	var zChar = makeTextPlane('Z', 'blue', size / 10)
 	zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size)
 }
-
-export function ErrorOneTime() {
-	var time = 500
-	var timeout = false
-
-	return function(text, timer) {
-		if (!timeout) {
-			console.log('%c' + text, 'color:red')
-			timeout = true
-			setTimeout(() => {
-				timeout = false
-			}, timer || time)
-		}
-	}
-}
-
-export const TAU = Math.PI / 2
-export const PI2 = Math.PI * 2
-export const nullpointer = { link: null }

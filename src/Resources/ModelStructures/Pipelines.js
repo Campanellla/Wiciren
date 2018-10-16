@@ -1,4 +1,4 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
 import PipeNodeModel from '../Models/pipe/PipeNodeModel.js'
 import PipeModel from '../Models/pipe/PipeModel.js'

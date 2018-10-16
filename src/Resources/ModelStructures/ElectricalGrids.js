@@ -1,4 +1,4 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
 export default class ElectricalGrids {
 	constructor() {

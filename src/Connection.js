@@ -1,6 +1,6 @@
 import { game } from './App.js'
 
-import { nullpointer } from 'utils.js'
+import { nullpointer } from 'src/Utils'
 
 export default class Connection {
 	constructor(args) {

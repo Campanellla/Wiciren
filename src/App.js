@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components'
 
-import workspace from 'Workspace'
-import InterfaceView from './ReactComponents/InterfaceView.js'
-import UI from 'UI'
+import workspace from 'src/Workspace'
+import UI from 'src/UI'
 
 /// --- workspace --- ///
 export const game = workspace
@@ -33,14 +32,16 @@ export default class App extends Component {
 
 	setFocusCanvas() {
 		this.canvasElement.current.focus()
-		if (this.state.canvas.active) return
-		this.state.canvas.active = true
-		this.setState({})
+		let canvas = this.state.canvas
+		if (canvas.active) return
+		canvas.active = true
+		this.setState({ canvas })
 	}
 
 	onBlurCanvas() {
-		this.state.canvas.active = false
-		this.setState({})
+		let canvas = this.state.canvas
+		canvas.active = false
+		this.setState({ canvas })
 	}
 
 	render() {

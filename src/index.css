@@ -16,6 +16,18 @@ textarea {
 	box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+b {
+	margin: 0;
+	padding: 0;
+}
+
 .slider {
 	width: 98%;
 }
@@ -25,14 +37,6 @@ textarea {
 	position: fixed;
 	bottom: 5px;
 	right: 10px;
-}
-
-.ItemMenuCloseButton {
-	position: absolute;
-	top: 2px;
-	right: 1px;
-
-	border: none;
 }
 
 #timetext {
@@ -73,28 +77,6 @@ textarea {
 	display: inline-grid;
 	left: 0.25em;
 	bottom: 0.1em;
-}
-
-.ItemMenu {
-	font-size: small;
-
-	position: absolute;
-
-	width: 250px;
-	height: 250px;
-
-	background-color: white;
-
-	border: 1px;
-	border-style: solid;
-	border-color: gray;
-}
-
-.ItemMenuHeader {
-	width: 100%;
-	height: 20px;
-	background-color: gray;
-	user-select: none;
 }
 
 #InterfaceView {

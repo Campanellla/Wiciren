@@ -1,4 +1,4 @@
-import { updateObjects } from 'updates.js'
+import { updateObjects } from 'src/Updates'
 
 export default class Intervals {
 	constructor(game) {
@@ -52,8 +52,8 @@ export default class Intervals {
 				_int.fpsLabelComponent.current.setState({
 					text: this.game.engine.getFps().toFixed() + ' fps',
 				})
-			if (this.game.componentsNeedUpdate.length) {
-				this.game.componentsNeedUpdate.forEach(c => c.update())
+			if (_int.windowManager) {
+				_int.windowManager.update()
 			}
 		}
 	}

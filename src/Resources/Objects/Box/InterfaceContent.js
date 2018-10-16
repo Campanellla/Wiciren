@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import game from 'Workspace'
-
-export class Box_interface extends Component {
+export default class Box_interface extends Component {
 	constructor(props) {
 		super(props)
 		this.sliderRef = React.createRef()
@@ -31,32 +29,6 @@ export class Box_interface extends Component {
 				storageSize: item.models[0].storageSize || 0,
 			})
 		}
-	}
-
-	componentWillReceiveProps(props) {
-		if (this.props.item === props.item) return
-		if (this.props.item) this.props.item.updateInterface = null
-		if (props.item) props.item.updateInterface = this.updateInterface
-	}
-
-	componentDidMount() {
-		if (this.props.item) {
-			this.props.item.updateInterface = this.updateInterface
-			game.componentsNeedUpdate.push({
-				component: this,
-				update: this.updateInterface,
-			})
-		}
-	}
-
-	componentWillUnmount() {
-		let key = game.componentsNeedUpdate.findIndex(c => c.component === this)
-		if (key !== -1) {
-			game.componentsNeedUpdate.splice(key, 1)
-		} else {
-			console.log(this, 'not found myself in game.componentsNeedUpdate')
-		}
-		if (this.props.item) this.props.item.updateInterface = null
 	}
 
 	render() {

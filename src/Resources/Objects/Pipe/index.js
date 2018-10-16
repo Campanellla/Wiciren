@@ -1,13 +1,13 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from './../Base.js'
-import PipeModel from './../../Models/pipe/PipeModel.js'
-
-import { Pipe_interface } from './Pipe_interface.js'
+import Construction from '../Construction'
+import PipeModel from '../../Models/pipe/PipeModel'
+import InterfaceContent from './InterfaceContent'
 
 export default class Pipe extends Construction {
 	constructor(args) {
 		super()
+		this.InterfaceContent = InterfaceContent
 		args = args || {}
 		args.models = args.models || []
 
@@ -67,9 +67,6 @@ export default class Pipe extends Construction {
 			config: args.models[0],
 		}
 		this.models.push(new PipeModel(modelargs))
-
-		this.menu_interface = Pipe_interface
-		this.updateInterface = null
 
 		this.draw()
 	}

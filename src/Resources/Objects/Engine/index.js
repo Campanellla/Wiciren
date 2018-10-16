@@ -1,15 +1,14 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from '../Base.js'
-
-import TankModel from '../../Models/TankModel.js'
-import EngineModel from '../../Models/EngineModel.js'
-
-import { Engine_interface } from './Engine_interface.js'
+import Construction from '../Construction'
+import TankModel from '../../Models/TankModel'
+import EngineModel from '../../Models/EngineModel'
+import InterfaceContent from './InterfaceContent'
 
 export default class Engine extends Construction {
 	constructor(args) {
 		super()
+		this.InterfaceContent = InterfaceContent
 		args = args || {}
 		args.models = args.models || []
 
@@ -57,9 +56,6 @@ export default class Engine extends Construction {
 		this.models.push(new EngineModel(modelargs))
 
 		this.draw()
-
-		this.menu_interface = Engine_interface
-		this.updateInterface = null
 	}
 
 	update(dt) {

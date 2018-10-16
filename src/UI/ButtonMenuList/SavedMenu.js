@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components'
 
-import workspace from 'Workspace'
+import workspace from 'src/Workspace'
 
 export default class SavesList extends Component {
 	constructor(props) {
@@ -42,10 +42,12 @@ export default class SavesList extends Component {
 			let a = saveStr.match(/save\d{1,3}$/i)
 			if (a) saves.push(a[0])
 		}
-
+		function fifun(save) {
+			return save === 'save' + value
+		}
 		while (true) {
 			if (value < 1000) {
-				if (saves.findIndex(save => save === 'save' + value) === -1) {
+				if (saves.findIndex(fifun) === -1) {
 					let a = workspace.saveSessionToLocal(workspace.map.objectsList)
 					window.localStorage.setItem('save' + value, a)
 					window.localStorage.setItem(

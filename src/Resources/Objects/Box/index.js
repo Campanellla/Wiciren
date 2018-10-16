@@ -1,13 +1,13 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from './../Base.js'
-import StorageModel from './../../Models/StorageModel.js'
-
-import { Box_interface } from './Box_interface.js'
+import Construction from '../Construction'
+import StorageModel from '../../Models/StorageModel'
+import InterfaceContent from './InterfaceContent'
 
 export default class Box extends Construction {
 	constructor(args) {
 		super()
+		this.InterfaceContent = InterfaceContent
 		args = args || {}
 		args.models = args.models || []
 
@@ -25,9 +25,6 @@ export default class Box extends Construction {
 			storageSize: 11,
 		}
 		this.models.push(new StorageModel(modelargs))
-
-		this.menu_interface = Box_interface
-		this.updateInterface = null
 
 		this.draw()
 	}

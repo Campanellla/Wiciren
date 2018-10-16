@@ -1,13 +1,13 @@
-import game from 'Workspace'
+import game from 'src/Workspace'
 
-import { Construction } from '../Base.js'
-import DeviceModel from '../../Models/DeviceModel.js'
-
-import { Device_interface } from './Device_interface.js'
+import Construction from '../Construction'
+import DeviceModel from '../../Models/DeviceModel'
+import InterfaceContent from './InterfaceContent'
 
 export default class Device extends Construction {
 	constructor(args) {
 		super()
+		this.InterfaceContent = InterfaceContent
 		args = args || {}
 		args.models = args.models || []
 
@@ -36,9 +36,6 @@ export default class Device extends Construction {
 			config: args.models[0],
 		}
 		this.models.push(new DeviceModel(modelargs))
-
-		this.menu_interface = Device_interface
-		this.updateInterface = null
 
 		this.draw()
 	}

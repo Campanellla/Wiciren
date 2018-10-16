@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import game from 'Workspace'
-
-export class Engine_interface extends Component {
+export default class Engine_interface extends Component {
 	constructor(props) {
 		super(props)
 		this.sliderRef = React.createRef()
@@ -32,38 +30,7 @@ export class Engine_interface extends Component {
 		this.onClickConnect = this.onClickConnect.bind(this)
 		this.onSliderChange = this.onSliderChange.bind(this)
 
-		this.updateInterface()
-	}
-
-	componentWillReceiveProps(props) {
-		if (this.props.item === props.item) return
-		console.log(this.props.item, props.item)
-		if (this.props.item) this.props.item.updateInterface = null
-		if (props.item) props.item.updateInterface = this.updateInterface
-	}
-
-	componentDidMount() {
-		if (this.props.item) {
-			this.props.item.updateInterface = this.updateInterface
-			game.componentsNeedUpdate.push({
-				component: this,
-				update: this.updateInterface,
-			})
-		}
-	}
-
-	componentWillUnmount() {
-		let key = game.componentsNeedUpdate.findIndex(c => c.component === this)
-
-		if (key !== -1) {
-			game.componentsNeedUpdate.splice(key, 1)
-		} else {
-			console.log(this, 'not found myself in game.componentsNeedUpdate')
-		}
-
-		if (this.props.item) {
-			this.props.item.updateInterface = null
-		}
+		//this.updateInterface()
 	}
 
 	updateInterface() {
@@ -126,19 +93,21 @@ export class Engine_interface extends Component {
 	}
 
 	render() {
+		let state = this.state
+		let items = [
+			'key: ' + state.key,
+			'volume: ' + state.volume.toFixed(1) + 'ltrs',
+			'speed: ' + state.speed.toFixed(1) + ' rpm',
+			'load: ' + (state.load / 1000).toFixed(0) + ' kWt',
+			'controlIndex: ' + state.controlIndex.toFixed(0),
+			'setPoint: ' + state.setPoint.toFixed(1),
+			'frequency: ' + state.frequency.toFixed(1) + ' Hz',
+			'current: ' + state.current.toFixed(2) + ' A',
+		]
 		return (
 			<div>
 				<div id="ItemMenuText">
-					{[
-						'key: ' + this.state.key,
-						'volume: ' + this.state.volume.toFixed(1) + 'ltrs',
-						'speed: ' + this.state.speed.toFixed(1) + ' rpm',
-						'load: ' + (this.state.load / 1000).toFixed(0) + ' kWt',
-						'controlIndex: ' + this.state.controlIndex.toFixed(0),
-						'setPoint: ' + this.state.setPoint.toFixed(1),
-						'frequency: ' + this.state.frequency.toFixed(1) + ' Hz',
-						'current: ' + this.state.current.toFixed(2) + ' A',
-					].map((item, key) => {
+					{items.map((item, key) => {
 						return (
 							<span key={key}>
 								{item}
